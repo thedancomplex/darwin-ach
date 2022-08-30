@@ -1,2 +1,3 @@
-# darwin-op-debian-11
-Running the Darwin OP on Debian 11 32 bit via the origonal FitPC2 and interfaced via ROS2
+# CM730 Driver
+
+Designed to talk directly with the CM730.  Updates the state and reference
