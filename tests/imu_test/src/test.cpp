@@ -35,13 +35,14 @@ int main()
 
   while(1) {
     darwin::update_imu();
-    printf("gx: %0.4f,\t gy: %0.4f,\t gz: %0.4f,\t ax: %0.4f,\t ay: %0.4f,\t az: %0.4f\n", 
+    printf("gx: %0.4f,\t gy: %0.4f,\t gz: %0.4f,\t ax: %0.4f,\t ay: %0.4f,\t az: %0.4f,\t volt:%0.2f\n", 
             darwin::imu_gyro_x,
             darwin::imu_gyro_y,
             darwin::imu_gyro_z,
             darwin::imu_acc_x,
             darwin::imu_acc_y,
-            darwin::imu_acc_z);
+            darwin::imu_acc_z,
+            darwin::voltage);
 
     usleep(10000);
   }

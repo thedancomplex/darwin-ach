@@ -25,6 +25,7 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 #define DARWIN_OFF CM730_OFF
 #define IMU_ACC_SCALE 70.67723342939482
 #define IMU_GYRO_SCALE 500.0
+#define VOLTAGE_SCALE 10.0
 
 // Motor IDs
 #define ID_CM730 200
@@ -43,6 +44,8 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 #define CM730_ADDRESS_IMU_ACC_Y 46
 #define CM730_ADDRESS_IMU_ACC_Z 48
 
+#define CM730_ADDRESS_VOLTAGE 50
+
 namespace darwin {
 
   int close();
@@ -58,15 +61,15 @@ namespace darwin {
   double int2double(uint16_t val); 
 
   // IMU data
-  double imu_gyro_x = 0.0; 
-  double imu_gyro_y = 0.0; 
-  double imu_gyro_z = 0.0; 
-  double imu_acc_x  = 0.0; 
-  double imu_acc_y  = 0.0; 
-  double imu_acc_z  = 0.0; 
+  double imu_gyro_x = -0.0; 
+  double imu_gyro_y = -0.0; 
+  double imu_gyro_z = -0.0; 
+  double imu_acc_x  = -0.0; 
+  double imu_acc_y  = -0.0; 
+  double imu_acc_z  = -0.0; 
 
   // Voltage
-  double voltage = 0.0;
+  double voltage = -0.0;
 
 
   // Initialize PortHandler instance
@@ -97,8 +100,10 @@ namespace darwin {
     {
       bool dxl_addparam_result = false;               // addParam result
       // Add parameter storage for Dynamixel#1 present position value
-      dxl_addparam_result = groupBulkReadImu.addParam(ID_CM730, CM730_ADDRESS_IMU_START, CM730_ADDRESS_IMU_LENGTH);
+      // +1 is added to read the voltage
+      dxl_addparam_result = groupBulkReadImu.addParam(ID_CM730, CM730_ADDRESS_IMU_START, CM730_ADDRESS_IMU_LENGTH+1);
       if (dxl_addparam_result != true) return 1;
+
       update_imu_setup_first = false;
       return 0;
     }
@@ -128,6 +133,7 @@ namespace darwin {
     uint16_t buff_acc_x = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_X, 2);
     uint16_t buff_acc_y = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_Y, 2);
     uint16_t buff_acc_z = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_Z, 2);
+    uint8_t buff_voltage = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_VOLTAGE, 1);
 
     imu_gyro_x = int2double(buff_gyro_x) * IMU_GYRO_SCALE;
     imu_gyro_y = int2double(buff_gyro_y) * IMU_GYRO_SCALE;
@@ -135,6 +141,7 @@ namespace darwin {
     imu_acc_x  = int2double(buff_acc_x)  * IMU_ACC_SCALE;
     imu_acc_y  = int2double(buff_acc_y)  * IMU_ACC_SCALE;
     imu_acc_z  = int2double(buff_acc_z)  * IMU_ACC_SCALE;
+    voltage    = (double)buff_voltage / VOLTAGE_SCALE;
 
 
     return 0;
