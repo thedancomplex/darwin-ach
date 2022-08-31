@@ -30,6 +30,12 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 
 // Addresses 
 #define CM730_ADDRESS_DYN_POWER 24
+#define CM730_ADDRESS_IMU_GYRO_Z 38
+#define CM730_ADDRESS_IMU_GYRO_Y 40
+#define CM730_ADDRESS_IMU_GYRO_X 42
+#define CM730_ADDRESS_IMU_ACC_x 44
+#define CM730_ADDRESS_IMU_ACC_Y 46
+#define CM730_ADDRESS_IMU_ACC_z 48
 
 namespace darwin {
 
@@ -40,7 +46,20 @@ namespace darwin {
   int off(int val);
   int kbhit(void);
   int ping(int val);
-  
+  int update_imu();
+  double int2double(uint16_t val); 
+
+  // IMU data
+  double imu_gyro_x = 0.0; 
+  double imu_gyro_y = 0.0; 
+  double imu_gyro_z = 0.0; 
+  double imu_acc_x  = 0.0; 
+  double imu_acc_y  = 0.0; 
+  double imu_acc_z  = 0.0; 
+
+  // Voltage
+  double voltage = 0.0;
+
 
   // Initialize PortHandler instance
   // Set the port path
@@ -51,6 +70,34 @@ namespace darwin {
   // Set the protocol version
   // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
   dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
+
+  double int2double(uint16_t val)
+  {
+    double the_out = (double)((int32_t)val - 512) / 1023.0;
+    return the_out;
+  }
+
+  int update_imu()
+  {
+    // Read IMU info
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+    uint8_t dxl_error = 0;                          // Dynamixel error
+    int the_imu_val = CM730_ADDRESS_IMU_GYRO_X;
+    uint16_t imu_tmp = 0;
+
+    dxl_comm_result = packetHandler->read2ByteTxRx(portHandler, ID_CM730, the_imu_val, &imu_tmp, &dxl_error);
+    if (dxl_comm_result != COMM_SUCCESS)
+    {
+      printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    }
+    else if (dxl_error != 0)
+    {
+      printf("%s\n", packetHandler->getRxPacketError(dxl_error));
+    }
+
+
+    return 0;
+  }
 
 
   int close()
