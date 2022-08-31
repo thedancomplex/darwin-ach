@@ -1,38 +1,19 @@
-TARGET      = darwind
+default: all
 
-# compiler options
-CC          = gcc
-CCFLAGS     = -O2 -O3 -DLINUX -D_GNU_SOURCE -Wall $(INCLUDES) $(FORMAT) -g
-LNKCC       = $(CX)
-LNKFLAGS    = $(CXFLAGS) #-Wl,-rpath,$(DIR_THOR)/lib
-FORMAT      = -m32
+CFLAGS := -I./include -I/usr/local/include/dynamixel_sdk -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g --std=gnu99
+CC := gcc
 
-#---------------------------------------------------------------------
-# Core components (all of these are likely going to be needed)
-#---------------------------------------------------------------------
-#INCLUDES   += -I$(DIR_DXL)/include/dynamixel_sdk
-INCLUDES   += -I/usr/local/include/dynamixel_sdk
-INCLUDES   += -I./include/
-LIBRARIES  += -ldxl_x86_c
-LIBRARIES  += -lrt
+BINARIES := darwind
+all : $(BINARIES)
 
+LIBS := -lrt -ldxl_x86_c
 
-#---------------------------------------------------------------------
-# Files
-#---------------------------------------------------------------------
-SOURCES = src/darwind.c 
+$(BINARIES): src/darwind.o
+	gcc -o $@ $< $(LIBS)
 
-#---------------------------------------------------------------------
-# Compiling Rules
-#---------------------------------------------------------------------
-$(TARGET): $(SOURCES)
-	$(CC) -c $(CCFLAGS) -g $(INCLUDES) $(SOURCES) -o $(TARGET) $(LIBRARIES)
-
-all: $(TARGET)
+%.o: %.c
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean:
-	rm -rf $(TARGET) *~ *.a *.so *.lo
+	rm -f $(BINARIES) src/*.o
 
-#---------------------------------------------------------------------
-# End of Makefile
-#---------------------------------------------------------------------
