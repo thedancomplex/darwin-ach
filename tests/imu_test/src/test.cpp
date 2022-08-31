@@ -35,7 +35,7 @@ int main()
 
   while(1) {
     darwin::update_imu();
-    printf("gx: %f.4, gy: %f.4, gz: %f.4, ax: %f.4, ay: %f.4, az: %f.4\n", 
+    printf("gx: %0.4f,\t gy: %0.4f,\t gz: %0.4f,\t ax: %0.4f,\t ay: %0.4f,\t az: %0.4f\n", 
             darwin::imu_gyro_x,
             darwin::imu_gyro_y,
             darwin::imu_gyro_z,

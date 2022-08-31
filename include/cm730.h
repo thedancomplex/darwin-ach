@@ -23,6 +23,7 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 #define CM730_OFF 0
 #define DARWIN_ON  CM730_ON
 #define DARWIN_OFF CM730_OFF
+#define IMU_ACC_SCALE 70.67723342939482
 
 // Motor IDs
 #define ID_CM730 200
@@ -82,7 +83,6 @@ namespace darwin {
     // Read IMU info
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
     uint8_t dxl_error = 0;                          // Dynamixel error
-    int the_imu_val = CM730_ADDRESS_IMU_GYRO_X;
     uint16_t imu_tmp = 0;
 
     int imu_i[] = {CM730_ADDRESS_IMU_GYRO_Z, CM730_ADDRESS_IMU_GYRO_Y, CM730_ADDRESS_IMU_GYRO_X,
@@ -91,16 +91,19 @@ namespace darwin {
     int ret = 0;
     for( int i = 0; i < imu_max; i++ )
     {
+      int the_imu_val = imu_i[i];
       dxl_comm_result = packetHandler->read2ByteTxRx(portHandler, ID_CM730, the_imu_val, &imu_tmp, &dxl_error);
-      if (dxl_comm_result != COMM_SUCCESS)
+      //if (dxl_comm_result != COMM_SUCCESS)
+      if (dxl_error == 0)
       {
-        printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-        if     ( i == CM730_ADDRESS_IMU_GYRO_Z ) imu_gyro_z = int2double(imu_tmp) * 500.0; // +-500 deg/sec
-        else if( i == CM730_ADDRESS_IMU_GYRO_Y ) imu_gyro_y = int2double(imu_tmp) * 500.0; // +-500 deg/sec
-        else if( i == CM730_ADDRESS_IMU_GYRO_X ) imu_gyro_x = int2double(imu_tmp) * 500.0; // +- 500 deg/sec
-        else if( i == CM730_ADDRESS_IMU_ACC_X  ) imu_acc_x  = int2double(imu_tmp) * 4.0; // +-4g
-        else if( i == CM730_ADDRESS_IMU_ACC_Y  ) imu_acc_y  = int2double(imu_tmp) * 4.0; // +-4g
-        else if( i == CM730_ADDRESS_IMU_ACC_Z  ) imu_acc_z  = int2double(imu_tmp) * 4.0; // +-4g
+        packetHandler->getTxRxResult(dxl_comm_result);
+        //printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+        if     ( the_imu_val == CM730_ADDRESS_IMU_GYRO_Z ) imu_gyro_z = int2double(imu_tmp) * 500.0; // +-500 deg/sec
+        else if( the_imu_val == CM730_ADDRESS_IMU_GYRO_Y ) imu_gyro_y = int2double(imu_tmp) * 500.0; // +-500 deg/sec
+        else if( the_imu_val == CM730_ADDRESS_IMU_GYRO_X ) imu_gyro_x = int2double(imu_tmp) * 500.0; // +- 500 deg/sec
+        else if( the_imu_val == CM730_ADDRESS_IMU_ACC_X  ) imu_acc_x  = int2double(imu_tmp) * IMU_ACC_SCALE; // +-4g
+        else if( the_imu_val == CM730_ADDRESS_IMU_ACC_Y  ) imu_acc_y  = int2double(imu_tmp) * IMU_ACC_SCALE; // +-4g
+        else if( the_imu_val == CM730_ADDRESS_IMU_ACC_Z  ) imu_acc_z  = int2double(imu_tmp) * IMU_ACC_SCALE; // +-4g
         else ret = 1;
       }
       else ret = 1;
