@@ -24,6 +24,7 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 #define DARWIN_ON  CM730_ON
 #define DARWIN_OFF CM730_OFF
 #define IMU_ACC_SCALE 70.67723342939482
+#define IMU_GYRO_SCALE 500.0
 
 // Motor IDs
 #define ID_CM730 200
@@ -52,6 +53,7 @@ namespace darwin {
   int kbhit(void);
   int ping(int val);
   int update_imu();
+  int update_imu_setup();
   int update_imu_slow();
   double int2double(uint16_t val); 
 
@@ -87,16 +89,53 @@ namespace darwin {
     return the_out;
   }
 
+
+  bool update_imu_setup_first = true;
+  int update_imu_setup()
+  {
+    if(update_imu_setup_first)
+    {
+      bool dxl_addparam_result = false;               // addParam result
+      // Add parameter storage for Dynamixel#1 present position value
+      dxl_addparam_result = groupBulkRead.addParam(ID_CM730, CM730_ADDRESS_IMU_START, CM730_ADDRESS_IMU_LENGTH);
+      if (dxl_addparam_result != true) return 1;
+      update_imu_setup_first = false;
+      return 0;
+    }
+    return 1;
+  }
+
   int update_imu()
   {
-    bool dxl_addparam_result = false;               // addParam result
+    update_imu_setup();
+    bool dxl_getdata_result = false;                // GetParam result
+    uint8_t dxl_error = 0;                          // Dynamixel error
 
-    // Add parameter storage for Dynamixel#1 present position value
-    dxl_addparam_result = groupBulkRead.addParam(ID_CM730, CM730_ADDRESS_IMU_START, CM730_ADDRESS_IMU_LENGTH);
-    if (dxl_addparam_result != true)
-    {
-      return 1;
-    }
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+
+    dxl_comm_result = groupBulkRead.txRxPacket();
+    packetHandler->getTxRxResult(dxl_comm_result);
+    if (groupBulkRead.getError(ID_CM730, &dxl_error)) return 1;
+
+    // Check if data is avaliable
+    dxl_getdata_result = groupBulkRead.isAvailable(ID_CM730, CM730_ADDRESS_IMU_START, CM730_ADDRESS_IMU_LENGTH);
+    if (dxl_getdata_result != true) return 1;
+    
+    // Assign the data
+    uint16_t buff_gyro_x = groupBulkRead.getData(ID_CM730, CM730_ADDRESS_IMU_GYRO_X, 2);
+    uint16_t buff_gyro_y = groupBulkRead.getData(ID_CM730, CM730_ADDRESS_IMU_GYRO_Y, 2);
+    uint16_t buff_gyro_z = groupBulkRead.getData(ID_CM730, CM730_ADDRESS_IMU_GYRO_Z, 2);
+    uint16_t buff_acc_x = groupBulkRead.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_X, 2);
+    uint16_t buff_acc_y = groupBulkRead.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_Y, 2);
+    uint16_t buff_acc_z = groupBulkRead.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_Z, 2);
+
+    imu_gyro_x = int2double(buff_gyro_x) * IMU_GYRO_SCALE;
+    imu_gyro_y = int2double(buff_gyro_y) * IMU_GYRO_SCALE;
+    imu_gyro_z = int2double(buff_gyro_z) * IMU_GYRO_SCALE;
+    imu_acc_x  = int2double(buff_acc_x)  * IMU_ACC_SCALE;
+    imu_acc_y  = int2double(buff_acc_y)  * IMU_ACC_SCALE;
+    imu_acc_z  = int2double(buff_acc_z)  * IMU_ACC_SCALE;
+
 
     return 0;
   }
@@ -121,9 +160,9 @@ namespace darwin {
       {
         packetHandler->getTxRxResult(dxl_comm_result);
         //printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-        if     ( the_imu_val == CM730_ADDRESS_IMU_GYRO_Z ) imu_gyro_z = int2double(imu_tmp) * 500.0; // +-500 deg/sec
-        else if( the_imu_val == CM730_ADDRESS_IMU_GYRO_Y ) imu_gyro_y = int2double(imu_tmp) * 500.0; // +-500 deg/sec
-        else if( the_imu_val == CM730_ADDRESS_IMU_GYRO_X ) imu_gyro_x = int2double(imu_tmp) * 500.0; // +- 500 deg/sec
+        if     ( the_imu_val == CM730_ADDRESS_IMU_GYRO_Z ) imu_gyro_z = int2double(imu_tmp) * IMU_GYRO_SCALE; // +-500 deg/sec
+        else if( the_imu_val == CM730_ADDRESS_IMU_GYRO_Y ) imu_gyro_y = int2double(imu_tmp) * IMU_GYRO_SCALE; // +-500 deg/sec
+        else if( the_imu_val == CM730_ADDRESS_IMU_GYRO_X ) imu_gyro_x = int2double(imu_tmp) * IMU_GYRO_SCALE; // +- 500 deg/sec
         else if( the_imu_val == CM730_ADDRESS_IMU_ACC_X  ) imu_acc_x  = int2double(imu_tmp) * IMU_ACC_SCALE; // +-4g
         else if( the_imu_val == CM730_ADDRESS_IMU_ACC_Y  ) imu_acc_y  = int2double(imu_tmp) * IMU_ACC_SCALE; // +-4g
         else if( the_imu_val == CM730_ADDRESS_IMU_ACC_Z  ) imu_acc_z  = int2double(imu_tmp) * IMU_ACC_SCALE; // +-4g
