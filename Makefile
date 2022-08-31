@@ -6,7 +6,7 @@ CC := g++
 BINARIES := darwind
 all : $(BINARIES)
 
-LIBS := -lrt -ldxl_x86_cpp
+LIBS := -lrt -ldxl_x86_cpp -lstdc++
 
 $(BINARIES): src/darwind.o
 	gcc -o $@ $< $(LIBS)

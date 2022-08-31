@@ -31,6 +31,10 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 
 // Addresses 
 #define CM730_ADDRESS_DYN_POWER 24
+
+#define CM730_ADDRESS_IMU_START 38
+#define CM730_ADDRESS_IMU_LENGTH 12
+
 #define CM730_ADDRESS_IMU_GYRO_Z 38
 #define CM730_ADDRESS_IMU_GYRO_Y 40
 #define CM730_ADDRESS_IMU_GYRO_X 42
@@ -48,6 +52,7 @@ namespace darwin {
   int kbhit(void);
   int ping(int val);
   int update_imu();
+  int update_imu_slow();
   double int2double(uint16_t val); 
 
   // IMU data
@@ -72,6 +77,10 @@ namespace darwin {
   // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
   dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
 
+  // Initialize GroupBulkRead instance
+  dynamixel::GroupBulkRead groupBulkRead(portHandler, packetHandler);
+
+
   double int2double(uint16_t val)
   {
     double the_out = (double)((int32_t)val - 512) / 1023.0;
@@ -79,6 +88,20 @@ namespace darwin {
   }
 
   int update_imu()
+  {
+    bool dxl_addparam_result = false;               // addParam result
+
+    // Add parameter storage for Dynamixel#1 present position value
+    dxl_addparam_result = groupBulkRead.addParam(ID_CM730, CM730_ADDRESS_IMU_START, CM730_ADDRESS_IMU_LENGTH);
+    if (dxl_addparam_result != true)
+    {
+      return 1;
+    }
+
+    return 0;
+  }
+
+  int update_imu_slow()
   {
     // Read IMU info
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result

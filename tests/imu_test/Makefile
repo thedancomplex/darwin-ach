@@ -6,7 +6,7 @@ CC := g++
 BINARIES := test
 all : $(BINARIES)
 
-LIBS := -lrt -ldxl_x86_cpp
+LIBS := -lrt -ldxl_x86_cpp -lstdc++
 
 $(BINARIES): src/test.o
 	gcc -o $@ $< $(LIBS)
