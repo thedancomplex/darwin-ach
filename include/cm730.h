@@ -21,6 +21,12 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 // Enumbs and defines
 #define CM730_ON  1
 #define CM730_OFF 0
+#define DARWIN_ON  CM730_ON
+#define DARWIN_OFF CM730_OFF
+
+// Motor IDs
+#define ID_CM730 200
+#define ID_DARWIN ID_CM730
 
 // Addresses 
 #define CM730_ADDRESS_DYN_POWER 24
@@ -31,8 +37,9 @@ namespace darwin {
   int open();
   int getch();
   int on(int val);
+  int off(int val);
   int kbhit(void);
-  int pint(int val);
+  int ping(int val);
   
 
   // Initialize PortHandler instance
@@ -125,16 +132,53 @@ namespace darwin {
 
 
 
+  int off(int val)
+  {
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+    uint8_t dxl_error = 0;                          // Dynamixel error
+
+    dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, val, CM730_ADDRESS_DYN_POWER, CM730_OFF, &dxl_error);
+    if (dxl_comm_result != COMM_SUCCESS)
+    {
+      printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    }
+    else if (dxl_error != 0)
+    {
+      printf("%s\n", packetHandler->getRxPacketError(dxl_error));
+      return 1;
+    }
+    else
+    {
+      printf("Dynamixel has been successfully turned off \n");
+    }
+    return 0;
+  }
 
   int on(int val)
   {
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+    uint8_t dxl_error = 0;                          // Dynamixel error
 
+    dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, val, CM730_ADDRESS_DYN_POWER, CM730_ON, &dxl_error);
+    if (dxl_comm_result != COMM_SUCCESS)
+    {
+      printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    }
+    else if (dxl_error != 0)
+    {
+      printf("%s\n", packetHandler->getRxPacketError(dxl_error));
+      return 1;
+    }
+    else
+    {
+      printf("Dynamixel has been successfully turned on \n");
+    }
+    return 0;
   }
 
   int ping(int val)
   {
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-
     uint8_t dxl_error = 0;                          // Dynamixel error
     uint16_t dxl_model_number;                      // Dynamixel model number
 

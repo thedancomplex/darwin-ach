@@ -17,12 +17,19 @@
 /* Author: Daniel M. Lofaro */
 
 #include "cm730.h"
+#include <unistd.h>
 
 int main()
 {
 
   // Open
   darwin::open();
+
+  // Turn on motor power
+  darwin::on(ID_DARWIN);
+ 
+  // Wait 1 second for power to turn on
+  usleep(1000000);
 
   // Try to ping the Dynamixel
   // Get Dynamixel model number
@@ -32,6 +39,9 @@ int main()
     darwin::ping(i);
   }
   darwin::ping(200);
+
+  // Turn off motor power
+  darwin::off(ID_DARWIN);
 
   // Close port
   darwin::close();
