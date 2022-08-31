@@ -184,12 +184,12 @@ namespace darwin {
     if (dxl_getdata_result != true) return 1;
     
     // Assign the data
-    uint16_t buff_left_x   = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_LEFT_X, 2);
-    uint16_t buff_left_y   = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_LEFT_Y, 2);
-    uint16_t buff_right_x  = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_RIGHT_X, 2);
-    uint16_t buff_right_y  = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_RIGHT_Y, 2);
-    uint16_t buff_fsr_x    = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_FSR_X, 2);
-    uint16_t buff_fsr_y    = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_FSR_Y, 2);
+    uint16_t buff_left_x   = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_LEFT_X, 2);
+    uint16_t buff_left_y   = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_LEFT_Y, 2);
+    uint16_t buff_right_x  = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_RIGHT_X, 2);
+    uint16_t buff_right_y  = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_RIGHT_Y, 2);
+    uint16_t buff_fsr_x    = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_FSR_X, 2);
+    uint16_t buff_fsr_y    = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_FSR_Y, 2);
 
     ft_left_x   = int2double(buff_left_x)  * FT_SCALE;
     ft_left_y   = int2double(buff_left_y)  * FT_SCALE;
@@ -204,16 +204,14 @@ namespace darwin {
 
   double ft_char2double(uint8_t val, int* err)
   {
-    int the_raised = RAISED;
-    int the_not_raised = NOT_RAISED;
     if( val == 255)
     {
-      err = &the_raised;
+      *err = RAISED;
       return 0.0;
     }
 
     double the_out = (double)val - 127.0 / 127.0;
-    err = &the_not_raised;
+    *err = NOT_RAISED;
     return the_out;
   }
 
