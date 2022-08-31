@@ -42,7 +42,8 @@ int main()
             darwin::imu_acc_x,
             darwin::imu_acc_y,
             darwin::imu_acc_z);
-    usleep(1000);
+
+    usleep(10000);
   }
 
 
