@@ -1,3 +1,22 @@
+/*******************************************************************************
+* Copyright 2022 Daniel M. Lofaro
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*******************************************************************************/
+
+/* Author: Daniel M. Lofaro */
+
+
 #if !defined(DYN_CM730)
 #define DYN_CM730 1
 #endif
@@ -26,10 +45,14 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 #define IMU_ACC_SCALE 70.67723342939482
 #define IMU_GYRO_SCALE 500.0
 #define VOLTAGE_SCALE 10.0
+#define FT_SCALE 1/1000.0
+#define FSR_SCALE_X 1.0
+#define FSR_SCALE_Y 1.0
 
 // Motor IDs
 #define ID_CM730 200
 #define ID_DARWIN ID_CM730
+#define ID_FT 100
 
 // Addresses 
 #define CM730_ADDRESS_DYN_POWER 24
@@ -46,7 +69,22 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 
 #define CM730_ADDRESS_VOLTAGE 50
 
+#define FT_ADDRESS_START 26
+#define FT_ADDRESS_LENGTH 10
+#define FT_ADDRESS_LEFT_X 26
+#define FT_ADDRESS_LEFT_Y 28
+#define FT_ADDRESS_RIGHT_X 30
+#define FT_ADDRESS_RIGHT_Y 32
+#define FT_ADDRESS_FSR_X 34
+#define FT_ADDRESS_FSR_Y 35
+#define FT_ADDRESS_VOLTAGE 42
+
 namespace darwin {
+
+  #define ERROR 1
+  #define NO_ERROR 0
+  #define RAISED 1
+  #define NOT_RAISED 0
 
   int close();
   int open();
@@ -58,7 +96,11 @@ namespace darwin {
   int update_imu();
   int update_imu_setup();
   int update_imu_slow();
+  int update_ft();
+  int update_ft_setup();
   double int2double(uint16_t val); 
+  double uint2double(uint16_t val); 
+  double ft_char2double(uint8_t val, int* err);
 
   // IMU data
   double imu_gyro_x = -0.0; 
@@ -68,9 +110,20 @@ namespace darwin {
   double imu_acc_y  = -0.0; 
   double imu_acc_z  = -0.0; 
 
+  // FT data
+  double ft_left_x  = -0.0;
+  double ft_left_y  = -0.0;
+  double ft_right_x = -0.0;
+  double ft_right_y = -0.0;
+  double ft_fsr_x   = -0.0;
+  double ft_fsr_y   = -0.0;
+  int ft_fsr_raised_x = RAISED;
+  int ft_fsr_raised_y = RAISED;
+
+
   // Voltage
   double voltage = -0.0;
-
+  double voltage_foot = -0.0;
 
   // Initialize PortHandler instance
   // Set the port path
@@ -84,6 +137,7 @@ namespace darwin {
 
   // Initialize GroupBulkRead instance
   dynamixel::GroupBulkRead groupBulkReadImu(portHandler, packetHandler);
+  dynamixel::GroupBulkRead groupBulkReadFt(portHandler, packetHandler);
 
 
   double int2double(uint16_t val)
@@ -92,6 +146,76 @@ namespace darwin {
     return the_out;
   }
 
+  double uint2double(uint16_t val)
+  {
+    return (double)(val) / 65535.0;
+  }
+
+  bool update_ft_setup_first = true;
+  int update_ft_setup()
+  {
+    if(update_ft_setup_first)
+    {
+      bool dxl_addparam_result = false;               // addParam result
+      // Add parameter storage for Dynamixel#1 present position value
+      // +1 is added to read the voltage
+      dxl_addparam_result = groupBulkReadFt.addParam(ID_FT, FT_ADDRESS_START, FT_ADDRESS_LENGTH);
+      if (dxl_addparam_result != true) return 1;
+
+      update_ft_setup_first = false;
+      return 0;
+    }
+    return 1;
+  }
+  int update_ft()
+  {
+    update_ft_setup();
+    bool dxl_getdata_result = false;                // GetParam result
+    uint8_t dxl_error = 0;                          // Dynamixel error
+
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+
+    dxl_comm_result = groupBulkReadFt.txRxPacket();
+    packetHandler->getTxRxResult(dxl_comm_result);
+    if (groupBulkReadFt.getError(ID_FT, &dxl_error)) return 1;
+
+    // Check if data is avaliable
+    dxl_getdata_result = groupBulkReadFt.isAvailable(ID_FT, FT_ADDRESS_START, FT_ADDRESS_LENGTH);
+    if (dxl_getdata_result != true) return 1;
+    
+    // Assign the data
+    uint16_t buff_left_x   = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_LEFT_X, 2);
+    uint16_t buff_left_y   = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_LEFT_Y, 2);
+    uint16_t buff_right_x  = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_RIGHT_X, 2);
+    uint16_t buff_right_y  = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_RIGHT_Y, 2);
+    uint16_t buff_fsr_x    = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_FSR_X, 2);
+    uint16_t buff_fsr_y    = groupBulkReadImu.getData(ID_FT, FT_ADDRESS_FSR_Y, 2);
+
+    ft_left_x   = int2double(buff_left_x)  * FT_SCALE;
+    ft_left_y   = int2double(buff_left_y)  * FT_SCALE;
+    ft_right_x  = int2double(buff_right_x) * FT_SCALE;
+    ft_right_y  = int2double(buff_right_y) * FT_SCALE;
+
+    ft_fsr_x    = ft_char2double(buff_fsr_x, &ft_fsr_raised_x) * FSR_SCALE_X;
+    ft_fsr_y    = ft_char2double(buff_fsr_y, &ft_fsr_raised_y) * FSR_SCALE_Y;
+
+    return 0;
+  }
+
+  double ft_char2double(uint8_t val, int* err)
+  {
+    int the_raised = RAISED;
+    int the_not_raised = NOT_RAISED;
+    if( val == 255)
+    {
+      err = &the_raised;
+      return 0.0;
+    }
+
+    double the_out = (double)val - 127.0 / 127.0;
+    err = &the_not_raised;
+    return the_out;
+  }
 
   bool update_imu_setup_first = true;
   int update_imu_setup()

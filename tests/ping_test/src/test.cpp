@@ -35,10 +35,16 @@ int main()
   // Try to ping the Dynamixel
   // Get Dynamixel model number
 
+  // Ping each motor
   for (int i = 1; i <=20; i++)
   {
     darwin::ping(i);
   }
+
+  // ping the force sensor
+  darwin::ping(100);
+
+  // ping the CM730
   darwin::ping(200);
 
   // Turn off motor power
