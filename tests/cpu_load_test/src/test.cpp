@@ -51,7 +51,7 @@ int main()
   darwin::on(ID_DARWIN);
  
   // Wait 1 second for power to turn on
-  usleep(1000000);
+  usleep(100000);
 
   double tick = get_time();
   double tock = get_time();
