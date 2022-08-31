@@ -33,9 +33,9 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 #define CM730_ADDRESS_IMU_GYRO_Z 38
 #define CM730_ADDRESS_IMU_GYRO_Y 40
 #define CM730_ADDRESS_IMU_GYRO_X 42
-#define CM730_ADDRESS_IMU_ACC_x 44
+#define CM730_ADDRESS_IMU_ACC_X 44
 #define CM730_ADDRESS_IMU_ACC_Y 46
-#define CM730_ADDRESS_IMU_ACC_z 48
+#define CM730_ADDRESS_IMU_ACC_Z 48
 
 namespace darwin {
 
@@ -85,18 +85,29 @@ namespace darwin {
     int the_imu_val = CM730_ADDRESS_IMU_GYRO_X;
     uint16_t imu_tmp = 0;
 
-    dxl_comm_result = packetHandler->read2ByteTxRx(portHandler, ID_CM730, the_imu_val, &imu_tmp, &dxl_error);
-    if (dxl_comm_result != COMM_SUCCESS)
+    int imu_i[] = {CM730_ADDRESS_IMU_GYRO_Z, CM730_ADDRESS_IMU_GYRO_Y, CM730_ADDRESS_IMU_GYRO_X,
+                   CM730_ADDRESS_IMU_ACC_X,  CM730_ADDRESS_IMU_ACC_Y,  CM730_ADDRESS_IMU_ACC_Z};
+    int imu_max = sizeof(imu_i) / sizeof(imu_i[0]);
+    int ret = 0;
+    for( int i = 0; i < imu_max; i++ )
     {
-      printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-    }
-    else if (dxl_error != 0)
-    {
-      printf("%s\n", packetHandler->getRxPacketError(dxl_error));
+      dxl_comm_result = packetHandler->read2ByteTxRx(portHandler, ID_CM730, the_imu_val, &imu_tmp, &dxl_error);
+      if (dxl_comm_result != COMM_SUCCESS)
+      {
+        printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+        if     ( i == CM730_ADDRESS_IMU_GYRO_Z ) imu_gyro_z = int2double(imu_tmp) * 500.0; // +-500 deg/sec
+        else if( i == CM730_ADDRESS_IMU_GYRO_Y ) imu_gyro_y = int2double(imu_tmp) * 500.0; // +-500 deg/sec
+        else if( i == CM730_ADDRESS_IMU_GYRO_X ) imu_gyro_x = int2double(imu_tmp) * 500.0; // +- 500 deg/sec
+        else if( i == CM730_ADDRESS_IMU_ACC_X  ) imu_acc_x  = int2double(imu_tmp) * 4.0; // +-4g
+        else if( i == CM730_ADDRESS_IMU_ACC_Y  ) imu_acc_y  = int2double(imu_tmp) * 4.0; // +-4g
+        else if( i == CM730_ADDRESS_IMU_ACC_Z  ) imu_acc_z  = int2double(imu_tmp) * 4.0; // +-4g
+        else ret = 1;
+      }
+      else ret = 1;
     }
 
 
-    return 0;
+    return ret;
   }
 
 
