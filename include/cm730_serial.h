@@ -135,10 +135,20 @@ int serial_read()
   return 0;
 }
 
+void serial_print_buffer(uint8_t *buff)
+{
+  printf("Serial Buff Length = %d\n Buff=\n",n);
+  for( int i = 0; i < n; i++ )
+  {
+    printf("%x ",(uint8_t)read_buf[i]);
+  }
+  printf("\n");
+  return 0;
+}
 
 uint8_t serial_get_checksum(uint8_t *rxpacket)
 {
-  unsigned char checksum    = 0;
+  uint8_t checksum    = 0;
   uint8_t wait_length = rxpacket[SERIAL_PKT_LENGTH] + SERIAL_PKT_LENGTH + 1;
 
 
