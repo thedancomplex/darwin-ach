@@ -32,7 +32,7 @@
 #include "cm730_defines.h"
 
 #include "cm730_vars.h"
-
+#include "cm730_serial.h"
 
 
 int d_setup()
@@ -40,14 +40,14 @@ int d_setup()
   // Initialize PortHandler instance
   // Set the port path
   // Get methods and members of PortHandlerLinux or PortHandlerWindows
-  d_port_num = portHandler(DEVICENAME);
+  //// d_port_num = portHandler(DEVICENAME);
 
   // Initialize PacketHandler instance
   // Set the protocol version
   // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
-  packetHandler();
+  //// packetHandler();
 
-  return 0;
+  return serial_open();
 }
 
 int getch()

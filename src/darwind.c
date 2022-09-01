@@ -22,8 +22,11 @@
 int main()
 {
 
+  printf("baud = %d\n", B9600);
+  printf("baud = %d\n", B1000000);
   // Open
   d_setup();
+
 
   // Turn on motor power
 //  darwin::on(ID_DARWIN);
@@ -32,7 +35,9 @@ int main()
   usleep(1000000);
 
   // Get CM730 ID
-  d_read1byte(ID_CM730, CM730_ADDRESS_ID);
+//  d_read1byte(ID_CM730, CM730_ADDRESS_ID);
+//  serial_write(ID_CM730, CM730_ADDRESS_ID);
+  serial_read();
 
 
   // Try to ping the Dynamixel
