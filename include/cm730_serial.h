@@ -137,10 +137,11 @@ int serial_read()
 
 void serial_print_buffer(uint8_t *buff)
 {
+  int n = 10;
   printf("Serial Buff Length = %d\n Buff=\n",n);
   for( int i = 0; i < n; i++ )
   {
-    printf("%x ",(uint8_t)read_buf[i]);
+    printf("%x ",(uint8_t)buff[i]);
   }
   printf("\n");
   return 0;

@@ -36,8 +36,8 @@ int main()
 
   // Get CM730 ID
 //  d_read1byte(ID_CM730, CM730_ADDRESS_ID);
-  serial_write(ID_CM730, CM730_ADDRESS_ID);
-  usleep(1000);
+//  serial_write(ID_CM730, CM730_ADDRESS_ID);
+//  usleep(1000);
   serial_read();
 
 
