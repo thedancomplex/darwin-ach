@@ -62,8 +62,11 @@ int main()
     double f = 1/T;
     printf("dt = %f\t f = %f\n",T,f );
     tick = tock;
-    darwin::update_imu();
-    darwin::update_ft();
+
+    uint8_t buff = darwin::read1byte(ID_CM730, 5);
+    darwin::flush();
+//    darwin::update_imu();
+//    darwin::update_ft();
     usleep(10000);
   }
 

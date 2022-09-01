@@ -35,51 +35,52 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 #define BAUDRATE                        1000000
 #define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
 
+#include <sys/ioctl.h>
 
-
-// Enumbs and defines
-#define CM730_ON  1
-#define CM730_OFF 0
-#define DARWIN_ON  CM730_ON
-#define DARWIN_OFF CM730_OFF
-#define IMU_ACC_SCALE 70.67723342939482
-#define IMU_GYRO_SCALE 500.0
-#define VOLTAGE_SCALE 10.0
-#define FT_SCALE 1/1000.0
-#define FSR_SCALE_X 1.0
-#define FSR_SCALE_Y 1.0
-
-// Motor IDs
-#define ID_CM730 200
-#define ID_DARWIN ID_CM730
-#define ID_FT 100
-
-// Addresses 
-#define CM730_ADDRESS_DYN_POWER 24
-
-#define CM730_ADDRESS_IMU_START 38
-#define CM730_ADDRESS_IMU_LENGTH 12
-
-#define CM730_ADDRESS_IMU_GYRO_Z 38
-#define CM730_ADDRESS_IMU_GYRO_Y 40
-#define CM730_ADDRESS_IMU_GYRO_X 42
-#define CM730_ADDRESS_IMU_ACC_X 44
-#define CM730_ADDRESS_IMU_ACC_Y 46
-#define CM730_ADDRESS_IMU_ACC_Z 48
-
-#define CM730_ADDRESS_VOLTAGE 50
-
-#define FT_ADDRESS_START 26
-#define FT_ADDRESS_LENGTH 10
-#define FT_ADDRESS_LEFT_X 26
-#define FT_ADDRESS_LEFT_Y 28
-#define FT_ADDRESS_RIGHT_X 30
-#define FT_ADDRESS_RIGHT_Y 32
-#define FT_ADDRESS_FSR_X 34
-#define FT_ADDRESS_FSR_Y 35
-#define FT_ADDRESS_VOLTAGE 42
 
 namespace darwin {
+  // Enumbs and defines
+  #define CM730_ON  1
+  #define CM730_OFF 0
+  #define DARWIN_ON  CM730_ON
+  #define DARWIN_OFF CM730_OFF
+  #define IMU_ACC_SCALE 70.67723342939482
+  #define IMU_GYRO_SCALE 500.0
+  #define VOLTAGE_SCALE 10.0
+  #define FT_SCALE 1/1000.0
+  #define FSR_SCALE_X 1.0
+  #define FSR_SCALE_Y 1.0
+
+  // Motor IDs
+  #define ID_CM730 200
+  #define ID_DARWIN ID_CM730
+  #define ID_FT 100
+
+  // Addresses 
+  #define CM730_ADDRESS_DYN_POWER 24
+
+  #define CM730_ADDRESS_IMU_START 38
+  #define CM730_ADDRESS_IMU_LENGTH 12
+
+  #define CM730_ADDRESS_IMU_GYRO_Z 38
+  #define CM730_ADDRESS_IMU_GYRO_Y 40
+  #define CM730_ADDRESS_IMU_GYRO_X 42
+  #define CM730_ADDRESS_IMU_ACC_X 44
+  #define CM730_ADDRESS_IMU_ACC_Y 46
+  #define CM730_ADDRESS_IMU_ACC_Z 48
+
+  #define CM730_ADDRESS_VOLTAGE 50
+
+  #define FT_ADDRESS_START 26
+  #define FT_ADDRESS_LENGTH 10
+  #define FT_ADDRESS_LEFT_X 26
+  #define FT_ADDRESS_LEFT_Y 28
+  #define FT_ADDRESS_RIGHT_X 30
+  #define FT_ADDRESS_RIGHT_Y 32
+  #define FT_ADDRESS_FSR_X 34
+  #define FT_ADDRESS_FSR_Y 35
+  #define FT_ADDRESS_VOLTAGE 42
+
 
   #define ERROR 1
   #define NO_ERROR 0
@@ -101,6 +102,8 @@ namespace darwin {
   double int2double(uint16_t val); 
   double uint2double(uint16_t val); 
   double ft_char2double(uint8_t val, int* err);
+  uint8_t read1byte(uint8_t id, uint8_t address);
+  int flush();
 
   // IMU data
   double imu_gyro_x = -0.0; 
@@ -129,7 +132,6 @@ namespace darwin {
   // Set the port path
   // Get methods and members of PortHandlerLinux or PortHandlerWindows
   dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
-
   // Initialize PacketHandler instance
   // Set the protocol version
   // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
@@ -139,6 +141,12 @@ namespace darwin {
   dynamixel::GroupBulkRead groupBulkReadImu(portHandler, packetHandler);
   dynamixel::GroupBulkRead groupBulkReadFt(portHandler, packetHandler);
 
+  int flush()
+  {
+    portHandler->clearPort();
+    //portHandler->flush();
+    return 0;
+  }
 
   double int2double(uint16_t val)
   {
@@ -269,6 +277,21 @@ namespace darwin {
     return 0;
   }
 
+  uint8_t read1byte(uint8_t id, uint8_t address)
+  {
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+    uint8_t dxl_error = 0;                          // Dynamixel error
+    uint8_t buff = 0;
+    dxl_comm_result = packetHandler->read1ByteTxRx(portHandler, id, address, &buff, &dxl_error);
+    if (dxl_error == 0)
+    {
+      packetHandler->getTxRxResult(dxl_comm_result);
+      return buff;
+    }
+
+    return 255;
+  }
+
   int update_imu_slow()
   {
     // Read IMU info
@@ -313,6 +336,7 @@ namespace darwin {
 
   int open()
   {
+    portHandler->setPacketTimeout(0.01);
     // Open port
     if (portHandler->openPort())
     {
