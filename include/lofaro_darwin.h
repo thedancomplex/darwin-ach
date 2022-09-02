@@ -61,6 +61,7 @@ namespace darwin {
 
   #define CM730_ADDRESS_IMU_START 38
   #define CM730_ADDRESS_IMU_LENGTH 12
+  #define CM730_ADDRESS_READ_DATA_OFFSET 5
 
   #define CM730_ADDRESS_IMU_GYRO_Z 38
   #define CM730_ADDRESS_IMU_GYRO_Y 40
@@ -96,7 +97,7 @@ namespace darwin {
   int off(int val);
   int kbhit(void);
   int ping(int val);
-  int update_imu();
+  int update_imu(uint8_t val[]);
   int update_imu_setup();
   int update_imu_slow();
   int update_ft();
@@ -106,6 +107,7 @@ namespace darwin {
   double ft_char2double(uint8_t val, int* err);
   uint8_t read1byte(uint8_t id, uint8_t address);
   int flush();
+  uint16_t chars2uInt16(uint8_t d_lsb, uint8_t d_msb);
 
   // IMU data
   double imu_gyro_x = -0.0; 
@@ -204,17 +206,44 @@ namespace darwin {
     return the_out;
   }
 
-  int update_imu()
+  uint16_t chars2uInt16(uint8_t d_lsb, uint8_t d_msb)
   {
-    
-    // Assign the data
+    uint16_t d = 0;
+    d = d | (uint16_t)d_lsb;
+    d = d | ((uint16_t)d_msb << 8);
+    return d;
+  }
+
+  int update_imu( uint8_t buff[])
+  {
+// ff ff c8 f 0 0 2 0 2 0  2  5  2  bc 1  79 2  7b 68 0
+// 1  2  3  4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+    int length = 19;
+    // Assign the diata
 /*
-    uint16_t buff_gyro_x = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_GYRO_X, 2);
+#define CM730_ADDRESS_IMU_START 38
+  #define CM730_ADDRESS_IMU_LENGTH 12
+
+  #define CM730_ADDRESS_IMU_GYRO_Z 38
+  #define CM730_ADDRESS_IMU_GYRO_Y 40
+  #define CM730_ADDRESS_IMU_GYRO_X 42
+  #define CM730_ADDRESS_IMU_ACC_X 44
+  #define CM730_ADDRESS_IMU_ACC_Y 46
+  #define CM730_ADDRESS_IMU_ACC_Z 48
+*/    
+    uint8_t b0 = 0;
+    uint8_t b1 = 0;
+    b0 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_GYRO_X) - CM730_ADDRESS_IMU_START;
+    b1 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_GYRO_X) - CM730_ADDRESS_IMU_START + 1;
+    uint16_t buff_gyro_x = chars2uInt16(b0, b1);
+/*
     uint16_t buff_gyro_y = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_GYRO_Y, 2);
     uint16_t buff_gyro_z = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_GYRO_Z, 2);
     uint16_t buff_acc_x = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_X, 2);
     uint16_t buff_acc_y = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_Y, 2);
     uint16_t buff_acc_z = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_Z, 2);
+*/
+/*
     uint8_t buff_voltage = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_VOLTAGE, 1);
 
     imu_gyro_x = int2double(buff_gyro_x) * IMU_GYRO_SCALE;
@@ -227,6 +256,11 @@ namespace darwin {
 */
 
     return 0;
+  }
+
+  int close()
+  {
+    return lofaro::do_close();
   }
 
   int open()

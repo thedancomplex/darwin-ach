@@ -32,6 +32,7 @@ int serial_port = 0;
 
 uint8_t   get_checksum(uint8_t *rxpacket);
 int       do_open();
+int       do_close();
 int       do_write(uint8_t id, uint8_t address, uint8_t d0);
 int       do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
 int       do_write(uint8_t id, uint8_t address, uint8_t length, uint8_t *dn);
@@ -112,6 +113,12 @@ int do_open()
     return 1;
   }
 
+  return 0;
+}
+
+int do_close()
+{
+  close(serial_port);
   return 0;
 }
 
