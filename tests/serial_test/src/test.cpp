@@ -16,36 +16,33 @@
 
 /* Author: Daniel M. Lofaro */
 
-#include "lofaro_serial.h"
-#include <unistd.h>
-
+#include "lofaro_darwin.h"
 
 int main()
 {
-
   // Open
-  lofaro::do_open();
+  darwin::open();
 
 
   // Turn on motor power
   // darwin::on(ID_DARWIN);
  
   // Wait 1 second for power to turn on
-  usleep(1000000);
+  darwin::sleep(1.0);
 
   // Try to ping the Dynamixel
   // Get Dynamixel model number
 
-  double tick = lofaro::get_time();
-  double tock = lofaro::get_time();
+  double tick = darwin::time();
+  double tock = darwin::time();
   while(1)
   {
     // read 1 byte from address 5
     //lofaro::do_read(200, 3);
-    lofaro::do_read(200, 38, 13);
-    lofaro::do_read_buffer();
-    usleep(50000);
-    tock = lofaro::get_time();
+    darwin::read(200, 38, 13);
+    darwin::read_buffer();
+    darwin::sleep(0.01); 
+    tock = darwin::time();
     double dt = tock - tick;
     double f  = 1/dt;
     tick = tock;

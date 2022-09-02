@@ -26,12 +26,7 @@
 #define STDIN_FILENO 0
 
 #include <stdio.h>
-#include <dynamixel_sdk.h>                                   // Uses Dynamixel SDK library
-// Protocol version
-#define PROTOCOL_VERSION                1.0                 // See which protocol version is used in the Dynamixel
 
-// Default setting
-int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 #define BAUDRATE                        1000000
 //#define DEVICENAME                      "/dev/ttyUSB1"      // Check which port is being used on your controller
 #define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
@@ -39,7 +34,10 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 #include <sys/ioctl.h>
 
 
+#include "lofaro_serial.h"
+
 namespace darwin {
+
   // Enumbs and defines
   #define CM730_ON  1
   #define CM730_OFF 0
@@ -89,7 +87,9 @@ namespace darwin {
   #define RAISED 1
   #define NOT_RAISED 0
 
-  int close();
+  int sleep(double val);
+  double time();
+
   int open();
   int getch();
   int on(int val);
@@ -130,24 +130,30 @@ namespace darwin {
   double voltage = -0.0;
   double voltage_foot = -0.0;
 
-  // Initialize PortHandler instance
-  // Set the port path
-  // Get methods and members of PortHandlerLinux or PortHandlerWindows
-  dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
-  // Initialize PacketHandler instance
-  // Set the protocol version
-  // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
-  dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
 
-  // Initialize GroupBulkRead instance
-  dynamixel::GroupBulkRead groupBulkReadImu(portHandler, packetHandler);
-  dynamixel::GroupBulkRead groupBulkReadFt(portHandler, packetHandler);
+  int read(uint8_t id, uint8_t address);
+  int read(uint8_t id, uint8_t address, uint8_t length);
+  int read_buffer();
 
-  int flush()
+  int sleep(double val)
   {
-    portHandler->clearPort();
-    //portHandler->flush();
-    return 0;
+    long usec = (long)(val * 1000000);
+    return usleep(usec);
+  }
+
+  int read_buffer()
+  {
+    return lofaro::do_read_buffer();
+  }
+
+  int read(uint8_t id, uint8_t address)
+  {
+    return lofaro::do_read(id,address);
+  }
+  
+  int read(uint8_t id, uint8_t address, uint8_t length)
+  {
+    return lofaro::do_read(id,address,length);
   }
 
   double int2double(uint16_t val)
@@ -161,39 +167,11 @@ namespace darwin {
     return (double)(val) / 65535.0;
   }
 
-  bool update_ft_setup_first = true;
-  int update_ft_setup()
-  {
-    if(update_ft_setup_first)
-    {
-      bool dxl_addparam_result = false;               // addParam result
-      // Add parameter storage for Dynamixel#1 present position value
-      // +1 is added to read the voltage
-      dxl_addparam_result = groupBulkReadFt.addParam(ID_FT, FT_ADDRESS_START, FT_ADDRESS_LENGTH);
-      if (dxl_addparam_result != true) return 1;
-
-      update_ft_setup_first = false;
-      return 0;
-    }
-    return 1;
-  }
   int update_ft()
   {
-    update_ft_setup();
-    bool dxl_getdata_result = false;                // GetParam result
-    uint8_t dxl_error = 0;                          // Dynamixel error
-
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-
-    dxl_comm_result = groupBulkReadFt.txRxPacket();
-    packetHandler->getTxRxResult(dxl_comm_result);
-    if (groupBulkReadFt.getError(ID_FT, &dxl_error)) return 1;
-
-    // Check if data is avaliable
-    dxl_getdata_result = groupBulkReadFt.isAvailable(ID_FT, FT_ADDRESS_START, FT_ADDRESS_LENGTH);
-    if (dxl_getdata_result != true) return 1;
     
     // Assign the data
+/*
     uint16_t buff_left_x   = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_LEFT_X, 2);
     uint16_t buff_left_y   = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_LEFT_Y, 2);
     uint16_t buff_right_x  = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_RIGHT_X, 2);
@@ -208,6 +186,7 @@ namespace darwin {
 
     ft_fsr_x    = ft_char2double(buff_fsr_x, &ft_fsr_raised_x) * FSR_SCALE_X;
     ft_fsr_y    = ft_char2double(buff_fsr_y, &ft_fsr_raised_y) * FSR_SCALE_Y;
+*/
 
     return 0;
   }
@@ -225,40 +204,11 @@ namespace darwin {
     return the_out;
   }
 
-  bool update_imu_setup_first = true;
-  int update_imu_setup()
-  {
-    if(update_imu_setup_first)
-    {
-      bool dxl_addparam_result = false;               // addParam result
-      // Add parameter storage for Dynamixel#1 present position value
-      // +1 is added to read the voltage
-      dxl_addparam_result = groupBulkReadImu.addParam(ID_CM730, CM730_ADDRESS_IMU_START, CM730_ADDRESS_IMU_LENGTH+1);
-      if (dxl_addparam_result != true) return 1;
-
-      update_imu_setup_first = false;
-      return 0;
-    }
-    return 1;
-  }
-
   int update_imu()
   {
-    update_imu_setup();
-    bool dxl_getdata_result = false;                // GetParam result
-    uint8_t dxl_error = 0;                          // Dynamixel error
-
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-
-    dxl_comm_result = groupBulkReadImu.txRxPacket();
-    packetHandler->getTxRxResult(dxl_comm_result);
-    if (groupBulkReadImu.getError(ID_CM730, &dxl_error)) return 1;
-
-    // Check if data is avaliable
-    dxl_getdata_result = groupBulkReadImu.isAvailable(ID_CM730, CM730_ADDRESS_IMU_START, CM730_ADDRESS_IMU_LENGTH);
-    if (dxl_getdata_result != true) return 1;
     
     // Assign the data
+/*
     uint16_t buff_gyro_x = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_GYRO_X, 2);
     uint16_t buff_gyro_y = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_GYRO_Y, 2);
     uint16_t buff_gyro_z = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_GYRO_Z, 2);
@@ -274,206 +224,33 @@ namespace darwin {
     imu_acc_y  = int2double(buff_acc_y)  * IMU_ACC_SCALE;
     imu_acc_z  = int2double(buff_acc_z)  * IMU_ACC_SCALE;
     voltage    = (double)buff_voltage / VOLTAGE_SCALE;
+*/
 
-
-    return 0;
-  }
-
-  uint8_t read1byte(uint8_t id, uint8_t address)
-  {
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-    uint8_t dxl_error = 0;                          // Dynamixel error
-    uint8_t buff = 0;
-    dxl_comm_result = packetHandler->read1ByteTxRx(portHandler, id, address, &buff, &dxl_error);
-    if (dxl_error == 0)
-    {
-      packetHandler->getTxRxResult(dxl_comm_result);
-      return buff;
-    }
-
-    return 255;
-  }
-
-  int update_imu_slow()
-  {
-    // Read IMU info
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-    uint8_t dxl_error = 0;                          // Dynamixel error
-    uint16_t imu_tmp = 0;
-
-    int imu_i[] = {CM730_ADDRESS_IMU_GYRO_Z, CM730_ADDRESS_IMU_GYRO_Y, CM730_ADDRESS_IMU_GYRO_X,
-                   CM730_ADDRESS_IMU_ACC_X,  CM730_ADDRESS_IMU_ACC_Y,  CM730_ADDRESS_IMU_ACC_Z};
-    int imu_max = sizeof(imu_i) / sizeof(imu_i[0]);
-    int ret = 0;
-    for( int i = 0; i < imu_max; i++ )
-    {
-      int the_imu_val = imu_i[i];
-      dxl_comm_result = packetHandler->read2ByteTxRx(portHandler, ID_CM730, the_imu_val, &imu_tmp, &dxl_error);
-      //if (dxl_comm_result != COMM_SUCCESS)
-      if (dxl_error == 0)
-      {
-        packetHandler->getTxRxResult(dxl_comm_result);
-        //printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-        if     ( the_imu_val == CM730_ADDRESS_IMU_GYRO_Z ) imu_gyro_z = int2double(imu_tmp) * IMU_GYRO_SCALE; // +-500 deg/sec
-        else if( the_imu_val == CM730_ADDRESS_IMU_GYRO_Y ) imu_gyro_y = int2double(imu_tmp) * IMU_GYRO_SCALE; // +-500 deg/sec
-        else if( the_imu_val == CM730_ADDRESS_IMU_GYRO_X ) imu_gyro_x = int2double(imu_tmp) * IMU_GYRO_SCALE; // +- 500 deg/sec
-        else if( the_imu_val == CM730_ADDRESS_IMU_ACC_X  ) imu_acc_x  = int2double(imu_tmp) * IMU_ACC_SCALE; // +-4g
-        else if( the_imu_val == CM730_ADDRESS_IMU_ACC_Y  ) imu_acc_y  = int2double(imu_tmp) * IMU_ACC_SCALE; // +-4g
-        else if( the_imu_val == CM730_ADDRESS_IMU_ACC_Z  ) imu_acc_z  = int2double(imu_tmp) * IMU_ACC_SCALE; // +-4g
-        else ret = 1;
-      }
-      else ret = 1;
-    }
-
-
-    return ret;
-  }
-
-
-  int close()
-  {
-    portHandler->closePort();
     return 0;
   }
 
   int open()
   {
-    portHandler->setPacketTimeout(0.01);
-    // Open port
-    if (portHandler->openPort())
-    {
-      printf("Succeeded to open the port!\n");
-    }
-    else
-    {
-      printf("Failed to open the port!\n");
-      printf("Press any key to terminate...\n");
-      getch();
-      return 1;
-    }
-
-    // Set port baudrate
-    if (portHandler->setBaudRate(BAUDRATE))
-    {
-      printf("Succeeded to change the baudrate!\n");
-    }
-    else
-    {
-      printf("Failed to change the baudrate!\n");
-      printf("Press any key to terminate...\n");
-      getch();
-      return 1;
-    }
-    return 0;
+    return lofaro::do_open();
   }
-
-
-  int getch()
-  {
-    struct termios oldt, newt;
-    int ch;
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    ch = getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    return ch;
-  }
-
-  int kbhit(void)
-  {
-    struct termios oldt, newt;
-    int ch;
-    int oldf;
-
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-    ch = getchar();
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-    if (ch != EOF)
-    {
-      ungetc(ch, stdin);
-      return 1;
-    }
-
-    return 0;
-  }
-
-
 
   int off(int val)
   {
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-    uint8_t dxl_error = 0;                          // Dynamixel error
-
-    dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, val, CM730_ADDRESS_DYN_POWER, CM730_OFF, &dxl_error);
-    if (dxl_comm_result != COMM_SUCCESS)
-    {
-      printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-    }
-    else if (dxl_error != 0)
-    {
-      printf("%s\n", packetHandler->getRxPacketError(dxl_error));
-      return 1;
-    }
-    else
-    {
-      printf("Dynamixel has been successfully turned off \n");
-    }
     return 0;
   }
 
   int on(int val)
   {
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-    uint8_t dxl_error = 0;                          // Dynamixel error
-
-    dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, val, CM730_ADDRESS_DYN_POWER, CM730_ON, &dxl_error);
-    if (dxl_comm_result != COMM_SUCCESS)
-    {
-      printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-    }
-    else if (dxl_error != 0)
-    {
-      printf("%s\n", packetHandler->getRxPacketError(dxl_error));
-      return 1;
-    }
-    else
-    {
-      printf("Dynamixel has been successfully turned on \n");
-    }
     return 0;
   }
 
   int ping(int val)
   {
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-    uint8_t dxl_error = 0;                          // Dynamixel error
-    uint16_t dxl_model_number;                      // Dynamixel model number
-
-    dxl_comm_result = packetHandler->ping(portHandler, val, &dxl_model_number, &dxl_error);
-    if (dxl_comm_result != COMM_SUCCESS) {
-      printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-    }
-    else if (dxl_error != 0) {
-      printf("%s\n", packetHandler->getRxPacketError(dxl_error));
-      return 1;
-    }
-    else {
-      printf("[ID:%03d] ping Succeeded. Dynamixel model number : %d\n", val, dxl_model_number);
-    }
     return 0;
   }
 
-
-
+  double time()
+  {
+    return lofaro::get_time();
+  }
 }
