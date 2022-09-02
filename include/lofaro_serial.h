@@ -137,6 +137,30 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0)
   return 0;
 }
 
+int do_read(uint8_t id, uint8_t address, uint8_t length_read)
+{
+  // Get ID Example
+  uint8_t length = 2 + 2;
+  uint8_t instruction = DYN_READ;
+  uint8_t the_address = address;
+  uint8_t msg[] = { 255, 255, id, length, instruction, address, length_read};
+  uint8_t the_checksum = get_checksum(msg);
+  uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
+  uint8_t buff[buff_length];
+  for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
+
+  buff[buff_length-1] = the_checksum;
+  int n = buff_length;
+  printf("Write Buffer = ");
+  for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
+  printf("\n");
+  
+  
+  write(serial_port, buff, sizeof(buff));
+//  do_read();
+  return 0;
+}
+
 int do_read(uint8_t id, uint8_t address)
 {
   // Get ID Example
