@@ -9,8 +9,10 @@
 #include <unistd.h> // write(), read(), close()
 #include <cstdint>
 
-namespace lofaro {
+#include <iostream>
 
+
+namespace lofaro {
 #include "lofaro_utils.h"
 
 #define SERIAL_PKT_LENGTH 3
@@ -33,9 +35,8 @@ int       do_open();
 int       do_write(uint8_t id, uint8_t address, uint8_t d0);
 int       do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
 int       do_write(uint8_t id, uint8_t address, uint8_t length, uint8_t *dn);
-int       do_read(uint8_t id, uint8_t address, uint8_t d0);
-int       do_read(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
-int       do_read(uint8_t id, uint8_t address, uint8_t length, uint8_t *dn);
+int       do_read(uint8_t id, uint8_t address);
+int       do_read(uint8_t id, uint8_t address, uint8_t length);
 int       do_read_buffer();
 
 int do_open()
@@ -136,21 +137,24 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0)
   return 0;
 }
 
-int do_read(uint8_t id, uint8_t address, uint8_t d0)
+int do_read(uint8_t id, uint8_t address)
 {
   // Get ID Example
-  uint8_t length = 1 + 2;
+  uint8_t length = 2 + 2;
   uint8_t instruction = DYN_READ;
   uint8_t the_address = address;
-  uint8_t msg[] = { 255, 255, id, length, instruction, d0 };
+  uint8_t msg[] = { 255, 255, id, length, instruction, address, 1};
   uint8_t the_checksum = get_checksum(msg);
   uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
   uint8_t buff[buff_length];
-  for (int i = 0; i < (buff_length-1); i++)
-  {
-    buff[i] = msg[i];
-  }
+  for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
+
   buff[buff_length-1] = the_checksum;
+  int n = buff_length;
+  printf("Write Buffer = ");
+  for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
+  printf("\n");
+  
   
   write(serial_port, buff, sizeof(buff));
 //  do_read();
@@ -172,16 +176,21 @@ int do_read_buffer()
     printf("%x ",(uint8_t)read_buf[i]);
   }
   printf("\n");
+  for( int i = 0; i < n; i++ ) std::cout << std::hex << (char)read_buf[i] << " ";
+  std::cout << std::endl;
   return 0;
 }
 
 void print_buffer(uint8_t *buff)
 {
   int n = 10;
-  printf("Serial Buff Length = %d\n Buff=\n",n);
+  //printf("Serial Buff Length = %d\n Buff=\n",n);
+
+  std::cout << buff << std::endl;
+  
   for( int i = 0; i < n; i++ )
   {
-    printf("%x ",(uint8_t)buff[i]);
+//    printf("%x ",(uint8_t)buff[i]);
   }
   printf("\n");
 }
