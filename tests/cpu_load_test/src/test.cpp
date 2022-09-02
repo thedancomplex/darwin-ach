@@ -64,11 +64,11 @@ int main()
     printf("dt = %f\t f = %f,\t buff = %d\n",T,f, buff );
     tick = tock;
 //    buff = darwin::read1byte(ID_CM730, CM730_ADDRESS_ID);
-    buff = darwin::read1byte(1, CM730_ADDRESS_ID);
+    buff = darwin::read1byte(200, CM730_ADDRESS_ID);
 //    darwin::flush();
 //    darwin::update_imu();
 //    darwin::update_ft();
-    usleep(100000);
+    usleep(10000);
   }
 
 
