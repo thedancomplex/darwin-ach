@@ -36,7 +36,7 @@ int main()
   // Get Dynamixel model number
 
   // read 1 byte from address 5
-  uint8_t buff = darwin::read1byte(ID_CM730, 5);
+  uint8_t buff = darwin::read1byte(ID_CM730, CM730_ADDRESS_ID);
 
   printf("buff = %d\n",buff);
 

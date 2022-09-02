@@ -33,6 +33,7 @@
 // Default setting
 int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 #define BAUDRATE                        1000000
+//#define DEVICENAME                      "/dev/ttyUSB1"      // Check which port is being used on your controller
 #define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
 
 #include <sys/ioctl.h>
@@ -58,6 +59,7 @@ namespace darwin {
 
   // Addresses 
   #define CM730_ADDRESS_DYN_POWER 24
+  #define CM730_ADDRESS_ID 3
 
   #define CM730_ADDRESS_IMU_START 38
   #define CM730_ADDRESS_IMU_LENGTH 12

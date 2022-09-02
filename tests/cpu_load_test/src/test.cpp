@@ -55,19 +55,20 @@ int main()
 
   double tick = get_time();
   double tock = get_time();
+  uint8_t buff = 0;
   while(1) {
 
     tock = get_time();
     double T = tock - tick;
     double f = 1/T;
-    printf("dt = %f\t f = %f\n",T,f );
+    printf("dt = %f\t f = %f,\t buff = %d\n",T,f, buff );
     tick = tock;
-
-    uint8_t buff = darwin::read1byte(ID_CM730, 5);
-    darwin::flush();
+//    buff = darwin::read1byte(ID_CM730, CM730_ADDRESS_ID);
+    buff = darwin::read1byte(1, CM730_ADDRESS_ID);
+//    darwin::flush();
 //    darwin::update_imu();
 //    darwin::update_ft();
-    usleep(10000);
+    usleep(100000);
   }
 
 
