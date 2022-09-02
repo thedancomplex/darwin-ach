@@ -43,7 +43,7 @@ int main()
     // read 1 byte from address 5
     lofaro::do_read(1, 3);
     lofaro::do_read_buffer();
-    usleep(10000);
+    usleep(1000);
     tock = lofaro::get_time();
     double dt = tock - tick;
     double f  = 1/dt;
