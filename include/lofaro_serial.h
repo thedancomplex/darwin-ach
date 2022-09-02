@@ -28,13 +28,15 @@ namespace lofaro {
 
 int serial_port = 0;
 
-uint8_t get_checksum(uint8_t *rxpacket);
-int     do_open();
-int     do_write(uint8_t id, uint8_t address, uint8_t d0);
-int     do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
-int     do_write(uint8_t id, uint8_t address, uint8_t length, uint8_t[] dn);
-int     do_read();
-
+uint8_t   get_checksum(uint8_t *rxpacket);
+int       do_open();
+int       do_write(uint8_t id, uint8_t address, uint8_t d0);
+int       do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
+int       do_write(uint8_t id, uint8_t address, uint8_t length, uint8_t *dn);
+int       do_read(uint8_t id, uint8_t address, uint8_t d0);
+int       do_read(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
+int       do_read(uint8_t id, uint8_t address, uint8_t length, uint8_t *dn);
+int       do_read_buffer();
 
 int do_open()
 {
@@ -112,8 +114,6 @@ int do_open()
   return 0;
 }
 
-int     do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
-int     do_write(uint8_t id, uint8_t address, uint8_t length, uint8_t[] dn);
 
 int do_write(uint8_t id, uint8_t address, uint8_t d0)
 {
@@ -136,7 +136,28 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0)
   return 0;
 }
 
-int do_read()
+int do_read(uint8_t id, uint8_t address, uint8_t d0)
+{
+  // Get ID Example
+  uint8_t length = 1 + 2;
+  uint8_t instruction = DYN_READ;
+  uint8_t the_address = address;
+  uint8_t msg[] = { 255, 255, id, length, instruction, d0 };
+  uint8_t the_checksum = get_checksum(msg);
+  uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
+  uint8_t buff[buff_length];
+  for (int i = 0; i < (buff_length-1); i++)
+  {
+    buff[i] = msg[i];
+  }
+  buff[buff_length-1] = the_checksum;
+  
+  write(serial_port, buff, sizeof(buff));
+//  do_read();
+  return 0;
+}
+
+int do_read_buffer()
 {
   char read_buf [256];
 
