@@ -163,7 +163,7 @@ int do_read(uint8_t id, uint8_t address)
 
 int do_read_buffer()
 {
-  char read_buf [256];
+  uint8_t read_buf [256];
 
   // Read bytes. The behaviour of read() (e.g. does it block?,
   // how long does it block for?) depends on the configuration
@@ -176,8 +176,18 @@ int do_read_buffer()
     printf("%x ",(uint8_t)read_buf[i]);
   }
   printf("\n");
-  for( int i = 0; i < n; i++ ) std::cout << std::hex << (char)read_buf[i] << " ";
-  std::cout << std::endl;
+
+  if( n > 2 )
+  {
+      if( (read_buf[0] == 0xff) & (read_buf[1] == 0xff) )
+      {
+         if( get_checksum(read_buf) == read_buf[ read_buf[3] + 2 + 1] ) printf("Checksum OK\n");
+         else printf("Checksum FAIL\n");
+      }
+  }
+  printf("\n");
+
+
   return 0;
 }
 
