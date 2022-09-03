@@ -145,7 +145,19 @@ namespace darwin {
 
   int read_buffer()
   {
-    return lofaro::do_read_buffer();
+    uint8_t buff[1024];
+    int n = 0;
+    int ret = lofaro::do_read_buffer(buff, &n);
+
+    printf("Serial Buff Length = %d\n Buff=\n",n);
+    for( int i = 0; i < n; i++ )
+    {
+      printf("%x ",(uint8_t)buff[i]);
+    }
+    printf("\n");
+
+
+    return 0;
   }
 
   int read(uint8_t id, uint8_t address)
@@ -230,21 +242,49 @@ namespace darwin {
   #define CM730_ADDRESS_IMU_ACC_X 44
   #define CM730_ADDRESS_IMU_ACC_Y 46
   #define CM730_ADDRESS_IMU_ACC_Z 48
+  #define CM730_ADDRESS_VOLTAGE 50
 */    
     uint8_t b0 = 0;
     uint8_t b1 = 0;
     b0 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_GYRO_X) - CM730_ADDRESS_IMU_START;
     b1 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_GYRO_X) - CM730_ADDRESS_IMU_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
     uint16_t buff_gyro_x = chars2uInt16(b0, b1);
-/*
-    uint16_t buff_gyro_y = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_GYRO_Y, 2);
-    uint16_t buff_gyro_z = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_GYRO_Z, 2);
-    uint16_t buff_acc_x = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_X, 2);
-    uint16_t buff_acc_y = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_Y, 2);
-    uint16_t buff_acc_z = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_Z, 2);
-*/
-/*
-    uint8_t buff_voltage = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_VOLTAGE, 1);
+
+    b0 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_GYRO_Y) - CM730_ADDRESS_IMU_START;
+    b1 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_GYRO_Y) - CM730_ADDRESS_IMU_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_gyro_y = chars2uInt16(b0, b1);
+
+    b0 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_GYRO_Z) - CM730_ADDRESS_IMU_START;
+    b1 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_GYRO_Z) - CM730_ADDRESS_IMU_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_gyro_z = chars2uInt16(b0, b1);
+
+    b0 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_ACC_X) - CM730_ADDRESS_IMU_START;
+    b1 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_ACC_X) - CM730_ADDRESS_IMU_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_acc_x = chars2uInt16(b0, b1);
+
+    b0 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_ACC_Y) - CM730_ADDRESS_IMU_START;
+    b1 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_ACC_Y) - CM730_ADDRESS_IMU_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_acc_y = chars2uInt16(b0, b1);
+
+    b0 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_ACC_Z) - CM730_ADDRESS_IMU_START;
+    b1 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_ACC_Z) - CM730_ADDRESS_IMU_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_acc_z = chars2uInt16(b0, b1);
+
+    b0 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_VOLTAGE) - CM730_ADDRESS_IMU_START;
+    b0 = buff[b0];
+    uint8_t buff_voltage = b0;
 
     imu_gyro_x = int2double(buff_gyro_x) * IMU_GYRO_SCALE;
     imu_gyro_y = int2double(buff_gyro_y) * IMU_GYRO_SCALE;
@@ -253,7 +293,6 @@ namespace darwin {
     imu_acc_y  = int2double(buff_acc_y)  * IMU_ACC_SCALE;
     imu_acc_z  = int2double(buff_acc_z)  * IMU_ACC_SCALE;
     voltage    = (double)buff_voltage / VOLTAGE_SCALE;
-*/
 
     return 0;
   }

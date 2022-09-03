@@ -38,7 +38,6 @@ int main()
 
   printf("d = %d\n", darwin::chars2uInt16(1,2));
 
-/*
   while(1)
   {
     // read 1 byte from address 5
@@ -53,7 +52,6 @@ int main()
     printf("dt = %f\t f = %2f\n",dt, f);
     
   }
-*/
   // Turn off motor power
   // darwin::off(ID_DARWIN);
 

@@ -38,7 +38,7 @@ int       do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
 int       do_write(uint8_t id, uint8_t address, uint8_t length, uint8_t *dn);
 int       do_read(uint8_t id, uint8_t address);
 int       do_read(uint8_t id, uint8_t address, uint8_t length);
-int       do_read_buffer();
+int       do_read_buffer(uint8_t buff[1024], int *the_length);
 
 int do_open()
 {
@@ -192,14 +192,21 @@ int do_read(uint8_t id, uint8_t address)
   return 0;
 }
 
-int do_read_buffer()
+int do_read_buffer(uint8_t buff[1024], int *the_length)
 {
-  uint8_t read_buf [256];
+  uint8_t read_buf[1024];
 
   // Read bytes. The behaviour of read() (e.g. does it block?,
   // how long does it block for?) depends on the configuration
   // settings above, specifically VMIN and VTIME
   int n = read(serial_port, &read_buf, sizeof(read_buf));
+  *the_length = n;
+
+  buff = read_buf;
+
+  if( n > 0) return 0;
+  return 1;
+
   // n is the number of bytes read. n may be 0 if no bytes were received, and can also be negative to signal an error.
   printf("Serial Buff Length = %d\n Buff=\n",n);
   for( int i = 0; i < n; i++ )
