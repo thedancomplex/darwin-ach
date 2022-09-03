@@ -79,6 +79,7 @@ namespace darwin {
 
   #define CM730_ADDRESS_VOLTAGE 50
 
+  #define FT_ADDRESS_READ_DATA_OFFSET 5
   #define FT_ADDRESS_START 26
   #define FT_ADDRESS_LENGTH 10
   #define FT_ADDRESS_LEFT_X 26
@@ -107,7 +108,7 @@ namespace darwin {
   int update_imu(uint8_t val[]);
   int update_imu_setup();
   int update_imu_slow();
-  int update_ft();
+  int update_ft( uint8_t buff[] );
   int update_ft_setup();
   double int2double(uint16_t val); 
   double uint2double(uint16_t val); 
@@ -159,19 +160,23 @@ namespace darwin {
     int n = 0;
     int ret = lofaro::do_read_buffer(buff, &n);
 
-    if( RETURN_OK == check_head(buff) )
+    bool do_run = true;
+    while(do_run)
     {
-      uint8_t id = buff[BUFFER_ID];
-      if( id == ID_CM730 )
+      if( RETURN_OK == check_head(buff) )
       {
-        update_imu(buff);
+        uint8_t id = buff[BUFFER_ID];
+        if( id == ID_CM730 )     update_imu(buff);
+        else if ( id == ID_FT )  update_ft(buff);
       }
+      if ( RETURN_FAIL == get_next_message(buff, &n) ) do_run = false;
     }
 
+    return 0;
+  }
 
-
-    while( RETURN_OK == get_next_message(buff, &n) )
-    {
+  int print_buff( uint8_t buff[], int n)
+  {
       printf("Serial Buff Length = %d\n Buff=\n",n);
       for( int i = 0; i < n; i++ )
       {
@@ -180,9 +185,8 @@ namespace darwin {
       printf("\n");
       printf("Is head ok %d\n",check_head(buff));
       printf("Is checksum ok %d\n",check_checksum(buff));
-    }
 
-    return 0;
+      return 0;
   }
 
   int get_next_message( uint8_t buff[], int *the_length )
@@ -239,17 +243,62 @@ namespace darwin {
     return (double)(val) / 65535.0;
   }
 
-  int update_ft()
+  int update_ft( uint8_t buff[])
   {
+    if ( RETURN_OK != check_head(buff) ) return RETURN_FAIL;
+    if ( RETURN_OK != check_checksum(buff) ) return RETURN_FAIL;
+
+  #define FT_ADDRESS_READ_DATA_OFFSET 5
+  #define FT_ADDRESS_START 26
+  #define FT_ADDRESS_LENGTH 10
+  #define FT_ADDRESS_LEFT_X 26
+  #define FT_ADDRESS_LEFT_Y 28
+  #define FT_ADDRESS_RIGHT_X 30
+  #define FT_ADDRESS_RIGHT_Y 32
+  #define FT_ADDRESS_FSR_X 34
+  #define FT_ADDRESS_FSR_Y 35
+  #define FT_ADDRESS_VOLTAGE 42
+
+    // Assign the diata
+    uint8_t b0 = 0;
+    uint8_t b1 = 0;
+    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_LEFT_X) - FT_ADDRESS_START;
+    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_LEFT_X) - FT_ADDRESS_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_left_x = chars2uInt16(b0, b1);
+    
+    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_LEFT_Y) - FT_ADDRESS_START;
+    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_LEFT_Y) - FT_ADDRESS_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_left_y = chars2uInt16(b0, b1);
+    
+    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_RIGHT_X) - FT_ADDRESS_START;
+    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_RIGHT_X) - FT_ADDRESS_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_right_x = chars2uInt16(b0, b1);
+    
+    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_RIGHT_Y) - FT_ADDRESS_START;
+    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_RIGHT_Y) - FT_ADDRESS_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_right_y = chars2uInt16(b0, b1);
+    
+    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_FSR_X) - FT_ADDRESS_START;
+    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_FSR_X) - FT_ADDRESS_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_fsr_x = chars2uInt16(b0, b1);
+    
+    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_FSR_Y) - FT_ADDRESS_START;
+    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_FSR_Y) - FT_ADDRESS_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_fsr_y = chars2uInt16(b0, b1);
     
     // Assign the data
-/*
-    uint16_t buff_left_x   = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_LEFT_X, 2);
-    uint16_t buff_left_y   = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_LEFT_Y, 2);
-    uint16_t buff_right_x  = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_RIGHT_X, 2);
-    uint16_t buff_right_y  = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_RIGHT_Y, 2);
-    uint16_t buff_fsr_x    = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_FSR_X, 2);
-    uint16_t buff_fsr_y    = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_FSR_Y, 2);
 
     ft_left_x   = int2double(buff_left_x)  * FT_SCALE;
     ft_left_y   = int2double(buff_left_y)  * FT_SCALE;
@@ -258,7 +307,6 @@ namespace darwin {
 
     ft_fsr_x    = ft_char2double(buff_fsr_x, &ft_fsr_raised_x) * FSR_SCALE_X;
     ft_fsr_y    = ft_char2double(buff_fsr_y, &ft_fsr_raised_y) * FSR_SCALE_Y;
-*/
 
     return 0;
   }
