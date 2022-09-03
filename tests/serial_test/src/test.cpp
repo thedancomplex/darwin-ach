@@ -44,6 +44,8 @@ int main()
     //lofaro::do_read(200, 3);
     darwin::read(200, 38, 13);
     darwin::read_buffer();
+    printf("imu acc z = %f\n",darwin::imu_acc_z);
+    printf("voltage = %f\n",darwin::voltage);
     darwin::sleep(0.01); 
     tock = darwin::time();
     double dt = tock - tick;

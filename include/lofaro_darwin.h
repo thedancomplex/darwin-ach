@@ -38,6 +38,11 @@
 
 namespace darwin {
 
+
+  // Buffer positions
+  #define BUFFER_ID 2
+  #define BUFFER_LENGTH 3	
+
   // Enumbs and defines
   #define CM730_ON  1
   #define CM730_OFF 0
@@ -49,6 +54,8 @@ namespace darwin {
   #define FT_SCALE 1/1000.0
   #define FSR_SCALE_X 1.0
   #define FSR_SCALE_Y 1.0
+  #define RETURN_OK 0
+  #define RETURN_FAIL 1
 
   // Motor IDs
   #define ID_CM730 200
@@ -108,6 +115,8 @@ namespace darwin {
   uint8_t read1byte(uint8_t id, uint8_t address);
   int flush();
   uint16_t chars2uInt16(uint8_t d_lsb, uint8_t d_msb);
+  int check_head( uint8_t buff[] );
+  int check_checksum( uint8_t buff[] );
 
   // IMU data
   double imu_gyro_x = -0.0; 
@@ -149,17 +158,48 @@ namespace darwin {
     int n = 0;
     int ret = lofaro::do_read_buffer(buff, &n);
 
+    if( RETURN_OK == check_head(buff) )
+    {
+      uint8_t id = buff[BUFFER_ID];
+      if( id == ID_CM730 )
+      {
+        update_imu(buff);
+      }
+    }
+
+
+
     printf("Serial Buff Length = %d\n Buff=\n",n);
     for( int i = 0; i < n; i++ )
     {
       printf("%x ",(uint8_t)buff[i]);
     }
     printf("\n");
+    printf("Is head ok %d\n",check_head(buff));
+    printf("Is checksum ok %d\n",check_checksum(buff));
+
+
+    
 
 
     return 0;
   }
 
+  int check_checksum( uint8_t buff[] )
+  {
+     uint8_t cs = lofaro::get_checksum(buff);
+     uint8_t cs_i = buff[BUFFER_LENGTH] + 2 + 1;
+     uint8_t cs_val = buff[cs_i];
+     if ( cs == cs_val ) return RETURN_OK;
+     return RETURN_FAIL;
+  }
+
+  int check_head( uint8_t buff[] )
+  {
+    if( (buff[0] == 0xff) & (buff[1] == 0xff) ) return 0;
+    return 1;
+  }
+  
   int read(uint8_t id, uint8_t address)
   {
     return lofaro::do_read(id,address);
@@ -230,20 +270,12 @@ namespace darwin {
   {
 // ff ff c8 f 0 0 2 0 2 0  2  5  2  bc 1  79 2  7b 68 0
 // 1  2  3  4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-    int length = 19;
-    // Assign the diata
-/*
-#define CM730_ADDRESS_IMU_START 38
-  #define CM730_ADDRESS_IMU_LENGTH 12
 
-  #define CM730_ADDRESS_IMU_GYRO_Z 38
-  #define CM730_ADDRESS_IMU_GYRO_Y 40
-  #define CM730_ADDRESS_IMU_GYRO_X 42
-  #define CM730_ADDRESS_IMU_ACC_X 44
-  #define CM730_ADDRESS_IMU_ACC_Y 46
-  #define CM730_ADDRESS_IMU_ACC_Z 48
-  #define CM730_ADDRESS_VOLTAGE 50
-*/    
+    if ( RETURN_OK != check_head(buff) ) return RETURN_FAIL;
+    if ( RETURN_OK != check_checksum(buff) ) return RETURN_FAIL;
+    int length = 19;
+
+    // Assign the diata
     uint8_t b0 = 0;
     uint8_t b1 = 0;
     b0 = (CM730_ADDRESS_READ_DATA_OFFSET + CM730_ADDRESS_IMU_GYRO_X) - CM730_ADDRESS_IMU_START;
