@@ -117,6 +117,7 @@ namespace darwin {
   uint16_t chars2uInt16(uint8_t d_lsb, uint8_t d_msb);
   int check_head( uint8_t buff[] );
   int check_checksum( uint8_t buff[] );
+  int get_next_message( uint8_t buff[], int *the_length );
 
   // IMU data
   double imu_gyro_x = -0.0; 
@@ -169,20 +170,37 @@ namespace darwin {
 
 
 
-    printf("Serial Buff Length = %d\n Buff=\n",n);
-    for( int i = 0; i < n; i++ )
+    while( RETURN_OK == get_next_message(buff, &n) )
     {
-      printf("%x ",(uint8_t)buff[i]);
+      printf("Serial Buff Length = %d\n Buff=\n",n);
+      for( int i = 0; i < n; i++ )
+      {
+        printf("%x ",(uint8_t)buff[i]);
+      }
+      printf("\n");
+      printf("Is head ok %d\n",check_head(buff));
+      printf("Is checksum ok %d\n",check_checksum(buff));
     }
-    printf("\n");
-    printf("Is head ok %d\n",check_head(buff));
-    printf("Is checksum ok %d\n",check_checksum(buff));
-
-
-    
-
 
     return 0;
+  }
+
+  int get_next_message( uint8_t buff[], int *the_length )
+  {
+    int n = *the_length;
+    int ni = n;
+    for ( int i = 0; i < ni; i++)
+    {
+      ni = ni - 1;
+      *the_length = ni;
+      memcpy(buff, buff + 1*sizeof(buff[0]), (1024-1)*sizeof(buff[0]) );
+      if( (RETURN_OK == check_checksum(buff)) & 
+          (RETURN_OK == check_head(buff)    )  )
+      {
+       return RETURN_OK;
+      }
+    }
+    return RETURN_FAIL;
   }
 
   int check_checksum( uint8_t buff[] )

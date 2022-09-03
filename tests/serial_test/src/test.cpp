@@ -46,7 +46,7 @@ int main()
     darwin::read_buffer();
     printf("imu acc z = %f\n",darwin::imu_acc_z);
     printf("voltage = %f\n",darwin::voltage);
-    darwin::sleep(0.01); 
+    darwin::sleep(0.001); 
     tock = darwin::time();
     double dt = tock - tick;
     double f  = 1/dt;
