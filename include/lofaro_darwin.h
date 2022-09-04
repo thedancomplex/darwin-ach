@@ -148,6 +148,19 @@ namespace darwin {
   int read(uint8_t id, uint8_t address, uint8_t length);
   int read_buffer();
 
+  int on(uint8_t id)
+  {
+    int ret =  lofaro::do_write(id, CM730_ADDRESS_DYN_POWER, CM730_ON);
+    if ( ret == 0 ) return RETURN_OK;
+    return RETURN_FAIL;
+  }
+  int off(uint8_t id)
+  {
+    int ret =  lofaro::do_write(id, CM730_ADDRESS_DYN_POWER, CM730_OFF);
+    if ( ret == 0 ) return RETURN_OK;
+    return RETURN_FAIL;
+  }
+
   int sleep(double val)
   {
     long usec = (long)(val * 1000000);

@@ -25,7 +25,7 @@ int main()
 
 
   // Turn on motor power
-  // darwin::on(ID_DARWIN);
+  darwin::on(ID_DARWIN);
  
   // Wait 1 second for power to turn on
   darwin::sleep(1.0);
@@ -65,7 +65,7 @@ int main()
     
   }
   // Turn off motor power
-  // darwin::off(ID_DARWIN);
+  darwin::off(ID_DARWIN);
 
   // Close port
   darwin::close();
