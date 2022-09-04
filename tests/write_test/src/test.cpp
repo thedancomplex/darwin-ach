@@ -16,54 +16,38 @@
 
 /* Author: Daniel M. Lofaro */
 
-#include "lofaro_darwin.h"
+#include "cm730.h"
+#include <unistd.h>
 
 int main()
 {
+
   // Open
   darwin::open();
 
 
   // Turn on motor power
-  // darwin::on(ID_DARWIN);
+  darwin::on(ID_DARWIN);
  
   // Wait 1 second for power to turn on
-  darwin::sleep(1.0);
+  usleep(1000000);
 
   // Try to ping the Dynamixel
   // Get Dynamixel model number
 
-  double tick = darwin::time();
-  double tock = darwin::time();
+  // write EEPROM to change the return rate
+  darwin::write1byte(ID_CM730, 5, 0);
 
-  printf("d = %d\n", darwin::chars2uInt16(1,2));
+  usleep(10000);
 
-  while(1)
-  {
-    // read 1 byte from address 5
-    //lofaro::do_read(200, 3);
-    darwin::read(200, 38, 13);
-    while ( darwin::read_buffer() != RETURN_OK )
-    {
-/*
-      tock = darwin::time();
-      double dt = tock - tick;
-      double f  = 1/dt;
-      printf("dt = %f\t f = %2f\n",dt, f);
-*/
-    }
-    printf("imu acc z = %f\n",darwin::imu_acc_z);
-    printf("voltage = %f\n",darwin::voltage);
- //   darwin::sleep(0.001); 
-    tock = darwin::time();
-    double dt = tock - tick;
-    double f  = 1/dt;
-    tick = tock;
-    printf("dt = %f\t f = %2f\n",dt, f);
-    
-  }
+  // read 1 byte from address 5
+  uint8_t buff = darwin::read1byte(ID_CM730, 5);
+  //uint8_t buff = darwin::read1byte(ID_CM730, CM730_ADDRESS_ID);
+
+  printf("buff = %d\n",buff);
+
   // Turn off motor power
-  // darwin::off(ID_DARWIN);
+  darwin::off(ID_DARWIN);
 
   // Close port
   darwin::close();

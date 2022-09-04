@@ -105,6 +105,7 @@ namespace darwin {
   double uint2double(uint16_t val); 
   double ft_char2double(uint8_t val, int* err);
   uint8_t read1byte(uint8_t id, uint8_t address);
+  int write1byte(uint8_t id, uint8_t address, uint8_t val);
   int flush();
 
   // IMU data
@@ -409,6 +410,27 @@ namespace darwin {
   }
 
 
+  int write1byte(uint8_t id, uint8_t address, uint8_t val)
+  {
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+    uint8_t dxl_error = 0;                          // Dynamixel error
+
+    dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, id, address, val, &dxl_error);
+    if (dxl_comm_result != COMM_SUCCESS)
+    {
+      printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    }
+    else if (dxl_error != 0)
+    {
+      printf("%s\n", packetHandler->getRxPacketError(dxl_error));
+      return 1;
+    }
+    else
+    {
+      printf("Dynamixel has been successfully turned off \n");
+    }
+    return 0;
+  }
 
   int off(int val)
   {

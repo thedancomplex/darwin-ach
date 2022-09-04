@@ -160,6 +160,8 @@ namespace darwin {
     int n = 0;
     int ret = lofaro::do_read_buffer(buff, &n);
 
+    if ( n == 0 ) return RETURN_FAIL;
+
     bool do_run = true;
     while(do_run)
     {
@@ -172,7 +174,7 @@ namespace darwin {
       if ( RETURN_FAIL == get_next_message(buff, &n) ) do_run = false;
     }
 
-    return 0;
+    return RETURN_OK;
   }
 
   int print_buff( uint8_t buff[], int n)
