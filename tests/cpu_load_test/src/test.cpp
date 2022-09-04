@@ -68,7 +68,7 @@ int main()
 //    darwin::flush();
 //    darwin::update_imu();
 //    darwin::update_ft();
-    usleep(10000);
+//    usleep(10000);
   }
 
 

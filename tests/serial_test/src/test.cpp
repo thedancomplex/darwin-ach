@@ -43,6 +43,7 @@ int main()
     // read 1 byte from address 5
     //lofaro::do_read(200, 3);
     darwin::read(200, 38, 13);
+    //darwin::read(200, 38, 13);
     while ( darwin::read_buffer() != RETURN_OK )
     {
 /*
@@ -51,6 +52,7 @@ int main()
       double f  = 1/dt;
       printf("dt = %f\t f = %2f\n",dt, f);
 */
+ //     darwin::sleep(0.010);
     }
     printf("imu acc z = %f\n",darwin::imu_acc_z);
     printf("voltage = %f\n",darwin::voltage);

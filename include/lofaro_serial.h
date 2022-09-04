@@ -39,6 +39,10 @@ int       do_write(uint8_t id, uint8_t address, uint8_t length, uint8_t *dn);
 int       do_read(uint8_t id, uint8_t address);
 int       do_read(uint8_t id, uint8_t address, uint8_t length);
 int       do_read_buffer(uint8_t buff[1024], int *the_length);
+void do_flush();
+
+struct termios tty;
+
 
 int do_open()
 {
@@ -54,7 +58,7 @@ int do_open()
   // Create new termios struct, we call it 'tty' for convention
   // No need for "= {0}" at the end as we'll immediately write the existing
   // config to this struct
-  struct termios tty;
+//  struct termios tty;
 
   tty.c_cflag &= ~PARENB; // Clear parity bit, disabling parity (most common)
   // tty.c_cflag |= PARENB;  // Set parity bit, enabling parity
@@ -96,7 +100,13 @@ int do_open()
   cfsetispeed(&tty, B1000000);
   cfsetospeed(&tty, B1000000);
 
+
+
+
+
   serial_port = open("/dev/ttyUSB0", O_RDWR);
+
+  //serial_port = open("/dev/ttyUSB0", O_RDWR);
 
   // Check for errors
   if (serial_port < 0) {
@@ -140,8 +150,14 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0)
   buff[buff_length-1] = the_checksum;
   
   write(serial_port, buff, sizeof(buff));
+  do_flush();
 //  do_read();
   return 0;
+}
+
+void do_flush()
+{
+  return;
 }
 
 int do_read(uint8_t id, uint8_t address, uint8_t length_read)
@@ -164,6 +180,7 @@ int do_read(uint8_t id, uint8_t address, uint8_t length_read)
   
   
   write(serial_port, buff, sizeof(buff));
+  do_flush();
 //  do_read();
   return 0;
 }
@@ -188,6 +205,7 @@ int do_read(uint8_t id, uint8_t address)
   
   
   write(serial_port, buff, sizeof(buff));
+  do_flush();
 //  do_read();
   return 0;
 }

@@ -58,7 +58,7 @@ InstallRos2()
   sudo apt-get install qtdeclarative5-dev
   sudo apt install python-is-python3
   sudo pip3 install netifaces
-
+  sudo apt install setserial
 
   # Remove  root access for serial port
   sudo apt remove modemmanager
@@ -93,6 +93,7 @@ InstallRos2()
 
   colcon build --symlink-install --packages-skip-build-finished
   echo ". ~/ros2_humble/install/local_setup.bash" >> ~/.bashrc
+  echo "setserial /dev/ttyUSB0 low_latency" >> ~/.bashrc
 }
 
 InstallCm730()
@@ -105,6 +106,16 @@ InstallCm730()
 
   cd $HUMBLE_INSTALL_DIR
   colcon build --symlink-install --packages-skip-build-finished
+}
+
+LowLatency()
+{
+	setserial /dev/ttyUSB0 low_latency
+	sudo setserial /dev/ttyUSB0 low_latency
+	flush
+	sudo flush
+	sleep(1)
+	echo '---- Low Latency Set ----'
 }
 
 ShowUsage()
@@ -135,6 +146,9 @@ case "$1" in
 	
 	'cm730' )
 		InstallCm730 $@
+	;;
+        'low-latency' )
+		LowLatency $@
 	;;
 	
 	* )
