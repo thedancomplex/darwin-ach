@@ -101,7 +101,7 @@ namespace darwin {
 
 
   #define DARWIN_MOTOR_BROADCAST 0Xfe
-  #define DARWIN_MOTOR_NUM 20
+  #define DARWIN_MOTOR_NUM 3
 
   #define ERROR 1
   #define NO_ERROR 0
@@ -166,7 +166,7 @@ namespace darwin {
   {
     for( int i = 0; i < DARWIN_MOTOR_NUM; i++ )
     {
-      write(i+1, MX_ADDRESS_DELAY, i+1);
+      write(i+1, MX_ADDRESS_DELAY, i);
       sleep(0.1); 
     }
     return RETURN_OK;

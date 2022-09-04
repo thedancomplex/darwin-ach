@@ -44,7 +44,7 @@ int main()
     //lofaro::do_read(200, 3);
 //    darwin::get_imu_state();
     darwin::get_motor_state();
-    for(int i = 0; i < 10; i++) 
+    for(int i = 0; i < 30; i++) 
     { 
       darwin::read_buffer(); 
       darwin::sleep(0.002);
