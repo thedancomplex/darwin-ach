@@ -84,7 +84,7 @@ namespace darwin {
   #define MX_ADDRESS_LOAD 40
   #define MX_ADDRESS_VOLTAGE 42
   #define MX_ADDRESS_TEMP 43
-  
+  #define MX_ADDRESS_DELAY 5
 
   #define CM730_ADDRESS_VOLTAGE 50
 
@@ -110,6 +110,7 @@ namespace darwin {
 
   int sleep(double val);
   double time();
+  int set_motor_delays();
 
   int open();
   int getch();
@@ -118,6 +119,7 @@ namespace darwin {
   int kbhit(void);
   int ping(int val);
   int get_imu_state();
+  int write(uint8_t id, uint8_t address, uint8_t d0);
   int update_imu(uint8_t val[]);
   int update_imu_setup();
   int update_imu_slow();
@@ -132,6 +134,9 @@ namespace darwin {
   int check_head( uint8_t buff[] );
   int check_checksum( uint8_t buff[] );
   int get_next_message( uint8_t buff[], int *the_length );
+  int read(uint8_t id, uint8_t address);
+  int read(uint8_t id, uint8_t address, uint8_t length);
+  int read_buffer();
 
   // IMU data
   double imu_gyro_x = -0.0; 
@@ -157,9 +162,21 @@ namespace darwin {
   double voltage_foot = -0.0;
 
 
-  int read(uint8_t id, uint8_t address);
-  int read(uint8_t id, uint8_t address, uint8_t length);
-  int read_buffer();
+  int set_motor_delays()
+  {
+    for( int i = 0; i < DARWIN_MOTOR_NUM; i++ )
+    {
+      write(i+1, MX_ADDRESS_DELAY, i+1);
+      sleep(0.1); 
+    }
+    return RETURN_OK;
+  }
+
+
+  int write(uint8_t id, uint8_t address, uint8_t d0)
+  {
+    return lofaro::do_write(id, address, d0);
+  }
 
   int on(uint8_t id)
   {
