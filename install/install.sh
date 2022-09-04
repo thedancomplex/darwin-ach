@@ -112,9 +112,9 @@ LowLatency()
 {
 	setserial /dev/ttyUSB0 low_latency
 	sudo setserial /dev/ttyUSB0 low_latency
-	flush
-	sudo flush
-	sleep(1)
+	sync
+	sudo sync
+	sleep 1
 	echo '---- Low Latency Set ----'
 }
 
@@ -135,6 +135,8 @@ ShowUsage()
         echo '         (~24hr on Darwin OPs CPU) '
 	echo 'cm730  : installs cm730 (ros2)     '
 	echo '         drivers                   '
+	echo 'low-latency : sets serial to       '
+	echo '              low latency mode     '
 	echo
 }
 
