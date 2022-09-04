@@ -38,6 +38,7 @@ int       do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
 int       do_write(uint8_t id, uint8_t address, uint8_t length, uint8_t *dn);
 int       do_read(uint8_t id, uint8_t address);
 int       do_read(uint8_t id, uint8_t address, uint8_t length);
+int       do_read(uint8_t id, uint8_t buff[], uint8_t buff_length);
 int       do_read_buffer(uint8_t buff[1024], int *the_length);
 void do_flush();
 
@@ -158,6 +159,41 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0)
 void do_flush()
 {
   return;
+}
+
+int do_read(uint8_t id, uint8_t buff[], uint8_t buff_length)
+{
+
+  uint8_t length = 2 + buff_length + 1 ;
+  uint8_t instruction = DYN_READ_BULK;
+  uint8_t msg_length_full = length + 3 + 1 ;
+  uint8_t msg[msg_length_full + 10];
+  memset(&msg, 0, sizeof(msg));
+  msg[0] = 0xff;
+  msg[1] = 0xff;
+  msg[2] = id;
+  msg[3] = length;
+  msg[4] = DYN_READ_BULK;
+  msg[5] = 0x00;
+  int ii = 0;
+  for( int i = 0; i < buff_length; i++ )
+  {
+    ii = i + 6;
+    msg[ii] = buff[i];
+  }
+
+  uint8_t the_checksum = get_checksum(msg);
+  msg[msg_length_full - 1] = the_checksum;
+
+  printf("checksum = %x\n", the_checksum);
+
+  printf("Write Buffer = ");
+  for( int i = 0; i < buff_length + 10; i++ ) printf("%x ",(uint8_t)msg[i]);
+  printf("\n");
+  write(serial_port, buff, sizeof(msg));
+  do_flush();
+
+  return 0;
 }
 
 int do_read(uint8_t id, uint8_t address, uint8_t length_read)
