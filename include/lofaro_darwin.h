@@ -56,6 +56,11 @@ namespace darwin {
   #define FSR_SCALE_Y 1.0
   #define RETURN_OK 0
   #define RETURN_FAIL 1
+  #define MOTOR_VOLTAGE_SCALE 0.1
+  #define MOTOR_POS_SCALE 1.0 / 4096.0 * 2.0 * 3.14159265359
+  #define MOTOR_SPEED_SCALE 0.11 / 60.0 * 2.0 * 3.14159265359
+  #define MOTOR_LOAD_SCALE 1.0
+  #define MOTOR_TEMP_SCALE 1.0
 
   // Motor IDs
   #define ID_CM730 200
@@ -77,6 +82,8 @@ namespace darwin {
   #define CM730_ADDRESS_IMU_ACC_Y 46
   #define CM730_ADDRESS_IMU_ACC_Z 48
 
+  #define MX_ID 2  
+  #define MX_ADDRESS_READ_DATA_OFFSET 5
   #define MX_ADDRESS_STATE_START 36
   #define MX_ADDRESS_STATE_LENGTH 8
   #define MX_ADDRESS_POS 36
@@ -101,7 +108,9 @@ namespace darwin {
 
 
   #define DARWIN_MOTOR_BROADCAST 0Xfe
-  #define DARWIN_MOTOR_NUM 3
+  #define DARWIN_MOTOR_NUM 20
+  #define DARWIN_MOTOR_MIN 1
+  #define DARWIN_MOTOR_MAX 20
 
   #define ERROR 1
   #define NO_ERROR 0
@@ -126,6 +135,7 @@ namespace darwin {
   int update_ft( uint8_t buff[] );
   int update_ft_setup();
   double int2double(uint16_t val); 
+  double int2double(uint16_t val, int bit); 
   double uint2double(uint16_t val); 
   double ft_char2double(uint8_t val, int* err);
   uint8_t read1byte(uint8_t id, uint8_t address);
@@ -137,6 +147,11 @@ namespace darwin {
   int read(uint8_t id, uint8_t address);
   int read(uint8_t id, uint8_t address, uint8_t length);
   int read_buffer();
+  int get_motor_state();
+  int get_motor_state(int id);
+  int setup();
+  int update_motor_state( uint8_t buff[]);
+  void print_state();
 
   // IMU data
   double imu_gyro_x = -0.0; 
@@ -161,6 +176,32 @@ namespace darwin {
   double voltage = -0.0;
   double voltage_foot = -0.0;
 
+typedef struct motor_state_def {
+	double pos;	
+	double speed;
+	double load;	
+	double voltage;	
+	double temp;		
+}__attribute__((packed)) motor_state_def_t;
+
+  motor_state_def_t motor_state[DARWIN_MOTOR_NUM+1];
+
+
+void print_state()
+{
+  printf("pos\t\t speed\t\t load\t\t voltage\t\t temp\n");
+  for(int i = 0; i < (DARWIN_MOTOR_NUM+1); i++)
+  {
+    motor_state_def_t ms = motor_state[i];
+    printf("%f\t %f\t %f\t %f\t %f\n", ms.pos, ms.speed, ms.load, ms.voltage, ms.temp);
+  }
+}
+
+  int setup()
+  {
+    memset(&motor_state, 0, sizeof(motor_state));
+    return open();
+  }
 
   int set_motor_delays()
   {
@@ -218,6 +259,7 @@ namespace darwin {
         uint8_t id = buff[BUFFER_ID];
         if( id == ID_CM730 )     update_imu(buff);
         else if ( id == ID_FT )  update_ft(buff);
+        else if ( (id>=DARWIN_MOTOR_MIN) & (id<=DARWIN_MOTOR_MAX)  )  update_motor_state(buff);
       }
       if ( RETURN_FAIL == get_next_message(buff, &n) ) do_run = false;
     }
@@ -282,6 +324,11 @@ namespace darwin {
     return lofaro::do_read(id,address,length);
   }
 
+  double int2double(uint16_t val, int bit)
+  {
+    double the_out = (double)((int32_t)val - ((2^bit)/2)) / (2^bit);
+    return the_out;
+  }
   double int2double(uint16_t val)
   {
     double the_out = (double)((int32_t)val - 512) / 1023.0;
@@ -299,6 +346,26 @@ namespace darwin {
   }
 
   int get_motor_state()
+  {
+    int ret = 0;
+    for( int i = 0; i < DARWIN_MOTOR_NUM; i++ )
+    {
+      ret += get_motor_state(i+1);
+    }
+    
+    if (ret > 0) return RETURN_FAIL;
+    return RETURN_OK;
+  }
+
+  int get_motor_state(int id)
+  {
+    int ret = lofaro::do_read(id, MX_ADDRESS_STATE_START, MX_ADDRESS_STATE_LENGTH);
+
+    if( ret == 0 ) return RETURN_OK;
+    return RETURN_FAIL;
+  }
+
+  int get_motor_state_bulk()
   {
     uint8_t buff_len = DARWIN_MOTOR_NUM * 3;
     uint8_t buff[buff_len];
@@ -323,17 +390,6 @@ namespace darwin {
   {
     if ( RETURN_OK != check_head(buff) ) return RETURN_FAIL;
     if ( RETURN_OK != check_checksum(buff) ) return RETURN_FAIL;
-
-  #define FT_ADDRESS_READ_DATA_OFFSET 5
-  #define FT_ADDRESS_START 26
-  #define FT_ADDRESS_LENGTH 10
-  #define FT_ADDRESS_LEFT_X 26
-  #define FT_ADDRESS_LEFT_Y 28
-  #define FT_ADDRESS_RIGHT_X 30
-  #define FT_ADDRESS_RIGHT_Y 32
-  #define FT_ADDRESS_FSR_X 34
-  #define FT_ADDRESS_FSR_Y 35
-  #define FT_ADDRESS_VOLTAGE 42
 
     // Assign the diata
     uint8_t b0 = 0;
@@ -406,6 +462,59 @@ namespace darwin {
     d = d | (uint16_t)d_lsb;
     d = d | ((uint16_t)d_msb << 8);
     return d;
+  }
+
+  int update_motor_state( uint8_t buff[])
+  {
+// ff ff c8 f 0 0 2 0 2 0  2  5  2  bc 1  79 2  7b 68 0
+// 1  2  3  4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+
+  #define MX_ADDRESS_POS 36
+  #define MX_ADDRESS_SPEED 38
+  #define MX_ADDRESS_LOAD 40
+  #define MX_ADDRESS_VOLTAGE 42
+  #define MX_ADDRESS_TEMP 43
+  #define MX_ADDRESS_DELAY 5
+    
+    if ( RETURN_OK != check_head(buff) ) return RETURN_FAIL;
+    if ( RETURN_OK != check_checksum(buff) ) return RETURN_FAIL;
+  #define MX_ADDRESS_READ_DATA_OFFSET 5
+    uint8_t id = buff[MX_ID];
+    uint8_t b0 = 0;
+    uint8_t b1 = 0;
+    b0 = (MX_ADDRESS_READ_DATA_OFFSET + MX_ADDRESS_POS) - MX_ADDRESS_STATE_START;
+    b1 = (MX_ADDRESS_READ_DATA_OFFSET + MX_ADDRESS_POS) - MX_ADDRESS_STATE_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_pos = chars2uInt16(b0, b1);
+
+    b0 = (MX_ADDRESS_READ_DATA_OFFSET + MX_ADDRESS_SPEED) - MX_ADDRESS_STATE_START;
+    b1 = (MX_ADDRESS_READ_DATA_OFFSET + MX_ADDRESS_SPEED) - MX_ADDRESS_STATE_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_speed = chars2uInt16(b0, b1);
+
+    b0 = (MX_ADDRESS_READ_DATA_OFFSET + MX_ADDRESS_LOAD) - MX_ADDRESS_STATE_START;
+    b1 = (MX_ADDRESS_READ_DATA_OFFSET + MX_ADDRESS_LOAD) - MX_ADDRESS_STATE_START + 1;
+    b0 = buff[b0];
+    b1 = buff[b1];
+    uint16_t buff_load = chars2uInt16(b0, b1);
+
+    b0 = (MX_ADDRESS_READ_DATA_OFFSET + MX_ADDRESS_VOLTAGE) - MX_ADDRESS_STATE_START;
+    b0 = buff[b0];
+    uint8_t buff_voltage = b0;
+
+    b0 = (MX_ADDRESS_READ_DATA_OFFSET + MX_ADDRESS_TEMP) - MX_ADDRESS_STATE_START;
+    b0 = buff[b0];
+    uint8_t buff_temp = b0;
+
+    motor_state[id].pos     = int2double(buff_pos, 12)   * MOTOR_POS_SCALE;
+    motor_state[id].speed   = int2double(buff_speed, 11) * MOTOR_SPEED_SCALE;
+    motor_state[id].load    = int2double(buff_load,11)  * MOTOR_LOAD_SCALE;
+    motor_state[id].voltage = (double)buff_voltage   * MOTOR_VOLTAGE_SCALE;
+    motor_state[id].temp   = (double)buff_temp       * MOTOR_TEMP_SCALE;
+
+    return RETURN_OK;
   }
 
   int update_imu( uint8_t buff[])

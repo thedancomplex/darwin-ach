@@ -21,7 +21,7 @@
 int main()
 {
   // Open
-  darwin::open();
+  darwin::setup();
 
 
   // Turn on motor power
@@ -33,37 +33,29 @@ int main()
   // Try to ping the Dynamixel
   // Get Dynamixel model number
 
+
   double tick = darwin::time();
   double tock = darwin::time();
-
-  printf("d = %d\n", darwin::chars2uInt16(1,2));
-
   while(1)
   {
     // read 1 byte from address 5
     //lofaro::do_read(200, 3);
-//    darwin::get_imu_state();
+    darwin::get_imu_state();
+    darwin::get_motor_state(20);
+    darwin::get_motor_state(14);
+    darwin::get_motor_state(1);
     darwin::get_motor_state();
-    for(int i = 0; i < 30; i++) 
+    darwin::sleep(0.002);
+    
+    bool do_loop = true;
+    while(do_loop) 
     { 
-      darwin::read_buffer(); 
-      darwin::sleep(0.002);
-    }
-    //darwin::read(200, 38, 13);
-/*
-    while ( darwin::read_buffer() != RETURN_OK )
-    {
       tock = darwin::time();
       double dt = tock - tick;
-      double f  = 1/dt;
-      printf("dt = %f\t f = %2f\n",dt, f);
- //     darwin::sleep(0.010);
+      if (dt > 0.01) do_loop = false;
+      darwin::read_buffer(); 
+      darwin::sleep(0.0001);
     }
-*/
-//    printf("imu acc z = %f\n",darwin::imu_acc_z);
-//    printf("voltage = %f\n",darwin::voltage);
- //   darwin::sleep(0.001); 
-
 
     tock = darwin::time();
     double dt = tock - tick;
@@ -71,7 +63,7 @@ int main()
     tick = tock;
     printf("dt = %f\t f = %2f\n",dt, f);
     printf("-------------------\n");
-    
+    darwin::print_state();
   }
   // Turn off motor power
   darwin::off(ID_DARWIN);
