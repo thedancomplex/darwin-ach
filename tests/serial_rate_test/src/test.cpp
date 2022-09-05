@@ -36,15 +36,15 @@ int main()
 
   double tick = darwin::time();
   double tock = darwin::time();
+  int mot_i = 0;
   while(1)
   {
     // read 1 byte from address 5
     //lofaro::do_read(200, 3);
     darwin::get_imu_state();
-    darwin::get_motor_state(20);
-    darwin::get_motor_state(14);
-    darwin::get_motor_state(1);
-    darwin::get_motor_state();
+    darwin::get_motor_state(mot_i+1);
+    mot_i = mot_i+1;
+    if(mot_i > 20) mot_i = 0;
     darwin::sleep(0.002);
     
     bool do_loop = true;

@@ -326,8 +326,11 @@ void print_state()
 
   double int2double(uint16_t val, int bit)
   {
-    double the_out = (double)((int32_t)val - ((2^bit)/2)) / (2^bit);
-    return the_out;
+    double tmp = 0.0;
+    int bit_div = 2^(bit-1);
+    if( val > bit_div ) tmp =(double)(val-bit_div)/(double)bit_div * -1.0;
+    else                tmp =(double)(val        )/(double)bit_div *  1.0;
+    return tmp;
   }
   double int2double(uint16_t val)
   {
