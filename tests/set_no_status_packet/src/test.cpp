@@ -21,7 +21,7 @@
 int main()
 {
   // Open
-  darwin::setup();
+  darwin::open();
 
 
   // Turn on motor power
@@ -30,34 +30,13 @@ int main()
   // Wait 1 second for power to turn on
   darwin::sleep(1.0);
 
-  // Try to ping the Dynamixel
-  // Get Dynamixel model number
+
+  darwin::set_motor_status_level();
 
 
-  double tick = darwin::time();
-  double tock = darwin::time();
-  int mot_i = 20;
-  while(1)
-  {
-    // read 1 byte from address 5
-    //lofaro::do_read(200, 3);
-    darwin::get_imu_state();
-    darwin::get_motor_state(mot_i);
-    darwin::sleep(0.002);
-    
-    bool do_loop = true;
-    while(do_loop) 
-    { 
-      tock = darwin::time();
-      double dt = tock - tick;
-      if (dt > 0.01) do_loop = false;
-      darwin::read_buffer(); 
-      darwin::sleep(0.0001);
-    }
+  // wait 1 second for power off
+  darwin::sleep(1.0);
 
-    tock = darwin::time();
-    darwin::print_state(mot_i);
-  }
   // Turn off motor power
   darwin::off(ID_DARWIN);
 

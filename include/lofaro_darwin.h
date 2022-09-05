@@ -92,7 +92,7 @@ namespace darwin {
   #define MX_ADDRESS_VOLTAGE 42
   #define MX_ADDRESS_TEMP 43
   #define MX_ADDRESS_DELAY 5
-
+  #define MX_ADDRESS_STATUS_RETURN_LEVEL 16
   #define CM730_ADDRESS_VOLTAGE 50
 
   #define FT_ADDRESS_READ_DATA_OFFSET 5
@@ -120,6 +120,7 @@ namespace darwin {
   int sleep(double val);
   double time();
   int set_motor_delays();
+  int set_motor_status_level();
 
   int open();
   int getch();
@@ -212,6 +213,16 @@ void print_state()
     return open();
   }
 
+  int set_motor_status_level()
+  {
+    for( int i = 0; i < DARWIN_MOTOR_NUM; i++ )
+    {
+      write(i+1, MX_ADDRESS_STATUS_RETURN_LEVEL, 2);
+      sleep(0.1); 
+    }
+    return RETURN_OK;
+  }
+
   int set_motor_delays()
   {
     for( int i = 0; i < DARWIN_MOTOR_NUM; i++ )
@@ -263,11 +274,11 @@ void print_state()
     bool do_run = true;
     while(do_run)
     {
-      if( RETURN_OK == check_head(buff) )
+      if( (RETURN_OK == check_head(buff)) & (RETURN_OK == check_checksum(buff)) )
       {
         uint8_t id = buff[BUFFER_ID];
-        if( id == ID_CM730 )     update_imu(buff);
-        else if ( id == ID_FT )  update_ft(buff);
+        if      ( id == ID_CM730 )                                    update_imu(buff);
+        else if ( id == ID_FT )                                       update_ft(buff);
         else if ( (id>=DARWIN_MOTOR_MIN) & (id<=DARWIN_MOTOR_MAX)  )  update_motor_state(buff);
       }
       if ( RETURN_FAIL == get_next_message(buff, &n) ) do_run = false;
@@ -478,19 +489,15 @@ void print_state()
 
   int update_motor_state( uint8_t buff[])
   {
-// ff ff c8 f 0 0 2 0 2 0  2  5  2  bc 1  79 2  7b 68 0
-// 1  2  3  4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-
-  #define MX_ADDRESS_POS 36
-  #define MX_ADDRESS_SPEED 38
-  #define MX_ADDRESS_LOAD 40
-  #define MX_ADDRESS_VOLTAGE 42
-  #define MX_ADDRESS_TEMP 43
-  #define MX_ADDRESS_DELAY 5
-    
-    if ( RETURN_OK != check_head(buff) ) return RETURN_FAIL;
+    if ( RETURN_OK != check_head(buff)     ) return RETURN_FAIL;
     if ( RETURN_OK != check_checksum(buff) ) return RETURN_FAIL;
-  #define MX_ADDRESS_READ_DATA_OFFSET 5
+
+/*
+    uint8_t cs  = lofaro::get_checksum(buff);
+    uint8_t cs2 = buff[ (MX_ADDRESS_TEMP - MX_ADDRESS_STATE_START) -4 ];
+    printf("%x\t %x\n", cs, cs2);
+    if ( cs != cs2 ) return RETURN_FAIL; 
+*/
     uint8_t id = buff[MX_ID];
     uint8_t b0 = 0;
     uint8_t b1 = 0;
@@ -520,11 +527,11 @@ void print_state()
     b0 = buff[b0];
     uint8_t buff_temp = b0;
 
-    motor_state[id].pos     = int2double(buff_pos, 12)   * MOTOR_POS_SCALE;
+    motor_state[id].pos     = int2double(buff_pos,   12) * MOTOR_POS_SCALE;
     motor_state[id].speed   = int2double(buff_speed, 11) * MOTOR_SPEED_SCALE;
-    motor_state[id].load    = int2double(buff_load,11)  * MOTOR_LOAD_SCALE;
-    motor_state[id].voltage = (double)buff_voltage   * MOTOR_VOLTAGE_SCALE;
-    motor_state[id].temp   = (double)buff_temp       * MOTOR_TEMP_SCALE;
+    motor_state[id].load    = int2double(buff_load,  11) * MOTOR_LOAD_SCALE;
+    motor_state[id].voltage = (double)buff_voltage       * MOTOR_VOLTAGE_SCALE;
+    motor_state[id].temp    = (double)buff_temp          * MOTOR_TEMP_SCALE;
 
     return RETURN_OK;
   }
