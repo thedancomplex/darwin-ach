@@ -152,6 +152,8 @@ namespace darwin {
   int setup();
   int update_motor_state( uint8_t buff[]);
   void print_state();
+  void print_state(int id);
+  void print_state_head();
 
   // IMU data
   double imu_gyro_x = -0.0; 
@@ -186,14 +188,21 @@ typedef struct motor_state_def {
 
   motor_state_def_t motor_state[DARWIN_MOTOR_NUM+1];
 
-
-void print_state()
+void print_state_head()
 {
   printf("pos\t\t speed\t\t load\t\t voltage\t\t temp\n");
+}
+void print_state(int id)
+{
+    motor_state_def_t ms = motor_state[id];
+    printf("%f\t %f\t %f\t %f\t %f\n", ms.pos, ms.speed, ms.load, ms.voltage, ms.temp);
+}
+void print_state()
+{
+  print_state_head();
   for(int i = 0; i < (DARWIN_MOTOR_NUM+1); i++)
   {
-    motor_state_def_t ms = motor_state[i];
-    printf("%f\t %f\t %f\t %f\t %f\n", ms.pos, ms.speed, ms.load, ms.voltage, ms.temp);
+    print_state(i);
   }
 }
 
@@ -245,11 +254,11 @@ void print_state()
     int ret = lofaro::do_read_buffer(buff, &n);
 
     if ( n == 0 ) return RETURN_FAIL;
-
+/*
     printf("-----RX buffer = ");
     for( int i = 0; i < n; i++) printf("%x ",buff[i]);
     printf("\n");
-
+*/
 
     bool do_run = true;
     while(do_run)

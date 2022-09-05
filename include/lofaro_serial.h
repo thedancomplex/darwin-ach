@@ -185,11 +185,13 @@ int do_read(uint8_t id, uint8_t buff[], uint8_t buff_length)
   uint8_t the_checksum = get_checksum(msg);
   msg[msg_length_full - 1] = the_checksum;
 
+/*
   printf("checksum = %x\n", the_checksum);
 
   printf("Write Buffer = ");
   for( int i = 0; i < buff_length + 10; i++ ) printf("%x ",(uint8_t)msg[i]);
   printf("\n");
+*/
   write(serial_port, buff, sizeof(msg));
   do_flush();
 
@@ -210,10 +212,11 @@ int do_read(uint8_t id, uint8_t address, uint8_t length_read)
 
   buff[buff_length-1] = the_checksum;
   int n = buff_length;
+/*
   printf("Write Buffer = ");
   for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
   printf("\n");
-  
+*/
   
   write(serial_port, buff, sizeof(buff));
   do_flush();
@@ -235,10 +238,11 @@ int do_read(uint8_t id, uint8_t address)
 
   buff[buff_length-1] = the_checksum;
   int n = buff_length;
+/*
   printf("Write Buffer = ");
   for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
   printf("\n");
-  
+*/
   
   write(serial_port, buff, sizeof(buff));
   do_flush();
