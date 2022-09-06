@@ -127,9 +127,9 @@ DarwinLegacy()
 	sudo mkdir -p $INSTALL_DIR
 	echo $INSTALL_DIR
         sudo cp -r ../include/ $INSTALL_DIR/
-	echo $INCLUDE_DIR
-	sudo rm $INCLUDE_DIR
-        sudo ln -s $INSTALL_DIR/include $INCLUDE_DIR
+#	echo $INCLUDE_DIR
+#	sudo rm $INCLUDE_DIR
+#        sudo ln -s $INSTALL_DIR/include $INCLUDE_DIR
 
 }
 
