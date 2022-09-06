@@ -1,6 +1,8 @@
 HUMBLE_INSTALL_DIR=~/ros2_humble/
 DEB_VERSION=$(env -i bash -c '. /etc/os-release; echo $VERSION_CODENAME')
-
+PACKAGE_NAME=darwin-legacy
+INSTALL_DIR=/etc/$PACKAGE_NAME
+INCLUDE_DIR=/usr/include/$PACKAGE_NAME
 
 InstallRos2()
 {
@@ -118,6 +120,19 @@ LowLatency()
 	echo '---- Low Latency Set ----'
 }
 
+DarwinLegacy()
+{
+	THE_DIR=$(pwd)
+	sudo rm -rf $INSTALL_DIR
+	sudo mkdir -p $INSTALL_DIR
+	echo $INSTALL_DIR
+        sudo cp -r ../include/ $INSTALL_DIR/
+	echo $INCLUDE_DIR
+	sudo rm $INCLUDE_DIR
+        sudo ln -s $INSTALL_DIR/include $INCLUDE_DIR
+
+}
+
 ShowUsage()
 {
 	echo 
@@ -137,6 +152,9 @@ ShowUsage()
 	echo '         drivers                   '
 	echo 'low-latency : sets serial to       '
 	echo '              low latency mode     '
+        echo 'darwin-legacy : install the        '
+        echo '              : darwin-legacy      '
+        echo '              : system             '
 	echo
 }
 
@@ -151,6 +169,10 @@ case "$1" in
 	;;
         'low-latency' )
 		LowLatency $@
+	;;
+
+	'darwin-legacy' )
+		DarwinLegacy $@
 	;;
 	
 	* )
