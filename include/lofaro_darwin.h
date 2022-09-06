@@ -96,6 +96,7 @@ namespace darwin {
   #define MX_ADDRESS_TEMP 43
   #define MX_ADDRESS_DELAY 5
   #define MX_ADDRESS_STATUS_RETURN_LEVEL 16
+  #define MX_ADDRESS_GOAL_POS 30
   #define CM730_ADDRESS_VOLTAGE 50
 
   #define FT_ADDRESS_READ_DATA_OFFSET 5
@@ -109,7 +110,9 @@ namespace darwin {
   #define FT_ADDRESS_FSR_Y 35
   #define FT_ADDRESS_VOLTAGE 42
 
-  #define SERIAL_PORT_DEFAULT "/det/ttyUSB0"
+  # define M_PI           3.14159265358979323846
+
+  #define SERIAL_PORT_DEFAULT "/dev/ttyUSB0"
 
   #define DARWIN_MOTOR_BROADCAST 0Xfe
   #define DARWIN_MOTOR_NUM 20
@@ -126,6 +129,12 @@ namespace darwin {
   int set_motor_delays();
   int set_motor_delays(int val);
   int set_motor_status_level();
+  int set_motor_status_level(int val);
+  int set_motor_pos(int id, double pos);
+  uint16_t double2uint16(double val);
+  uint8_t getMSB(uint16_t val);
+  uint8_t getLSB(uint16_t val);
+  double enc2rad(uint16_t val);
 
   int open();
   int open(const char* the_serial_port);
@@ -249,9 +258,13 @@ void print_state_imu()
 
   int set_motor_status_level()
   {
+    return set_motor_status_level(2);
+  }
+  int set_motor_status_level(int val)
+  {
     for( int i = 0; i < DARWIN_MOTOR_NUM; i++ )
     {
-      write(i+1, MX_ADDRESS_STATUS_RETURN_LEVEL, 2);
+      write(i+1, MX_ADDRESS_STATUS_RETURN_LEVEL, val);
       sleep(0.1); 
     }
     return RETURN_OK;
@@ -420,6 +433,11 @@ void print_state_imu()
   int read(uint8_t id, uint8_t address, uint8_t length)
   {
     return lofaro::do_read(id,address,length);
+  }
+
+  double enc2rad(uint16_t val)
+  {
+    return (double)((double)((int32_t)val - 0x800)) / ( (double)(0x800) ) * M_PI;
   }
 
   double int2double(uint16_t val, int bit)
@@ -682,7 +700,7 @@ void print_state_imu()
     b0 = buff[b0];
     uint8_t buff_temp = b0;
 
-    motor_state[id].pos     = int2double(buff_pos,   12) * MOTOR_POS_SCALE;
+    motor_state[id].pos     = enc2rad(buff_pos);
     motor_state[id].speed   = int2double(buff_speed, 11) * MOTOR_SPEED_SCALE;
     motor_state[id].load    = int2double(buff_load,  11) * MOTOR_LOAD_SCALE;
     motor_state[id].voltage = (double)buff_voltage       * MOTOR_VOLTAGE_SCALE;
@@ -787,5 +805,35 @@ void print_state_imu()
   double time()
   {
     return lofaro::get_time();
+  }
+
+  uint8_t getMSB(uint16_t val)
+  {
+    return (uint8_t)((val >> 8) & 0xff);
+  }
+
+  uint8_t getLSB(uint16_t val)
+  {
+    return (uint8_t)(val & 0xff);
+  }
+
+  uint16_t double2uint16(double val)
+  {
+     uint16_t the_out = 0;
+
+     the_out = (uint16_t)((val / M_PI * 0x800) + 0x800);
+
+     if(the_out > 0xfff) the_out = 0xfff;
+     else if( the_out < 0) the_out = 0;
+
+     return the_out;
+  }
+
+  int set_motor_pos(int id, double pos)
+  {
+    uint16_t val = double2uint16(pos);
+    uint8_t d0 = getLSB(val);
+    uint8_t d1 = getMSB(val);
+    return write(id, MX_ADDRESS_GOAL_POS, d0, d1);
   }
 }
