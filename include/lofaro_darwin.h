@@ -74,6 +74,9 @@ namespace darwin {
   #define CM730_ADDRESS_DYN_POWER 24
   #define DYN_ADDRESS_DYN_POWER CM730_ADDRESS_DYN_POWER
   #define CM730_ADDRESS_ID 3
+  
+#define CM730_ADDRESS_VOLTAGE 50
+  #define CM730_ADDRESS_STATUS_RETURN_LEVEL 16
 
   #define CM730_ADDRESS_IMU_START 38
   #define CM730_ADDRESS_IMU_LENGTH 12
@@ -98,8 +101,8 @@ namespace darwin {
   #define MX_ADDRESS_DELAY 5
   #define MX_ADDRESS_STATUS_RETURN_LEVEL 16
   #define MX_ADDRESS_GOAL_POS 30
-  #define CM730_ADDRESS_VOLTAGE 50
 
+  #define FT_ADDRESS_STATUS_RETURN_LEVEL 16
   #define FT_ADDRESS_READ_DATA_OFFSET 5
   #define FT_ADDRESS_START 26
   #define FT_ADDRESS_LENGTH 10
@@ -136,6 +139,12 @@ namespace darwin {
   uint8_t getLSB(uint16_t val);
   double enc2rad(uint16_t val);
   double enc2radPerSec(uint16_t val);
+  int set_ft_status_level();
+  int set_ft_status_level(int val);
+  int set_cm730_status_level();
+  int set_cm730_status_level(int val);
+  int set_status_level();
+  int set_status_level(int val);
 
   int open();
   int open(const char* the_serial_port);
@@ -270,6 +279,43 @@ void print_state_imu()
       sleep(1.0); 
     }
     return RETURN_OK;
+  }
+  
+  int set_ft_status_level()
+  {
+    return set_ft_status_level(2);
+  }
+
+  int set_ft_status_level(int val)
+  {
+    return write(ID_FT, FT_ADDRESS_STATUS_RETURN_LEVEL, val);
+  }
+
+  int set_cm730_status_level()
+  {
+    return set_cm730_status_level(2);
+  }
+
+  int set_cm730_status_level(int val)
+  {
+    return write(ID_CM730, CM730_ADDRESS_STATUS_RETURN_LEVEL, val);
+  }
+
+  int set_status_level()
+  {
+    return set_status_level(2);
+  }
+
+  int set_status_level(int val)
+  {
+    int ret = 0;
+    ret += set_motor_status_level(val);
+    sleep(1.0);
+    ret += set_ft_status_level(val);
+    sleep(1.0);
+    ret += set_cm730_status_level(val);
+    if( ret >= 0 ) return RETURN_FAIL;
+    else RETURN_OK;
   }
 
   int set_motor_delays(int val)
