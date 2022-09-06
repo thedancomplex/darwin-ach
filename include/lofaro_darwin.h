@@ -286,7 +286,18 @@ void print_state_imu()
   int setup(const char* the_serial_port)
   {
     memset(&motor_state, 0, sizeof(motor_state));
-    return open(the_serial_port);
+    int ret = open(the_serial_port);
+    sleep(2.0);
+    const char* head = "setserial ";
+    const char* foot = " low_latency";
+    char *s = new char[strlen(head) + strlen(foot) + strlen(the_serial_port) + 1];
+    strcpy(s, head);
+    strcat(s, the_serial_port);
+    strcat(s, foot);
+    std::system(s);
+    //std::system("setserial /dev/ttyUSB0 low_latency");
+    sleep(2.0);
+    return ret;
   }
 
   int set_motor_status_level()

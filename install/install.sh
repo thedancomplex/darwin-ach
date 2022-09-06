@@ -127,9 +127,9 @@ DarwinLegacy()
 	sudo mkdir -p $INSTALL_DIR
 	echo $INSTALL_DIR
         sudo cp -r ../include/ $INSTALL_DIR/
-	sudo mkdir /etc/rc.local.d
-	chmod +x darwin-legacy.sh
-	sudo cp darwin-legacy.sh /etc/rc.local.d/
+#	sudo mkdir /etc/rc.local.d
+#	chmod +x darwin-legacy.sh
+#	sudo cp darwin-legacy.sh /etc/rc.local.d/
 #	echo $INCLUDE_DIR
 #	sudo rm $INCLUDE_DIR
 #        sudo ln -s $INSTALL_DIR/include $INCLUDE_DIR
