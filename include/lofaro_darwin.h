@@ -124,6 +124,7 @@ namespace darwin {
   int sleep(double val);
   double time();
   int set_motor_delays();
+  int set_motor_delays(int val);
   int set_motor_status_level();
 
   int open();
@@ -256,11 +257,23 @@ void print_state_imu()
     return RETURN_OK;
   }
 
+  int set_motor_delays(int val)
+  {
+    for( int i = 0; i < DARWIN_MOTOR_NUM; i++ )
+    {
+      int the_delay = i*val;
+      if (the_delay > 250) the_delay = 250;
+      write(i+1, MX_ADDRESS_DELAY, the_delay);
+      sleep(0.1); 
+    }
+    return RETURN_OK;
+  }
+
   int set_motor_delays()
   {
     for( int i = 0; i < DARWIN_MOTOR_NUM; i++ )
     {
-      write(i+1, MX_ADDRESS_DELAY, i*0);
+      write(i+1, MX_ADDRESS_DELAY, i*10);
       sleep(0.1); 
     }
     return RETURN_OK;

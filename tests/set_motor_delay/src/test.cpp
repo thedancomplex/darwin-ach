@@ -31,7 +31,7 @@ int main()
   darwin::sleep(1.0);
 
 
-  darwin::set_motor_delays();
+  darwin::set_motor_delays(0);
 
 
   // wait 1 second for power off
