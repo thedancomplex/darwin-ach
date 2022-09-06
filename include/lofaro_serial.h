@@ -13,7 +13,7 @@
 
 
 namespace lofaro {
-#include <lofaro_utils.h>
+#include "lofaro_utils.h"
 
 #define SERIAL_PKT_LENGTH 3
 

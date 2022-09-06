@@ -34,7 +34,7 @@
 #include <sys/ioctl.h>
 
 
-#include <lofaro_serial.h>
+#include "lofaro_serial.h"
 
 namespace darwin {
 
