@@ -1,0 +1,109 @@
+#include <cstdio>
+
+/* for ROS2 */
+#include <memory>
+
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+using std::placeholders::_1;
+
+
+/* For Darwin Legacy */
+#include <lofaro_darwin.h>
+
+class DarwinLofaro : public rclcpp:Node
+{
+  public:
+    DarwinLofaro()
+    : Node("minimal_publisher"), count_(0)
+    {
+      publisher_ = this->create_publisher<std_msgs::msg::String>("topic", 10);
+      timer_ = this->create_wall_timer(
+      500ms, std::bind(&MinimalPublisher::timer_callback, this));
+    }
+
+  private:
+    void timer_callback()
+    {
+      auto message = std_msgs::msg::String();
+      message.data = "Hello, world! " + std::to_string(count_++);
+      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
+      publisher_->publish(message);
+    }
+    rclcpp::TimerBase::SharedPtr timer_;
+    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+    size_t count_;
+};
+
+int setup()
+{
+    int ret = 0;
+    ret += darwin::setup();
+    ret += darwin::on();
+    darwin::sleep(1.0);
+    if ( ret > 0) return 1;
+    return 0;
+}
+
+void topic_callback(const std_msgs::msg::String & msg) const
+{
+      RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
+}
+
+int loop()
+{
+    double tock = darwin::time();
+    double tick = darwin::time();
+    while(1)
+    {
+
+      for (int i = 1; i <= 20; i++)
+      {
+        darwin::set_motor_pos_set(i, 0.0);
+      }
+      darwin::write_send();
+
+      darwin::get_imu_state_auto();
+      darwin::get_ft_state_auto();
+      darwin::get_motor_state_auto(1);
+      darwin::sleep(0.002);
+
+      double tick2 = darwin::time();
+      double tock2 = darwin::time();
+      bool do_loop = true;
+      while(do_loop)
+      {
+        tock2 = darwin::time();
+        double dt = tock2 - tick2;
+        if (dt > 0.001) do_loop = false;
+        darwin::read_buffer();
+        darwin::sleep(0.0001);
+      }
+
+      tock = darwin::time();
+      double dt = tock - tick;
+      printf("dt = %f\t f = %f\n", dt, 1/dt);
+
+      tick = tock;
+    }
+
+    return 0;
+}
+
+
+
+int main(int argc, char ** argv)
+{
+  (void) argc;
+  (void) argv;
+
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<DarwinLofaro>());
+  rclcpp::shutdown();
+
+  printf("hello world darwin_lofaro package\n");
+  return 0;
+}
+
+
+
