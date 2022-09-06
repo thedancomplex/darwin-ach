@@ -192,6 +192,7 @@ namespace darwin {
   void print_state_imu_head();
   void print_state();
   void print_state_ft();
+  void print_state_ft_head();
   double int2load(uint16_t val);
 
   // IMU data
@@ -233,9 +234,15 @@ void print_state()
   print_state_motor();
   print_state_ft();
 }
+void print_state_ft_head()
+{
+  printf("Left - x:\t\t y:\t\t Right - x:\t\t y:\t\t FSR: - x:\t\t y:\t\t Raised: \n");
+}
+
 void print_state_ft()
 {
-  printf("Left - x: %f\t y: %f\t Right - x: %f\t y: %f\t FSR: - x:%f\t y:%f\t Raised: %d %d\n",
+  print_state_ft_head();
+  printf("\t %f\t %f\t\t %f\t %f\t\t %f\t %f\t %d %d\n",
                  ft_left_x, ft_left_y, ft_right_x, ft_right_y,  ft_fsr_x, ft_fsr_y, ft_fsr_raised_x, ft_fsr_raised_y);
 }
 void print_state_motor_head()
