@@ -131,6 +131,7 @@ namespace darwin {
   int kbhit(void);
   int ping(int val);
   int get_imu_state();
+  int get_imu_state_auto();
   int write(uint8_t id, uint8_t address, uint8_t d0);
   int update_imu(uint8_t val[]);
   int update_imu_setup();
@@ -152,12 +153,16 @@ namespace darwin {
   int read_buffer();
   int get_motor_state();
   int get_motor_state(int id);
+  int get_motor_state_auto();
   int setup();
   int setup(const char* the_serial_port);
   int update_motor_state( uint8_t buff[]);
+  void print_state_motor();
+  void print_state_motor(int id);
+  void print_state_motor_head();
+  void print_state_imu();
+  void print_state_imu_head();
   void print_state();
-  void print_state(int id);
-  void print_state_head();
 
   // IMU data
   double imu_gyro_x = -0.0; 
@@ -192,22 +197,37 @@ typedef struct motor_state_def {
 
   motor_state_def_t motor_state[DARWIN_MOTOR_NUM+1];
 
-void print_state_head()
+void print_state()
 {
-  printf("pos\t\t speed\t\t load\t\t voltage\t\t temp\n");
+  print_state_imu();
+  print_state_motor();
 }
-void print_state(int id)
+
+void print_state_motor_head()
+{
+  printf("pos\t\t speed\t\t load\t\t voltage\t temp\n");
+}
+void print_state_motor(int id)
 {
     motor_state_def_t ms = motor_state[id];
     printf("%f\t %f\t %f\t %f\t %f\n", ms.pos, ms.speed, ms.load, ms.voltage, ms.temp);
 }
-void print_state()
+void print_state_motor()
 {
-  print_state_head();
+  print_state_motor_head();
   for(int i = 0; i < (DARWIN_MOTOR_NUM+1); i++)
   {
-    print_state(i);
+    print_state_motor(i);
   }
+}
+void print_state_imu_head()
+{
+  printf("gyro_x\t\t gyro_y\t\t gyro_z\t\t acc_x\t\t acc_y\t\t acc_z\n");
+}
+void print_state_imu()
+{
+    print_state_imu_head();
+    printf("%f\t %f\t %f\t %f\t %f\t %f\n", imu_gyro_x, imu_gyro_y, imu_gyro_z, imu_acc_x, imu_acc_y, imu_acc_z);
 }
   int setup()
   {
@@ -373,6 +393,50 @@ void print_state()
   int get_imu_state()
   {
     return read( ID_CM730, CM730_ADDRESS_IMU_START, CM730_ADDRESS_IMU_LENGTH + 1 );
+  }
+
+  int get_imu_state_auto()
+  {
+      get_imu_state();
+      bool do_loop = true;
+      double tick = time();
+      double tock = time();
+      double dt = 0.0;
+      while(do_loop)
+      {
+        int ret = read_buffer();
+        if (ret == RETURN_OK) do_loop = false;
+        tock = time();
+        dt = tock - tick;
+        if(dt > 0.001) do_loop = false;
+        sleep(0.0001);
+      }
+      
+    return RETURN_OK;
+  }
+
+
+  int get_motor_state_auto()
+  {
+    for(int i = 0; i < DARWIN_MOTOR_NUM; i++)
+    {
+      get_motor_state(i+1);
+      bool do_loop = true;
+      double tick = time();
+      double tock = time();
+      double dt = 0.0;
+      while(do_loop)
+      {
+        int ret = read_buffer();
+        if (ret == RETURN_OK) do_loop = false;
+        tock = time();
+        dt = tock - tick;
+        if(dt > 0.001) do_loop = false;
+        sleep(0.0001);
+      }
+      
+    }
+    return RETURN_OK;
   }
 
   int get_motor_state()
