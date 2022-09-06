@@ -28,10 +28,13 @@ namespace lofaro {
 #define DYN_WRITE_SYNC    0x83
 #define DYN_READ_BULK     0x92
 
+#define SERIAL_PORT_DEFAULT "/dev/ttyUSB0"
+
 int serial_port = 0;
 
 uint8_t   get_checksum(uint8_t *rxpacket);
 int       do_open();
+int       do_open(const char* the_serial_port);
 int       do_close();
 int       do_write(uint8_t id, uint8_t address, uint8_t d0);
 int       do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
@@ -44,8 +47,12 @@ void do_flush();
 
 struct termios tty;
 
-
 int do_open()
+{
+  return do_open(SERIAL_PORT_DEFAULT);
+}
+
+int do_open(const char* the_serial_port)
 {
 //  struct termios {
 //	tcflag_t c_iflag;		/* input mode flags */
@@ -105,9 +112,9 @@ int do_open()
 
 
 
-  serial_port = open("/dev/ttyUSB0", O_RDWR);
+  serial_port = open(the_serial_port, O_RDWR);
 
-  //serial_port = open("/dev/ttyUSB0", O_RDWR);
+ // serial_port = open("/dev/ttyUSB0", O_RDWR);
 
   // Check for errors
   if (serial_port < 0) {

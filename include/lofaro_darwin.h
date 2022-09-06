@@ -106,6 +106,7 @@ namespace darwin {
   #define FT_ADDRESS_FSR_Y 35
   #define FT_ADDRESS_VOLTAGE 42
 
+  #define SERIAL_PORT_DEFAULT "/det/ttyUSB0"
 
   #define DARWIN_MOTOR_BROADCAST 0Xfe
   #define DARWIN_MOTOR_NUM 20
@@ -123,6 +124,7 @@ namespace darwin {
   int set_motor_status_level();
 
   int open();
+  int open(const char* the_serial_port);
   int getch();
   int on(int val);
   int off(int val);
@@ -151,6 +153,7 @@ namespace darwin {
   int get_motor_state();
   int get_motor_state(int id);
   int setup();
+  int setup(const char* the_serial_port);
   int update_motor_state( uint8_t buff[]);
   void print_state();
   void print_state(int id);
@@ -206,11 +209,15 @@ void print_state()
     print_state(i);
   }
 }
-
   int setup()
   {
+    return setup(SERIAL_PORT_DEFAULT);
+  }
+
+  int setup(const char* the_serial_port)
+  {
     memset(&motor_state, 0, sizeof(motor_state));
-    return open();
+    return open(the_serial_port);
   }
 
   int set_motor_status_level()
@@ -606,7 +613,12 @@ void print_state()
 
   int open()
   {
-    return lofaro::do_open();
+    return open(SERIAL_PORT_DEFAULT);
+  }
+
+  int open(const char* the_serial_port)
+  {
+    return lofaro::do_open(the_serial_port);
   }
 
   int off(int val)

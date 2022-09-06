@@ -21,7 +21,8 @@
 int main()
 {
   // Open
-  darwin::setup();
+  darwin::setup("/dev/ttyUSB0");
+  //darwin::setup("/dev/ttyDARWIN1");
 
 
   // Turn on motor power
@@ -41,7 +42,7 @@ int main()
   {
     // read 1 byte from address 5
     //lofaro::do_read(200, 3);
-    darwin::get_imu_state();
+//    darwin::get_imu_state();
     darwin::get_motor_state(mot_i);
     darwin::sleep(0.002);
     
