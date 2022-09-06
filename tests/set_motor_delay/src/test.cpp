@@ -21,7 +21,7 @@
 int main()
 {
   // Open
-  darwin::open();
+  darwin::open("/dev/ttyUSB0");
 
 
   // Turn on motor power

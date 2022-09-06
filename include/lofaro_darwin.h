@@ -132,6 +132,7 @@ namespace darwin {
   int on();
   int on(int val);
   int off(int val);
+  int off();
   int kbhit(void);
   int ping(int val);
   int get_imu_state();
@@ -259,7 +260,7 @@ void print_state_imu()
   {
     for( int i = 0; i < DARWIN_MOTOR_NUM; i++ )
     {
-      write(i+1, MX_ADDRESS_DELAY, i);
+      write(i+1, MX_ADDRESS_DELAY, i*0);
       sleep(0.1); 
     }
     return RETURN_OK;
@@ -278,12 +279,26 @@ void print_state_imu()
 
   int on()
   {
-    int ret =  write(id, CM730_ADDRESS_DYN_POWER, CM730_ON);
+    int ret =  write(ID_CM730, CM730_ADDRESS_DYN_POWER, CM730_ON);
     sleep(1.0);
-    for( int i = DYN_MOTOR_MIN; i <= DYN_MOTOR_MAX; i++ )
+    for( int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++ )
     {
       ret += write(i, DYN_ADDRESS_DYN_POWER, DYN_ON);
     }
+
+    if( ret > 0 ) return RETURN_FAIL;
+    return RETURN_OK;
+  }
+  int off()
+  {
+    int ret = 0;
+    for( int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++ )
+    {
+      ret += write(i, DYN_ADDRESS_DYN_POWER, DYN_ON);
+    }
+    sleep(1.0);
+
+    ret +=  write(ID_CM730, CM730_ADDRESS_DYN_POWER, CM730_OFF);
 
     if( ret > 0 ) return RETURN_FAIL;
     return RETURN_OK;

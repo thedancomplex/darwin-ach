@@ -26,7 +26,7 @@ int main()
 
 
   // Turn on motor power
-  printf("Power = %d\n", darwin::off(ID_DARWIN));
+  printf("Power = %d\n", darwin::off());
  
   // Wait 1 second for power to turn on
   darwin::sleep(1.0);
