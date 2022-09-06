@@ -38,6 +38,7 @@ int main()
   // Ping each motor
   for (int i = 1; i <=20; i++)
   {
+    printf("%d - ",i);
     darwin::ping(i);
   }
 

@@ -157,6 +157,8 @@ namespace darwin {
   int ping(int val);
   int get_imu_state();
   int get_imu_state_auto();
+  int get_ft_state();
+  int get_ft_state_auto();
   int write(uint8_t id, uint8_t address, uint8_t d0);
   int update_imu(uint8_t val[]);
   int update_imu_setup();
@@ -189,6 +191,7 @@ namespace darwin {
   void print_state_imu();
   void print_state_imu_head();
   void print_state();
+  void print_state_ft();
   double int2load(uint16_t val);
 
   // IMU data
@@ -228,8 +231,13 @@ void print_state()
 {
   print_state_imu();
   print_state_motor();
+  print_state_ft();
 }
-
+void print_state_ft()
+{
+  printf("Left - x: %f\t y: %f\t Right - x: %f\t y: %f\t FSR: - x:%f\t y:%f\t Raised: %d %d\n",
+                 ft_left_x, ft_left_y, ft_right_x, ft_right_y,  ft_fsr_x, ft_fsr_y, ft_fsr_raised_x, ft_fsr_raised_y);
+}
 void print_state_motor_head()
 {
   printf("pos\t\t speed\t\t load\t\t voltage\t temp\n");
@@ -532,6 +540,30 @@ void print_state_imu()
     return RETURN_OK;
   }
 
+  int get_ft_state()
+  {
+    return read( ID_FT, FT_ADDRESS_START, FT_ADDRESS_LENGTH + 1 );
+  }
+
+  int get_ft_state_auto()
+  {
+      get_ft_state();
+      bool do_loop = true;
+      double tick = time();
+      double tock = time();
+      double dt = 0.0;
+      while(do_loop)
+      {
+        int ret = read_buffer();
+        if (ret == RETURN_OK) do_loop = false;
+        tock = time();
+        dt = tock - tick;
+        if(dt > 0.001) do_loop = false;
+        sleep(0.0001);
+      }
+      
+    return RETURN_OK;
+  }
 
   int get_motor_state_auto_i = DARWIN_MOTOR_MIN - 1;
   int get_motor_state_auto_n = 0;
