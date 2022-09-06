@@ -45,7 +45,9 @@ namespace darwin {
 
   // Enumbs and defines
   #define CM730_ON  1
+  #define DYN_ON CM730_ON  
   #define CM730_OFF 0
+  #define DYN_OFF CM730_OFF
   #define DARWIN_ON  CM730_ON
   #define DARWIN_OFF CM730_OFF
   #define IMU_ACC_SCALE 70.67723342939482
@@ -69,6 +71,7 @@ namespace darwin {
 
   // Addresses 
   #define CM730_ADDRESS_DYN_POWER 24
+  #define DYN_ADDRESS_DYN_POWER CM730_ADDRESS_DYN_POWER
   #define CM730_ADDRESS_ID 3
 
   #define CM730_ADDRESS_IMU_START 38
@@ -126,6 +129,7 @@ namespace darwin {
   int open();
   int open(const char* the_serial_port);
   int getch();
+  int on();
   int on(int val);
   int off(int val);
   int kbhit(void);
@@ -264,9 +268,7 @@ void print_state_imu()
 
   int write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
   {
-
-
-     return RETURN_OK; 
+    return lofaro::do_write(id, address, d0, d1);
   }
 
   int write(uint8_t id, uint8_t address, uint8_t d0)
@@ -274,15 +276,28 @@ void print_state_imu()
     return lofaro::do_write(id, address, d0);
   }
 
+  int on()
+  {
+    int ret =  write(id, CM730_ADDRESS_DYN_POWER, CM730_ON);
+    sleep(1.0);
+    for( int i = DYN_MOTOR_MIN; i <= DYN_MOTOR_MAX; i++ )
+    {
+      ret += write(i, DYN_ADDRESS_DYN_POWER, DYN_ON);
+    }
+
+    if( ret > 0 ) return RETURN_FAIL;
+    return RETURN_OK;
+  }
+
   int on(uint8_t id)
   {
-    int ret =  lofaro::do_write(id, CM730_ADDRESS_DYN_POWER, CM730_ON);
+    int ret =  write(id, CM730_ADDRESS_DYN_POWER, CM730_ON);
     if ( ret == 0 ) return RETURN_OK;
     return RETURN_FAIL;
   }
   int off(uint8_t id)
   {
-    int ret =  lofaro::do_write(id, CM730_ADDRESS_DYN_POWER, CM730_OFF);
+    int ret =  write(id, CM730_ADDRESS_DYN_POWER, CM730_OFF);
     if ( ret == 0 ) return RETURN_OK;
     return RETURN_FAIL;
   }
