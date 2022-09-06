@@ -65,6 +65,8 @@ namespace darwin {
   #define MOTOR_LOAD_SCALE 1.0
   #define MOTOR_TEMP_SCALE 1.0
 
+  #define DYN_ID_ALL 0xfe
+
   // Motor IDs
   #define ID_CM730 200
   #define ID_DARWIN ID_CM730
@@ -159,7 +161,12 @@ namespace darwin {
   int get_imu_state_auto();
   int get_ft_state();
   int get_ft_state_auto();
+  int write(uint8_t id, uint8_t address);
   int write(uint8_t id, uint8_t address, uint8_t d0);
+  int write_set(uint8_t id, uint8_t address);
+  int write_set(uint8_t id, uint8_t address, uint8_t d0);
+  int write_send();
+  int write_send(uint8_t id);
   int update_imu(uint8_t val[]);
   int update_imu_setup();
   int update_imu_slow();
@@ -355,10 +362,29 @@ void print_state_imu()
     return RETURN_OK;
   }
 
+  int write_send()
+  {
+    return lofaro::do_write_send(DYN_ID_ALL);
+  }
+
+  int write_send(uint8_t id)
+  {
+    return lofaro::do_write_send(id);
+  }
+
+  int write_set(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
+  {
+    return lofaro::do_write_set(id, address, d0, d1);
+  }
 
   int write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
   {
     return lofaro::do_write(id, address, d0, d1);
+  }
+
+  int write_set(uint8_t id, uint8_t address, uint8_t d0)
+  {
+    return lofaro::do_write_set(id, address, d0);
   }
 
   int write(uint8_t id, uint8_t address, uint8_t d0)
@@ -944,6 +970,14 @@ void print_state_imu()
      else if( the_out < 0) the_out = 0;
 
      return the_out;
+  }
+
+  int set_motor_pos_set(int id, double pos)
+  {
+    uint16_t val = double2uint16(pos);
+    uint8_t d0 = getLSB(val);
+    uint8_t d1 = getMSB(val);
+    return write_set(id, MX_ADDRESS_GOAL_POS, d0, d1);
   }
 
   int set_motor_pos(int id, double pos)

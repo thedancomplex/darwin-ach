@@ -17,6 +17,7 @@ namespace lofaro {
 
 #define SERIAL_PKT_LENGTH 3
 
+#define DYN_ID_ALL        0xfe
 
 #define DYN_PING          0x01
 #define DYN_READ          0x02
@@ -39,6 +40,10 @@ int       do_close();
 int       do_write(uint8_t id, uint8_t address, uint8_t d0);
 int       do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
 int       do_write(uint8_t id, uint8_t address, uint8_t length, uint8_t *dn);
+int       do_write_set(uint8_t id, uint8_t address, uint8_t d0);
+int       do_write_set(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1);
+int       do_write_send();
+int       do_write_send(uint8_t id);
 int       do_read(uint8_t id, uint8_t address);
 int       do_read(uint8_t id, uint8_t address, uint8_t length);
 int       do_read(uint8_t id, uint8_t buff[], uint8_t buff_length);
@@ -140,6 +145,32 @@ int do_close()
   return 0;
 }
 
+int do_write_set(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
+{
+  // Get ID Example
+  uint8_t length = 2 + 2 + 1;
+  uint8_t instruction = DYN_WRITE_REG;
+  uint8_t the_address = address;
+  uint8_t msg[] = { 255, 255, id, length, instruction, address, d0, d1};
+  uint8_t the_checksum = get_checksum(msg);
+  uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
+  uint8_t buff[buff_length];
+  for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
+
+  buff[buff_length-1] = the_checksum;
+  int n = buff_length;
+/*
+  printf("Write Buffer = ");
+  for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
+  printf("\n");
+*/
+  
+  write(serial_port, buff, sizeof(buff));
+  do_flush();
+//  do_read();
+  return 0;
+}
+
 int do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
 {
   // Get ID Example
@@ -165,6 +196,63 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
 //  do_read();
   return 0;
 }
+
+int do_write_set(uint8_t id, uint8_t address, uint8_t d0)
+{
+  // Get ID Example
+  uint8_t length = 2 + 2;
+  uint8_t instruction = DYN_WRITE_REG;
+  uint8_t the_address = address;
+  uint8_t msg[] = { 255, 255, id, length, instruction, address, d0};
+  uint8_t the_checksum = get_checksum(msg);
+  uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
+  uint8_t buff[buff_length];
+  for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
+
+  buff[buff_length-1] = the_checksum;
+  int n = buff_length;
+/*
+  printf("Write Buffer = ");
+  for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
+  printf("\n");
+*/
+  
+  write(serial_port, buff, sizeof(buff));
+  do_flush();
+//  do_read();
+  return 0;
+}
+
+int do_write_send()
+{
+  return do_write_send( DYN_ID_ALL );
+}
+
+int do_write_send(uint8_t id)
+{
+  // Get ID Example
+  uint8_t length = 2;
+  uint8_t instruction = DYN_ACTION;
+  uint8_t msg[] = { 255, 255, id, length, instruction};
+  uint8_t the_checksum = get_checksum(msg);
+  uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
+  uint8_t buff[buff_length];
+  for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
+
+  buff[buff_length-1] = the_checksum;
+  int n = buff_length;
+/*
+  printf("Write Buffer = ");
+  for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
+  printf("\n");
+*/
+  
+  write(serial_port, buff, sizeof(buff));
+  do_flush();
+//  do_read();
+  return 0;
+}
+
 
 int do_write(uint8_t id, uint8_t address, uint8_t d0)
 {
