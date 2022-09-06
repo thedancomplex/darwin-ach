@@ -38,6 +38,7 @@
 
 namespace darwin {
 
+  # define M_PI           3.14159265358979323846
 
   // Buffer positions
   #define BUFFER_ID 2
@@ -59,8 +60,8 @@ namespace darwin {
   #define RETURN_OK 0
   #define RETURN_FAIL 1
   #define MOTOR_VOLTAGE_SCALE 0.1
-  #define MOTOR_POS_SCALE 1.0 / 4096.0 * 2.0 * 3.14159265359
-  #define MOTOR_SPEED_SCALE 0.11 / 60.0 * 2.0 * 3.14159265359
+  #define MOTOR_POS_SCALE 1.0 / 4096.0 * 2.0 * M_PI
+  #define MOTOR_SPEED_SCALE 0.11 / 60.0  * 2.0 * M_PI
   #define MOTOR_LOAD_SCALE 1.0
   #define MOTOR_TEMP_SCALE 1.0
 
@@ -110,7 +111,6 @@ namespace darwin {
   #define FT_ADDRESS_FSR_Y 35
   #define FT_ADDRESS_VOLTAGE 42
 
-  # define M_PI           3.14159265358979323846
 
   #define SERIAL_PORT_DEFAULT "/dev/ttyUSB0"
 
@@ -135,6 +135,7 @@ namespace darwin {
   uint8_t getMSB(uint16_t val);
   uint8_t getLSB(uint16_t val);
   double enc2rad(uint16_t val);
+  double enc2radPerSec(uint16_t val);
 
   int open();
   int open(const char* the_serial_port);
@@ -701,12 +702,27 @@ void print_state_imu()
     uint8_t buff_temp = b0;
 
     motor_state[id].pos     = enc2rad(buff_pos);
-    motor_state[id].speed   = int2double(buff_speed, 11) * MOTOR_SPEED_SCALE;
+    motor_state[id].speed   = enc2radPerSec(buff_speed) * MOTOR_SPEED_SCALE;
     motor_state[id].load    = int2double(buff_load,  11) * MOTOR_LOAD_SCALE;
     motor_state[id].voltage = (double)buff_voltage       * MOTOR_VOLTAGE_SCALE;
     motor_state[id].temp    = (double)buff_temp          * MOTOR_TEMP_SCALE;
 
     return RETURN_OK;
+  }
+
+  double enc2radPerSec(uint16_t val)
+  {
+    double dir = 1.0;
+    int16_t mag_i = val & 0x3ff;
+    int16_t dir_i = val & 0x400;
+
+    if (dir_i) dir = -1.0;
+    double the_out = (double)mag_i * dir * MOTOR_SPEED_SCALE;
+    //double the_out = (double)mag_i / (double)0x400 * dir * MOTOR_SPEED_SCALE;
+
+    return the_out;
+
+    //return (double)( ((int32_t)(val) - 0x400) / 0x400 * MOTOR_SPEED_SCALE);
   }
 
   int update_imu( uint8_t buff[])

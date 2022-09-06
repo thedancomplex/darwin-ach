@@ -38,12 +38,21 @@ int main()
   double tick = darwin::time();
   double tock = darwin::time();
   int mot_i = 19;
+
+  int di = 0;
+  double deg = 0.5;
   while(1)
   {
     // read 1 byte from address 5
     //lofaro::do_read(200, 3);
 //    darwin::get_imu_state();
-    darwin::set_motor_pos(mot_i, 0.0);
+    if( di > 200)
+    {
+      di = 0;
+      deg = -deg;
+    }
+    di++;
+    darwin::set_motor_pos(mot_i,deg);
     darwin::get_motor_state(mot_i);
     darwin::sleep(0.002);
     
