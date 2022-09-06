@@ -180,6 +180,7 @@ namespace darwin {
   void print_state_imu();
   void print_state_imu_head();
   void print_state();
+  double int2load(uint16_t val);
 
   // IMU data
   double imu_gyro_x = -0.0; 
@@ -266,7 +267,7 @@ void print_state_imu()
     for( int i = 0; i < DARWIN_MOTOR_NUM; i++ )
     {
       write(i+1, MX_ADDRESS_STATUS_RETURN_LEVEL, val);
-      sleep(0.1); 
+      sleep(1.0); 
     }
     return RETURN_OK;
   }
@@ -702,12 +703,27 @@ void print_state_imu()
     uint8_t buff_temp = b0;
 
     motor_state[id].pos     = enc2rad(buff_pos);
-    motor_state[id].speed   = enc2radPerSec(buff_speed) * MOTOR_SPEED_SCALE;
-    motor_state[id].load    = int2double(buff_load,  11) * MOTOR_LOAD_SCALE;
+    motor_state[id].speed   = enc2radPerSec(buff_speed);
+    motor_state[id].load    = int2load(buff_load);
     motor_state[id].voltage = (double)buff_voltage       * MOTOR_VOLTAGE_SCALE;
     motor_state[id].temp    = (double)buff_temp          * MOTOR_TEMP_SCALE;
 
     return RETURN_OK;
+  }
+
+  double int2load(uint16_t val)
+  {
+    double dir = 1.0;
+    int16_t mag_i = val & 0x3ff;
+    int16_t dir_i = val & 0x400;
+
+    if (dir_i) dir = -1.0;
+    double the_out = (double)mag_i / (double)0x400 * dir * MOTOR_LOAD_SCALE;
+    //double the_out = (double)mag_i / (double)0x400 * dir * MOTOR_SPEED_SCALE;
+
+    return the_out;
+
+    //return (double)( ((int32_t)(val) - 0x400) / 0x400 * MOTOR_SPEED_SCALE);
   }
 
   double enc2radPerSec(uint16_t val)
