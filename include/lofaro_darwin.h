@@ -262,6 +262,13 @@ void print_state_imu()
   }
 
 
+  int write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
+  {
+
+
+     return RETURN_OK; 
+  }
+
   int write(uint8_t id, uint8_t address, uint8_t d0)
   {
     return lofaro::do_write(id, address, d0);
@@ -721,12 +728,12 @@ void print_state_imu()
 
   int off(int val)
   {
-    return 0;
+    return lofaro::do_write(val, CM730_ADDRESS_DYN_POWER,CM730_OFF); 
   }
 
   int on(int val)
   {
-    return 0;
+    return lofaro::do_write(val, CM730_ADDRESS_DYN_POWER,CM730_ON); 
   }
 
   int ping(int val)

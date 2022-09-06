@@ -62,7 +62,7 @@ int main()
     double tock2 = darwin::time();
     double dt2 = tock2 - tick2;
     printf("dt = %f\t f = %f\n", dt2, 1/dt2);
-    //darwin::print_state();
+    darwin::print_state();
   }
   // Turn off motor power
   darwin::off(ID_DARWIN);
