@@ -45,7 +45,7 @@ int main()
     // read 1 byte from address 5
     //lofaro::do_read(200, 3);
     darwin::get_imu_state_auto();
-    darwin::get_motor_state_auto();
+    darwin::get_motor_state_auto(1);
     darwin::sleep(0.002);
     
     bool do_loop = true;
@@ -57,6 +57,7 @@ int main()
       darwin::read_buffer(); 
       darwin::sleep(0.0001);
     }
+
 
     double tock2 = darwin::time();
     double dt2 = tock2 - tick2;

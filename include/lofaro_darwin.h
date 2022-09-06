@@ -154,6 +154,7 @@ namespace darwin {
   int get_motor_state();
   int get_motor_state(int id);
   int get_motor_state_auto();
+  int get_motor_state_auto(int n);
   int setup();
   int setup(const char* the_serial_port);
   int update_motor_state( uint8_t buff[]);
@@ -415,6 +416,39 @@ void print_state_imu()
     return RETURN_OK;
   }
 
+
+  int get_motor_state_auto_i = DARWIN_MOTOR_MIN - 1;
+  int get_motor_state_auto_n = 0;
+
+  int get_motor_state_auto(int n)
+  {
+  //#define DARWIN_MOTOR_MIN 1
+  //#define DARWIN_MOTOR_MAX 20
+    // updates next motor only and switches every n cycles
+    get_motor_state_auto_n++;
+    if (get_motor_state_auto_n < n) return RETURN_OK;
+    get_motor_state_auto_n = 0;
+
+    get_motor_state_auto_i++;
+    if(get_motor_state_auto_i > DARWIN_MOTOR_MAX) get_motor_state_auto_i = DARWIN_MOTOR_MIN - 1;
+
+     get_motor_state(get_motor_state_auto_i);
+     bool do_loop = true;
+     double tick = time();
+     double tock = time();
+     double dt = 0.0;
+     while(do_loop)
+     {
+        int ret = read_buffer();
+        if (ret == RETURN_OK) do_loop = false;
+        tock = time();
+        dt = tock - tick;
+        if(dt > 0.001) do_loop = false;
+        sleep(0.0001);
+     }
+      
+     return RETURN_OK;
+  }
 
   int get_motor_state_auto()
   {
