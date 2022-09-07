@@ -348,7 +348,7 @@ void print_state_imu()
     sleep(1.0);
     ret += set_cm730_status_level(val);
     if( ret >= 0 ) return RETURN_FAIL;
-    else RETURN_OK;
+    return RETURN_OK;
   }
 
   int set_motor_delays(int val)

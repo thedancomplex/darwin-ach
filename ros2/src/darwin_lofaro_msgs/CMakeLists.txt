@@ -23,7 +23,12 @@ find_package(std_msgs REQUIRED)
 
 set(msg_files
   "msg/MotorRefStamped.msg"
+  "msg/MotorRef.msg"
+  "msg/String.msg"
+  DEPENDENCIES builtin_interfaces
 )
+
+ament_export_dependencies(rosidl_default_runtime)
 
 #set(srv_files
 #  "srv/Ping.srv"
@@ -34,7 +39,6 @@ set(msg_files
 
 rosidl_generate_interfaces(darwin_lofaro_msgs
   ${msg_files}
-  ${srv_files}
   DEPENDENCIES builtin_interfaces std_msgs
 )
 
