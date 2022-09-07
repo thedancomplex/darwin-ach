@@ -2,16 +2,26 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
+
+/* Darwin-Legacy */
+#include <lofaro_darwin.h>
+
 using std::placeholders::_1;
 
-class MinimalSubscriber : public rclcpp::Node
+class DarwinLofaroRef : public rclcpp::Node
 {
   public:
-    MinimalSubscriber()
-    : Node("minimal_subscriber")
+    DarwinLofaroRef(int i)
+    : Node("darwin_lofaro_ref_subscriber")
     {
+      const char* head = "/darwin/ref/joint";
+      std::string s = std::to_string(i);
+      const char* id = s.c_str();
+      char* top = new char[strlen(head) + strlen(id) + 1];
+      strcpy(top, head);
+      strcat(top, id);
       subscription_ = this->create_subscription<std_msgs::msg::String>(
-      "topic", 10, std::bind(&MinimalSubscriber::topic_callback, this, _1));
+      top, 10, std::bind(&DarwinLofaroRef::topic_callback, this, _1));
     }
 
   private:
@@ -25,7 +35,19 @@ class MinimalSubscriber : public rclcpp::Node
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<MinimalSubscriber>());
+
+  rclcpp::executors::SingleThreadedExecutor exec;
+
+  std::shared_ptr<DarwinLofaroRef> node_darwin[20];
+  for( int i = 0; i < 20; i++ )
+  {
+    node_darwin[i] = std::make_shared<DarwinLofaroRef>(i);
+    exec.add_node(node_darwin[i]);
+  }
+  //std::shared_ptr node1 = std::make_shared<DarwinLofaroRef>(1);
+  //auto node1 = std::make_shared<DarwinLofaroRef>(1);
+  exec.spin();
+//  rclcpp::spin(std::make_shared<MinimalSubscriber>());
   rclcpp::shutdown();
   return 0;
 }
