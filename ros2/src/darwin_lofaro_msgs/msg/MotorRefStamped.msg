@@ -1,2 +1,5 @@
+# Motor Ref Stamped
+
+std_msgs/Header header
 uint16 id
-float64 ref
+float32 ref

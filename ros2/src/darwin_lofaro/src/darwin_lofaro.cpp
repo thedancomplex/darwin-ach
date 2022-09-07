@@ -25,15 +25,16 @@ class DarwinLofaroRef : public rclcpp::Node
         strcat(top, id);
       */
         const char* top = "/darwin/ref";
-        subscription_ = this->create_subscription<std_msgs::msg::String>(top, 10, std::bind(&DarwinLofaroRef::topic_callback, this, _1));
+        subscription_ = this->create_subscription<darwin_lofaro_msgs::msg::MotorRefStamped>(top, 10, std::bind(&DarwinLofaroRef::topic_callback, this, _1));
+        //subscription_ = this->create_subscription<std_msgs::msg::String>(top, 10, std::bind(&DarwinLofaroRef::topic_callback, this, _1));
     }
 
   private:
-    void topic_callback(const std_msgs::msg::String & msg) const
+    void topic_callback(const darwin_lofaro_msgs::msg::MotorRefStamped & msg) const
     {
-      RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
+      //RCLCPP_INFO(this->get_logger(), "I heard: '%d'", msg.id);
     }
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
+    rclcpp::Subscription<darwin_lofaro_msgs::msg::MotorRefStamped>::SharedPtr subscription_;
 };
 
 int main(int argc, char * argv[])
