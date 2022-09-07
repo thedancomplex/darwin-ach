@@ -76,6 +76,52 @@ class DarwinLofaroState : public rclcpp::Node
 };
 
 
+class DarwinLofaroCmd : public rclcpp::Node
+{
+  public:
+    DarwinLofaroCmd() : Node("darwin_lofaro_cmd_subscriber")
+    {
+        const char* top = "/darwin/cmd";
+        subscription_ = this->create_subscription<std_msgs::msg::String>(top, 10, std::bind(&DarwinLofaroCmd::topic_callback, this, _1));
+    }
+
+  private:
+
+    void topic_callback(const std_msgs::msg::String & msg) const
+    {
+      std::string str_msg = msg.data;
+      std::string str_on  ("on all");
+      std::string str_off ("off all");
+
+      const char delim = ' ';
+      std::vector<std::string> dout;
+      lofaro::do_split(str_msg, delim, dout);
+
+      int i = 0;
+      for(auto &str_msg: dout)
+      {
+         RCLCPP_INFO(this->get_logger(), "Message[%d]: %s", i, dout[i].c_str());
+         i++;
+      }
+      RCLCPP_INFO(this->get_logger(), "Message Length: '%d'", i);
+
+
+      if     ( str_msg.compare(str_on) == 0 )
+      {
+        RCLCPP_INFO(this->get_logger(), "Turing on Darwin-Lofaro Legacy");
+        darwin::setup("/dev/ttyUSB0");
+        darwin::on();
+      }
+      else if( str_msg.compare(str_off) == 0 )
+      {
+        RCLCPP_INFO(this->get_logger(), "Turing off Darwin-Lofaro Legacy");
+        darwin::off();
+      }
+      RCLCPP_INFO(this->get_logger(), "Message: '%s'", str_msg.c_str());
+    }
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
+};
+
 
 int main(int argc, char * argv[])
 {
@@ -85,9 +131,11 @@ int main(int argc, char * argv[])
 
   auto node_darwin_ref   = std::make_shared<DarwinLofaroRef>();
   auto node_darwin_state = std::make_shared<DarwinLofaroState>();
+  auto node_darwin_cmd   = std::make_shared<DarwinLofaroCmd>();
   //std::shared_ptr<DarwinLofaroRef> node_darwin = std::make_shared<DarwinLofaroRef>(i);
   exec.add_node(node_darwin_ref);
   exec.add_node(node_darwin_state);
+  exec.add_node(node_darwin_cmd);
 
 
   //std::shared_ptr node1 = std::make_shared<DarwinLofaroRef>(1);
