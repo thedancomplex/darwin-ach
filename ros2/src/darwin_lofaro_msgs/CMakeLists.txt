@@ -28,7 +28,6 @@ set(msg_files
   DEPENDENCIES builtin_interfaces
 )
 
-ament_export_dependencies(rosidl_default_runtime)
 
 #set(srv_files
 #  "srv/Ping.srv"
@@ -37,9 +36,11 @@ ament_export_dependencies(rosidl_default_runtime)
 #  "srv/BulkRead.srv"
 #  "srv/SyncWrite.srv")
 
-rosidl_generate_interfaces(darwin_lofaro_msgs
+rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}
   DEPENDENCIES builtin_interfaces std_msgs
 )
+
+ament_export_dependencies(rosidl_default_runtime)
 
 ament_package()

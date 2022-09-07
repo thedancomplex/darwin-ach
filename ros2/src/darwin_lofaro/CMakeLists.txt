@@ -9,14 +9,13 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
-find_package(darwin_lofaro_msgs REQUIRED)
 
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
 add_executable(darwin_lofaro src/darwin_lofaro.cpp)
-ament_target_dependencies(darwin_lofaro rclcpp std_msgs darwin_lofaro_msgs)
+ament_target_dependencies(darwin_lofaro rclcpp std_msgs)
 target_include_directories(darwin_lofaro PUBLIC
   /etc/darwin-legacy/include/
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
