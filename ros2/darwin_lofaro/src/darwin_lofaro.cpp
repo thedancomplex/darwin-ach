@@ -2,6 +2,9 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "darwin_lofaro_msgs/msg/motor_ref_stamped.hpp"
+//#include "darwin_lofaro_msgs/msg/MotorRefStamped.hpp"
+
 
 /* Darwin-Legacy */
 #include <lofaro_darwin.h>
