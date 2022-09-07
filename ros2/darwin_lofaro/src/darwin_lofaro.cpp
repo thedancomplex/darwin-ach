@@ -11,17 +11,18 @@ using std::placeholders::_1;
 class DarwinLofaroRef : public rclcpp::Node
 {
   public:
-    DarwinLofaroRef(int i)
-    : Node("darwin_lofaro_ref_subscriber")
+    DarwinLofaroRef() : Node("darwin_lofaro_ref_subscriber")
     {
-      const char* head = "/darwin/ref/joint";
-      std::string s = std::to_string(i);
-      const char* id = s.c_str();
-      char* top = new char[strlen(head) + strlen(id) + 1];
-      strcpy(top, head);
-      strcat(top, id);
-      subscription_ = this->create_subscription<std_msgs::msg::String>(
-      top, 10, std::bind(&DarwinLofaroRef::topic_callback, this, _1));
+      /*
+        const char* head = "/darwin/ref";
+        std::string s = std::to_string(i);
+        const char* id = s.c_str();
+        char* top = new char[strlen(head) + strlen(id) + 1];
+        strcpy(top, head);
+        strcat(top, id);
+      */
+        const char* top = "/darwin/ref";
+        subscription_ = this->create_subscription<std_msgs::msg::String>(top, 10, std::bind(&DarwinLofaroRef::topic_callback, this, _1));
     }
 
   private:
@@ -38,12 +39,11 @@ int main(int argc, char * argv[])
 
   rclcpp::executors::SingleThreadedExecutor exec;
 
-  std::shared_ptr<DarwinLofaroRef> node_darwin[20];
-  for( int i = 0; i < 20; i++ )
-  {
-    node_darwin[i] = std::make_shared<DarwinLofaroRef>(i);
-    exec.add_node(node_darwin[i]);
-  }
+  auto node_darwin = std::make_shared<DarwinLofaroRef>();
+  //std::shared_ptr<DarwinLofaroRef> node_darwin = std::make_shared<DarwinLofaroRef>(i);
+  exec.add_node(node_darwin);
+
+
   //std::shared_ptr node1 = std::make_shared<DarwinLofaroRef>(1);
   //auto node1 = std::make_shared<DarwinLofaroRef>(1);
   exec.spin();
