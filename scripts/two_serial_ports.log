@@ -1,0 +1,27 @@
+Use case 1
+
+Multiplexing serial input only or output only device attached to /dev/ttyS0, for use with multiple applications.
+
+1. Create a new tty_bus called /tmp/ttyS0mux:
+
+tty_bus -d -s /tmp/ttyS0mux
+
+2. Connect the real device to the bus using tty_attach:
+
+tty_attach -d -s /tmp/ttyS0mux /dev/ttyS0
+
+3. Create two fake /dev/ttyS0 devices, attached to the bus:
+
+tty_fake -d -s /tmp/ttyS0mux /dev/ttyS0fake0
+
+tty_fake -d -s /tmp/ttyS0mux /dev/ttyS0fake1
+
+4. Start your application and force it to use the new serial device for input or output
+
+/bin/foo /dev/ttyS0fake0 &
+
+/bin/bar /dev/ttyS0fake1 &
+
+Both application will read (or write) from the same serial device.
+
+
