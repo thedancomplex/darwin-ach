@@ -35,6 +35,7 @@
 
 
 #include "lofaro_serial.h"
+#include "lofaro_coms.h"
 
 namespace darwin {
 
