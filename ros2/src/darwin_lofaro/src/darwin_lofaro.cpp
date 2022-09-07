@@ -5,6 +5,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 //#include "darwin_lofaro_msgs/msg/motor_ref_stamped.hpp"
 //#include "darwin_lofaro_msgs/msg/string.hpp"
 //#include "darwin_lofaro_msgs/msg/motor_ref.hpp"
@@ -49,7 +50,8 @@ class DarwinLofaroState : public rclcpp::Node
     DarwinLofaroState()
     : Node("darwin_lofaro_state_publisher"), count_(0)
     {
-      publisher_ = this->create_publisher<std_msgs::msg::String>("/darwin/ref", 10);
+      publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/imu", 10);
+      //publisher_ = this->create_publisher<std_msgs::msg::String>("/darwin/ref", 10);
       timer_ = this->create_wall_timer(
       500ms, std::bind(&DarwinLofaroState::timer_callback, this));
     }
@@ -57,13 +59,19 @@ class DarwinLofaroState : public rclcpp::Node
   private:
     void timer_callback()
     {
-      auto message = std_msgs::msg::String();
-      message.data = "Hello, world! " + std::to_string(count_++);
-      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
+      auto message = geometry_msgs::msg::Twist();
+      message.linear.x = 1.0;
+      message.linear.y = 2.0;
+      message.linear.z = 3.0;
+      message.angular.x = 4.0;
+      message.angular.y = 5.0;
+      message.angular.z = 6.0;
+//      message.data = "Hello, world! " + std::to_string(count_++);
+//      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
       publisher_->publish(message);
     }
     rclcpp::TimerBase::SharedPtr timer_;
-    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
     size_t count_;
 };
 
