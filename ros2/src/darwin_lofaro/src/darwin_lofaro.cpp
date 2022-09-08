@@ -51,10 +51,11 @@ class DarwinLofaroRef : public rclcpp::Node
 
       if( length     <  2 ) return;
       if( (length%2) != 0 ) return;
-
+//      printf("length = %d\n", length);
 
       for( int i = 0; i < length; i = i + 2 )
-      {
+      { 
+//        printf("i = %d\n",i);
         try
         {
          std::string s0 = dout[i];
@@ -66,14 +67,12 @@ class DarwinLofaroRef : public rclcpp::Node
          if(mot_val < -(M_PI / 2.0)) return;
 
          darwin::motor_ref[mot_num] = mot_val;
-         return;
          throw 1;
         }
-        catch(...)
-        {
-           return;
-        }
+        catch(...){}
       }
+
+      return;
     }
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 };
