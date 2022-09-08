@@ -3,6 +3,7 @@ DEB_VERSION=$(env -i bash -c '. /etc/os-release; echo $VERSION_CODENAME')
 PACKAGE_NAME=darwin-legacy
 INSTALL_DIR=/etc/$PACKAGE_NAME
 INCLUDE_DIR=/usr/include/$PACKAGE_NAME
+ROS_BUILD_FILE=do_build.sh
 
 InstallRos2()
 {
@@ -120,6 +121,19 @@ LowLatency()
 	echo '---- Low Latency Set ----'
 }
 
+DarwinLegacyRos2()
+{
+	DarwinLegacy
+	THE_DIR=$(pwd)
+	sudo chmod -R 777 $INSTALL_DIR/ros2
+	cp ../scripts/$ROS_BUILD_FILE $INSTALL_DIR/ros2
+	cd $INSTALL_DIR/ros2
+	chmod +x $ROS_BUILD_FILE
+	source $ROS_BUILD_FILE
+	sudo chmod -R 755 $INSTALL_DIR/ros2
+	cd $THE_DIR
+}
+
 DarwinLegacy()
 {
 	THE_DIR=$(pwd)
@@ -127,6 +141,7 @@ DarwinLegacy()
 	sudo mkdir -p $INSTALL_DIR
 	echo $INSTALL_DIR
         sudo cp -r ../include/ $INSTALL_DIR/
+        sudo cp -r ../ros2/ $INSTALL_DIR/
 #	sudo mkdir /etc/rc.local.d
 #	chmod +x darwin-legacy.sh
 #	sudo cp darwin-legacy.sh /etc/rc.local.d/
@@ -139,25 +154,22 @@ DarwinLegacy()
 ShowUsage()
 {
 	echo 
-	echo '==================================='
-	echo '==================================='
-	echo '====== ROS2 and CM730 Install======'
-	echo '======  for the Darwin OP    ======'
-	echo '==================================='
-	echo '======== Daniel M. Lofaro ========='
-	echo '======== dan@danlofaro.com ========'
-	echo '==================================='
-	echo '==================================='
+	echo '================================================='
+	echo '================================================='
+	echo '============= ROS2 and CM730 Install============='
+	echo '=============  for the Darwin OP    ============='
+	echo '================================================='
+	echo '=============== Daniel M. Lofaro ================'
+	echo '=============== dan@danlofaro.com ==============='
+	echo '================================================='
+	echo '================================================='
 	echo ''
-	echo 'ros2   : installs ros 2 from source'
-        echo '         (~24hr on Darwin OPs CPU) '
-	echo 'cm730  : installs cm730 (ros2)     '
-	echo '         drivers                   '
-	echo 'low-latency : sets serial to       '
-	echo '              low latency mode     '
-        echo 'darwin-legacy : install the        '
-        echo '              : darwin-legacy      '
-        echo '              : system             '
+	echo 'ros2          : installs ros 2 from source       '
+        echo '                 (~24hr on Darwin OPs CPU)       '
+	echo 'cm730         : installs cm730 (ros2) drivers    '
+	echo 'low-latency   : sets serial to low latency mode  '
+        echo 'darwin-legacy : install the darwin-legacy system '
+        echo 'darwin-ros2   : install the darwin-ros2 system   '
 	echo
 }
 
@@ -177,6 +189,11 @@ case "$1" in
 	'darwin-legacy' )
 		DarwinLegacy $@
 	;;
+
+	'darwin-ros2' )
+		DarwinLegacyRos2 $@
+	;;
+	
 	
 	* )
 		ShowUsage
