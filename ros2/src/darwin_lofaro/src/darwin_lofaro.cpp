@@ -15,8 +15,9 @@ using namespace std::chrono_literals;
 
 /* Darwin-Legacy */
 #include <lofaro_darwin.h>
-
+#include <lofaro_utils_ros2.h>
 using std::placeholders::_1;
+
 
 class DarwinLofaroRef : public rclcpp::Node
 {
@@ -38,7 +39,7 @@ class DarwinLofaroRef : public rclcpp::Node
   private:
     void topic_callback(const std_msgs::msg::String & msg) const
     {
-      RCLCPP_INFO(this->get_logger(), "I heard: '%d'", msg.data);
+      RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data);
     }
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 };
@@ -53,19 +54,51 @@ class DarwinLofaroState : public rclcpp::Node
       publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/imu", 10);
       //publisher_ = this->create_publisher<std_msgs::msg::String>("/darwin/ref", 10);
       timer_ = this->create_wall_timer(
-      10ms, std::bind(&DarwinLofaroState::timer_callback, this));
+      500ms, std::bind(&DarwinLofaroState::timer_callback, this));
     }
+
+    bool is_enabled = false;
+    int is_enabled_i = 0;
 
   private:
     void timer_callback()
     {
+
+      // read 1 byte from address 5
+      //lofaro::do_read(200, 3);
+/*
+      for (int i = 1; i <= 20; i++)
+      {
+//      darwin::set_motor_pos(i, 0.0);
+        darwin::set_motor_pos_set(i, 0.0);
+      }
+      darwin::write_send();
+*/
+
+      darwin::get_imu_state_auto();
+      darwin::get_ft_state_auto();
+      darwin::get_motor_state_auto(1);
+      darwin::sleep(0.002);
+
+      bool do_loop = true;
+      double tick = darwin::time();
+      double tock = darwin::time();
+      while(do_loop)
+      {
+        tock = darwin::time();
+        double dt = tock - tick;
+        if (dt > 0.001) do_loop = false;
+        darwin::read_buffer();
+        darwin::sleep(0.0001);
+      }
+
       auto message = geometry_msgs::msg::Twist();
-      message.linear.x = 1.0;
-      message.linear.y = 2.0;
-      message.linear.z = 3.0;
-      message.angular.x = 4.0;
-      message.angular.y = 5.0;
-      message.angular.z = 6.0;
+      message.linear.x  = darwin::imu_acc_x;
+      message.linear.y  = darwin::imu_acc_y;
+      message.linear.z  = darwin::imu_acc_z;
+      message.angular.x = darwin::imu_gyro_x;
+      message.angular.y = darwin::imu_gyro_y;
+      message.angular.z = darwin::imu_gyro_z;
 //      message.data = "Hello, world! " + std::to_string(count_++);
 //      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
       publisher_->publish(message);
@@ -90,34 +123,91 @@ class DarwinLofaroCmd : public rclcpp::Node
     void topic_callback(const std_msgs::msg::String & msg) const
     {
       std::string str_msg = msg.data;
-      std::string str_on  ("on all");
-      std::string str_off ("off all");
 
       const char delim = ' ';
       std::vector<std::string> dout;
-      lofaro::do_split(str_msg, delim, dout);
+      lofaro_utils_ros2::do_split(str_msg, delim, dout);
 
       int i = 0;
+      int length = dout.size();
+/*
       for(auto &str_msg: dout)
-      {
+      { 
          RCLCPP_INFO(this->get_logger(), "Message[%d]: %s", i, dout[i].c_str());
          i++;
       }
-      RCLCPP_INFO(this->get_logger(), "Message Length: '%d'", i);
-
-
-      if     ( str_msg.compare(str_on) == 0 )
+*/
+      if(length < 1) return;
+      std::string s0 = dout[0];
+      if( s0.compare("open") == 0 )
       {
-        RCLCPP_INFO(this->get_logger(), "Turing on Darwin-Lofaro Legacy");
-        darwin::setup("/dev/ttyUSB0");
-        darwin::on();
+         RCLCPP_INFO(this->get_logger(), "Darwin-Lofaro Legacy: Startup");
+         darwin::setup("/dev/ttyUSB0");
+         return;
       }
-      else if( str_msg.compare(str_off) == 0 )
+      else if( s0.compare("close") == 0 )
       {
-        RCLCPP_INFO(this->get_logger(), "Turing off Darwin-Lofaro Legacy");
-        darwin::off();
+         RCLCPP_INFO(this->get_logger(), "Darwin-Lofaro Legacy: Close");
+         darwin::close();
+         return;
       }
-      RCLCPP_INFO(this->get_logger(), "Message: '%s'", str_msg.c_str());
+      else if( s0.compare("on") == 0 )
+      {
+           if(length < 2) return;
+           std::string s1 = dout[1];
+           if( s1.compare("all") == 0 )
+           {
+             RCLCPP_INFO(this->get_logger(), "Turing on Darwin-Lofaro Legacy");
+             darwin::setup("/dev/ttyUSB0");
+             darwin::on();
+           }
+           else
+           {
+              try
+              {
+                int mot_num = std::stoi(s1);
+                RCLCPP_INFO(this->get_logger(), "Turing on Darwin-Lofaro Legacy Mot: %d", mot_num);
+                darwin::on(mot_num);
+                return;
+                throw 1;
+              }
+              catch(...)
+              {
+                RCLCPP_INFO(this->get_logger(), "Bad CMD");
+                return;
+              }
+           }
+      }
+      else if( s0.compare("off") == 0 )
+      {
+           if(length < 2) return;
+           std::string s1 = dout[1];
+           if( s1.compare("all") == 0 )
+           {
+             RCLCPP_INFO(this->get_logger(), "Turing off Darwin-Lofaro Legacy");
+             darwin::off();
+             darwin::close();
+           }
+           else
+           {
+              try
+              {
+                int mot_num = std::stoi(s1);
+                RCLCPP_INFO(this->get_logger(), "Turing off Darwin-Lofaro Legacy Mot: %d", mot_num);
+                darwin::off(mot_num);
+                return;
+                throw 1;
+              }
+              catch(...)
+              {
+                RCLCPP_INFO(this->get_logger(), "Bad CMD");
+                return;
+              }
+           }
+      }
+  
+  
+      RCLCPP_INFO(this->get_logger(), "Message: '%s'", msg.data.c_str());
     }
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 };
@@ -125,6 +215,15 @@ class DarwinLofaroCmd : public rclcpp::Node
 
 int main(int argc, char * argv[])
 {
+
+  printf("Setting up Darwin-Lofaro Legacy\n");
+  darwin::setup("/dev/ttyUSB0");
+  darwin::sleep(2.0);
+  printf("Turning on actuators\n");
+  darwin::on();
+  darwin::sleep(2.0);
+  printf("Setting up ROS\n");
+
   rclcpp::init(argc, argv);
 
   rclcpp::executors::SingleThreadedExecutor exec;
@@ -137,6 +236,7 @@ int main(int argc, char * argv[])
   exec.add_node(node_darwin_state);
   exec.add_node(node_darwin_cmd);
 
+  printf("ROS about to spin\n");
 
   //std::shared_ptr node1 = std::make_shared<DarwinLofaroRef>(1);
   //auto node1 = std::make_shared<DarwinLofaroRef>(1);

@@ -26,7 +26,7 @@ int main()
 
 
   // Turn on motor power
-  darwin::on(ID_DARWIN);
+  darwin::on();
  
   // Wait 1 second for power to turn on
   darwin::sleep(1.0);
@@ -70,7 +70,8 @@ int main()
     double tock2 = darwin::time();
     double dt2 = tock2 - tick2;
     printf("dt = %f\t f = %f\n", dt2, 1/dt2);
-  //  darwin::print_state();
+    darwin::print_state();
+    darwin::sleep(1.0);
   }
   // Turn off motor power
   darwin::off(ID_DARWIN);

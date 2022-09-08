@@ -1,6 +1,6 @@
 default: all
 
-CFLAGS := -I/etc/darwin-legacy/include -Wall  
+CFLAGS := -I/etc/darwin-legacy/include -Wall 
 CC := g++
 
 BINARIES := test

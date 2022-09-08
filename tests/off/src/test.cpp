@@ -28,11 +28,12 @@ int main()
   // Turn on motor power
 //  darwin::on();
  
+  darwin::sleep(1.0);
+  // Turn off motor power
+  darwin::off();
   // Wait 1 second for power to turn on
   darwin::sleep(1.0);
 
-  // Turn off motor power
-  darwin::off();
 
   // Close port
   darwin::close();

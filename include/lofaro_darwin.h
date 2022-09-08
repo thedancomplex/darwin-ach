@@ -192,6 +192,7 @@ namespace darwin {
   int get_motor_state_auto(int n);
   int setup();
   int setup(const char* the_serial_port);
+  int setup(const char* the_serial_port, bool low_latency);
   int update_motor_state( uint8_t buff[]);
   void print_state_motor();
   void print_state_motor(int id);
@@ -286,6 +287,11 @@ void print_state_imu()
 
   int setup(const char* the_serial_port)
   {
+    return setup(the_serial_port, false);
+  }
+
+  int setup(const char* the_serial_port, bool low_latency)
+  {
     memset(&motor_state, 0, sizeof(motor_state));
     int ret = open(the_serial_port);
     sleep(2.0);
@@ -295,9 +301,12 @@ void print_state_imu()
     strcpy(s, head);
     strcat(s, the_serial_port);
     strcat(s, foot);
-    std::system(s);
-    //std::system("setserial /dev/ttyUSB0 low_latency");
-    sleep(2.0);
+    if(low_latency)
+    {
+      std::system(s);
+      //std::system("setserial /dev/ttyUSB0 low_latency");
+      sleep(2.0);
+    }
     return ret;
   }
 
