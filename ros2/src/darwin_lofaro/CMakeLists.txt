@@ -5,8 +5,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-set(CMAKE_C_FLAGS -I/etc/darwin-legacy/include -Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g
-)
+set(CMAKE_C_FLAGS "-Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g")
+set(CMAKE_CXX_FLAGS "-Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g")
 
 
 # find dependencies

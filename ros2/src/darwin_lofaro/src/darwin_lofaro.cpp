@@ -54,7 +54,7 @@ class DarwinLofaroState : public rclcpp::Node
       publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/imu", 10);
       //publisher_ = this->create_publisher<std_msgs::msg::String>("/darwin/ref", 10);
       timer_ = this->create_wall_timer(
-      500ms, std::bind(&DarwinLofaroState::timer_callback, this));
+      10ms, std::bind(&DarwinLofaroState::timer_callback, this));
     }
 
     bool is_enabled = false;
