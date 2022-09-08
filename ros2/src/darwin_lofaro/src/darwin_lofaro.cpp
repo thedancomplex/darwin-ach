@@ -69,14 +69,12 @@ class DarwinLofaroState : public rclcpp::Node
 
       // read 1 byte from address 5
       //lofaro::do_read(200, 3);
-/*
       for (int i = 1; i <= 20; i++)
       {
 //      darwin::set_motor_pos(i, 0.0);
-        darwin::set_motor_pos_set(i, 0.0);
+        darwin::set_motor_pos_set(i, darwin::motor_ref[i]);
       }
       darwin::write_send();
-*/
 
       darwin::get_imu_state_auto();
       darwin::get_ft_state_auto();

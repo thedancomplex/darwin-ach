@@ -223,6 +223,7 @@ namespace darwin {
   int ft_fsr_raised_y = RAISED;
 
 
+
   // Voltage
   double voltage = -0.0;
   double voltage_foot = -0.0;
@@ -236,6 +237,8 @@ typedef struct motor_state_def {
 }__attribute__((packed)) motor_state_def_t;
 
   motor_state_def_t motor_state[DARWIN_MOTOR_NUM+1];
+
+double motor_ref[DARWIN_MOTOR_NUM+1];
 
 void print_state()
 {
@@ -292,6 +295,7 @@ void print_state_imu()
 
   int setup(const char* the_serial_port, bool low_latency)
   {
+    memset(&motor_ref, 0, sizeof(motor_ref));
     memset(&motor_state, 0, sizeof(motor_state));
     int ret = open(the_serial_port);
     sleep(2.0);
