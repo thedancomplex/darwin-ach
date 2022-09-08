@@ -463,7 +463,7 @@ void print_state_imu()
   {
     uint8_t buff[1024];
     int n = 0;
-    int ret = lofaro::do_read_buffer(buff, &n);
+    lofaro::do_read_buffer(buff, &n);
 
     if ( n == 0 ) return RETURN_FAIL;
 /*
@@ -510,7 +510,13 @@ void print_state_imu()
     {
       ni = ni - 1;
       *the_length = ni;
+
+      #pragma GCC diagnostic push
+      #pragma GCC diagnostic ignored "-Wrestrict"
       memcpy(buff, buff + 1*sizeof(buff[0]), (1024-1)*sizeof(buff[0]) );
+      #pragma GCC diagnostic pop
+
+      //memcpy(buff, buff + 1*sizeof(buff[0]), (1024-1)*sizeof(buff[0]) );
       if( (RETURN_OK == check_checksum(buff)) & 
           (RETURN_OK == check_head(buff)    )  )
       {
@@ -880,7 +886,6 @@ void print_state_imu()
 
     if ( RETURN_OK != check_head(buff) ) return RETURN_FAIL;
     if ( RETURN_OK != check_checksum(buff) ) return RETURN_FAIL;
-    int length = 19;
 
     // Assign the diata
     uint8_t b0 = 0;

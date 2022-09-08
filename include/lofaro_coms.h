@@ -65,7 +65,8 @@ namespace coms
   int system_type   = 0;
   const int RECEIVE = 1;
   const int SEND    = 2;
-  char *hostname    = "10.116.0.221";
+  std::string host_str = "10.116.0.221";
+  const char *hostname    = host_str.c_str();
   int portno        = 42024;
   struct hostent *server;
   int sockfd        = 0;
@@ -82,13 +83,11 @@ namespace coms
 
   int setup(int system_type_val)
   {
-    int n;
 
     /* socket: create the socket */
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0)
     {
-        error("ERROR opening socket");
         return 1;
     }
 

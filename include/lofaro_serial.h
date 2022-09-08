@@ -150,7 +150,6 @@ int do_write_set(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
   // Get ID Example
   uint8_t length = 2 + 2 + 1;
   uint8_t instruction = DYN_WRITE_REG;
-  uint8_t the_address = address;
   uint8_t msg[] = { 255, 255, id, length, instruction, address, d0, d1};
   uint8_t the_checksum = get_checksum(msg);
   uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
@@ -158,7 +157,6 @@ int do_write_set(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
   for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
 
   buff[buff_length-1] = the_checksum;
-  int n = buff_length;
 /*
   printf("Write Buffer = ");
   for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
@@ -176,7 +174,6 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
   // Get ID Example
   uint8_t length = 2 + 2 + 1;
   uint8_t instruction = DYN_WRITE;
-  uint8_t the_address = address;
   uint8_t msg[] = { 255, 255, id, length, instruction, address, d0, d1};
   uint8_t the_checksum = get_checksum(msg);
   uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
@@ -184,7 +181,6 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
   for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
 
   buff[buff_length-1] = the_checksum;
-  int n = buff_length;
 /*
   printf("Write Buffer = ");
   for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
@@ -202,7 +198,6 @@ int do_write_set(uint8_t id, uint8_t address, uint8_t d0)
   // Get ID Example
   uint8_t length = 2 + 2;
   uint8_t instruction = DYN_WRITE_REG;
-  uint8_t the_address = address;
   uint8_t msg[] = { 255, 255, id, length, instruction, address, d0};
   uint8_t the_checksum = get_checksum(msg);
   uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
@@ -210,7 +205,6 @@ int do_write_set(uint8_t id, uint8_t address, uint8_t d0)
   for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
 
   buff[buff_length-1] = the_checksum;
-  int n = buff_length;
 /*
   printf("Write Buffer = ");
   for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
@@ -240,7 +234,6 @@ int do_write_send(uint8_t id)
   for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
 
   buff[buff_length-1] = the_checksum;
-  int n = buff_length;
 /*
   printf("Write Buffer = ");
   for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
@@ -259,7 +252,6 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0)
   // Get ID Example
   uint8_t length = 2 + 2;
   uint8_t instruction = DYN_WRITE;
-  uint8_t the_address = address;
   uint8_t msg[] = { 255, 255, id, length, instruction, address, d0};
   uint8_t the_checksum = get_checksum(msg);
   uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
@@ -267,7 +259,6 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0)
   for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
 
   buff[buff_length-1] = the_checksum;
-  int n = buff_length;
 /*
   printf("Write Buffer = ");
   for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
@@ -290,7 +281,6 @@ int do_read(uint8_t id, uint8_t buff[], uint8_t buff_length)
 {
 
   uint8_t length = 2 + buff_length + 1 ;
-  uint8_t instruction = DYN_READ_BULK;
   uint8_t msg_length_full = length + 3 + 1 ;
   uint8_t msg[msg_length_full + 10];
   memset(&msg, 0, sizeof(msg));
@@ -328,7 +318,6 @@ int do_read(uint8_t id, uint8_t address, uint8_t length_read)
   // Get ID Example
   uint8_t length = 2 + 2;
   uint8_t instruction = DYN_READ;
-  uint8_t the_address = address;
   uint8_t msg[] = { 255, 255, id, length, instruction, address, length_read};
   uint8_t the_checksum = get_checksum(msg);
   uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
@@ -336,7 +325,6 @@ int do_read(uint8_t id, uint8_t address, uint8_t length_read)
   for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
 
   buff[buff_length-1] = the_checksum;
-  int n = buff_length;
 /*
   printf("Write Buffer = ");
   for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
@@ -354,7 +342,6 @@ int do_read(uint8_t id, uint8_t address)
   // Get ID Example
   uint8_t length = 2 + 2;
   uint8_t instruction = DYN_READ;
-  uint8_t the_address = address;
   uint8_t msg[] = { 255, 255, id, length, instruction, address, 1};
   uint8_t the_checksum = get_checksum(msg);
   uint8_t buff_length = sizeof(msg)/sizeof(msg[0]) + 1;
@@ -362,7 +349,6 @@ int do_read(uint8_t id, uint8_t address)
   for (int i = 0; i < (buff_length-1); i++) buff[i] = msg[i];
 
   buff[buff_length-1] = the_checksum;
-  int n = buff_length;
 /*
   printf("Write Buffer = ");
   for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
@@ -434,8 +420,10 @@ uint8_t get_checksum(uint8_t *rxpacket)
 
   // calculate checksum
   for (uint16_t i = 2; i < wait_length - 1; i++)   // except header, checksum
+  {
     checksum += rxpacket[i];
-    checksum = ~checksum;
+  }
+  checksum = ~checksum;
   return checksum;
 }
 
