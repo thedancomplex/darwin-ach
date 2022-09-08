@@ -192,7 +192,7 @@ class DarwinLofaroCmd : public rclcpp::Node
       if( s0.compare("open") == 0 )
       {
          RCLCPP_INFO(this->get_logger(), "Darwin-Lofaro Legacy: Startup");
-         darwin::setup("/dev/ttyUSB0");
+         darwin::setup("/dev/ttyUSB0", true);
          return;
       }
       else if( s0.compare("close") == 0 )
@@ -213,7 +213,7 @@ class DarwinLofaroCmd : public rclcpp::Node
              darwin::on();
              */
              printf("Setting up Darwin-Lofaro Legacy\n");
-             darwin::setup("/dev/ttyUSB0");
+             darwin::setup("/dev/ttyUSB0", true);
              darwin::sleep(2.0);
              printf("Turning on actuators\n");
              darwin::on();
