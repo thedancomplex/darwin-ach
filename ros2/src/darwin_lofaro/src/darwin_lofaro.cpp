@@ -39,7 +39,41 @@ class DarwinLofaroRef : public rclcpp::Node
   private:
     void topic_callback(const std_msgs::msg::String & msg) const
     {
-      RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data);
+  //    RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data);
+      std::string str_msg = msg.data;
+
+      const char delim = ' ';
+      std::vector<std::string> dout;
+      lofaro_utils_ros2::do_split(str_msg, delim, dout);
+
+      int i = 0;
+      int length = dout.size();
+
+      if( length     <  2 ) return;
+      if( (length%2) != 0 ) return;
+
+
+      for( int i = 0; i < length; i = i + 2 )
+      {
+        try
+        {
+         std::string s0 = dout[i];
+         std::string s1 = dout[i+1];
+         int    mot_num = std::stoi(s0);
+         double mot_val = std::stod(s1);
+
+         if(mot_val >  (M_PI / 2.0)) return;
+         if(mot_val < -(M_PI / 2.0)) return;
+
+         darwin::motor_ref[mot_num] = mot_val;
+         return;
+         throw 1;
+        }
+        catch(...)
+        {
+           return;
+        }
+      }
     }
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 };
@@ -59,9 +93,6 @@ class DarwinLofaroState : public rclcpp::Node
       timer_ = this->create_wall_timer(
       10ms, std::bind(&DarwinLofaroState::timer_callback, this));
     }
-
-    bool is_enabled = false;
-    int is_enabled_i = 0;
 
   private:
     void timer_callback()
@@ -93,26 +124,26 @@ class DarwinLofaroState : public rclcpp::Node
         darwin::sleep(0.0001);
       }
 
-      auto message_imu      = geometry_msgs::msg::Twist();
-      auto message_ft_left  = geometry_msgs::msg::Twist();
-      auto message_ft_right = geometry_msgs::msg::Twist();
-      auto message_ft_com   = geometry_msgs::msg::Twist();
+      auto message_imu          = geometry_msgs::msg::Twist();
+      auto message_ft_left      = geometry_msgs::msg::Twist();
+      auto message_ft_right     = geometry_msgs::msg::Twist();
+      auto message_ft_com       = geometry_msgs::msg::Twist();
 
-      message_imu.linear.x  = darwin::imu_acc_x;
-      message_imu.linear.y  = darwin::imu_acc_y;
-      message_imu.linear.z  = darwin::imu_acc_z;
-      message_imu.angular.x = darwin::imu_gyro_x;
-      message_imu.angular.y = darwin::imu_gyro_y;
-      message_imu.angular.z = darwin::imu_gyro_z;
+      message_imu.linear.x      = darwin::imu_acc_x;
+      message_imu.linear.y      = darwin::imu_acc_y;
+      message_imu.linear.z      = darwin::imu_acc_z;
+      message_imu.angular.x     = darwin::imu_gyro_x;
+      message_imu.angular.y     = darwin::imu_gyro_y;
+      message_imu.angular.z     = darwin::imu_gyro_z;
 
-      message_ft_left.linear.x = darwin::ft_left_x;
-      message_ft_left.linear.y = darwin::ft_left_y;
+      message_ft_left.linear.x  = darwin::ft_left_x;
+      message_ft_left.linear.y  = darwin::ft_left_y;
 
       message_ft_right.linear.x = darwin::ft_right_x;
       message_ft_right.linear.y = darwin::ft_right_y;
 
-      message_ft_com.linear.x = darwin::ft_fsr_x;
-      message_ft_com.linear.y = darwin::ft_fsr_y;
+      message_ft_com.linear.x   = darwin::ft_fsr_x;
+      message_ft_com.linear.y   = darwin::ft_fsr_y;
 //      message.data = "Hello, world! " + std::to_string(count_++);
 //      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
       publisher_imu_->publish(message_imu);
