@@ -61,7 +61,7 @@ int main()
     { 
       tock = darwin::time();
       double dt = tock - tick;
-      if (dt > 0.001) do_loop = false;
+      if (dt > 0.003) do_loop = false;
       darwin::read_buffer(); 
       darwin::sleep(0.0001);
     }
@@ -71,7 +71,6 @@ int main()
     double dt2 = tock2 - tick2;
     printf("dt = %f\t f = %f\n", dt2, 1/dt2);
     darwin::print_state();
-    darwin::sleep(1.0);
   }
   // Turn off motor power
   darwin::off(ID_DARWIN);
