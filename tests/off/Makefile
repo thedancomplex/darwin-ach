@@ -1,6 +1,7 @@
 default: all
 
-CFLAGS := -I/etc/darwin-legacy/include -Wall  
+CFLAGS := -I/etc/darwin-legacy/include -Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g
+
 CC := g++
 
 BINARIES := test
