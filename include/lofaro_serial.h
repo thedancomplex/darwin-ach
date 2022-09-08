@@ -48,9 +48,16 @@ int       do_read(uint8_t id, uint8_t address);
 int       do_read(uint8_t id, uint8_t address, uint8_t length);
 int       do_read(uint8_t id, uint8_t buff[], uint8_t buff_length);
 int       do_read_buffer(uint8_t buff[1024], int *the_length);
+int       check_serial();
 void do_flush();
 
 struct termios tty;
+
+int check_serial()
+{
+  if(serial_port <= 0) return 1;
+  return 0;
+}
 
 int do_open()
 {
@@ -162,7 +169,8 @@ int do_write_set(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
   for( int i = 0; i < n; i++ ) printf("%x ",(uint8_t)buff[i]);
   printf("\n");
 */
-  
+
+  if(check_serial()) return 1;
   write(serial_port, buff, sizeof(buff));
   do_flush();
 //  do_read();
@@ -187,6 +195,7 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
   printf("\n");
 */
   
+  if(check_serial()) return 1;
   write(serial_port, buff, sizeof(buff));
   do_flush();
 //  do_read();
@@ -211,6 +220,7 @@ int do_write_set(uint8_t id, uint8_t address, uint8_t d0)
   printf("\n");
 */
   
+  if(check_serial()) return 1;
   write(serial_port, buff, sizeof(buff));
   do_flush();
 //  do_read();
@@ -240,6 +250,7 @@ int do_write_send(uint8_t id)
   printf("\n");
 */
   
+  if(check_serial()) return 1;
   write(serial_port, buff, sizeof(buff));
   do_flush();
 //  do_read();
@@ -265,6 +276,7 @@ int do_write(uint8_t id, uint8_t address, uint8_t d0)
   printf("\n");
 */
   
+  if(check_serial()) return 1;
   write(serial_port, buff, sizeof(buff));
   do_flush();
 //  do_read();
@@ -307,6 +319,7 @@ int do_read(uint8_t id, uint8_t buff[], uint8_t buff_length)
   for( int i = 0; i < buff_length + 10; i++ ) printf("%x ",(uint8_t)msg[i]);
   printf("\n");
 */
+  if(check_serial()) return 1;
   write(serial_port, buff, sizeof(msg));
   do_flush();
 
@@ -331,6 +344,7 @@ int do_read(uint8_t id, uint8_t address, uint8_t length_read)
   printf("\n");
 */
   
+  if(check_serial()) return 1;
   write(serial_port, buff, sizeof(buff));
   do_flush();
 //  do_read();
@@ -355,6 +369,7 @@ int do_read(uint8_t id, uint8_t address)
   printf("\n");
 */
   
+  if(check_serial()) return 1;
   write(serial_port, buff, sizeof(buff));
   do_flush();
 //  do_read();
@@ -368,6 +383,7 @@ int do_read_buffer(uint8_t buff[1024], int *the_length)
   // Read bytes. The behaviour of read() (e.g. does it block?,
   // how long does it block for?) depends on the configuration
   // settings above, specifically VMIN and VTIME
+  if(check_serial()) return 1;
   int n = read(serial_port, &read_buf, sizeof(read_buf));
   *the_length = n;
 

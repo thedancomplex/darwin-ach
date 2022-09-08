@@ -177,9 +177,18 @@ class DarwinLofaroCmd : public rclcpp::Node
            std::string s1 = dout[1];
            if( s1.compare("all") == 0 )
            {
+             /*
              RCLCPP_INFO(this->get_logger(), "Turing on Darwin-Lofaro Legacy");
              darwin::setup("/dev/ttyUSB0");
              darwin::on();
+             */
+             printf("Setting up Darwin-Lofaro Legacy\n");
+             darwin::setup("/dev/ttyUSB0");
+             darwin::sleep(2.0);
+             printf("Turning on actuators\n");
+             darwin::on();
+             darwin::sleep(2.0);
+             printf("Setting up ROS\n");
            }
            else
            {
@@ -235,7 +244,7 @@ class DarwinLofaroCmd : public rclcpp::Node
 
 int main(int argc, char * argv[])
 {
-
+/*
   printf("Setting up Darwin-Lofaro Legacy\n");
   darwin::setup("/dev/ttyUSB0");
   darwin::sleep(2.0);
@@ -243,7 +252,7 @@ int main(int argc, char * argv[])
   darwin::on();
   darwin::sleep(2.0);
   printf("Setting up ROS\n");
-
+*/
   rclcpp::init(argc, argv);
 
   rclcpp::executors::SingleThreadedExecutor exec;
