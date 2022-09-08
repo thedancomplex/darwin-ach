@@ -51,7 +51,10 @@ class DarwinLofaroState : public rclcpp::Node
     DarwinLofaroState()
     : Node("darwin_lofaro_state_publisher"), count_(0)
     {
-      publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/imu", 10);
+      publisher_imu_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/imu", 10);
+      publisher_ft_left_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/left", 10);
+      publisher_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/right", 10);
+      publisher_ft_com_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/com", 10);
       //publisher_ = this->create_publisher<std_msgs::msg::String>("/darwin/ref", 10);
       timer_ = this->create_wall_timer(
       10ms, std::bind(&DarwinLofaroState::timer_callback, this));
@@ -92,19 +95,38 @@ class DarwinLofaroState : public rclcpp::Node
         darwin::sleep(0.0001);
       }
 
-      auto message = geometry_msgs::msg::Twist();
-      message.linear.x  = darwin::imu_acc_x;
-      message.linear.y  = darwin::imu_acc_y;
-      message.linear.z  = darwin::imu_acc_z;
-      message.angular.x = darwin::imu_gyro_x;
-      message.angular.y = darwin::imu_gyro_y;
-      message.angular.z = darwin::imu_gyro_z;
+      auto message_imu      = geometry_msgs::msg::Twist();
+      auto message_ft_left  = geometry_msgs::msg::Twist();
+      auto message_ft_right = geometry_msgs::msg::Twist();
+      auto message_ft_com   = geometry_msgs::msg::Twist();
+
+      message_imu.linear.x  = darwin::imu_acc_x;
+      message_imu.linear.y  = darwin::imu_acc_y;
+      message_imu.linear.z  = darwin::imu_acc_z;
+      message_imu.angular.x = darwin::imu_gyro_x;
+      message_imu.angular.y = darwin::imu_gyro_y;
+      message_imu.angular.z = darwin::imu_gyro_z;
+
+      message_ft_left.linear.x = darwin::ft_left_x;
+      message_ft_left.linear.y = darwin::ft_left_y;
+
+      message_ft_right.linear.x = darwin::ft_right_x;
+      message_ft_right.linear.y = darwin::ft_right_y;
+
+      message_ft_com.linear.x = darwin::ft_fsr_x;
+      message_ft_com.linear.y = darwin::ft_fsr_y;
 //      message.data = "Hello, world! " + std::to_string(count_++);
 //      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
-      publisher_->publish(message);
+      publisher_imu_->publish(message_imu);
+      publisher_ft_left_->publish(message_ft_left);
+      publisher_ft_right_->publish(message_ft_right);
+      publisher_ft_com_->publish(message_ft_com);
     }
     rclcpp::TimerBase::SharedPtr timer_;
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_imu_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_left_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_right_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_com_;
     size_t count_;
 };
 
