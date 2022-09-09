@@ -65,13 +65,18 @@ namespace darwin {
   #define MOTOR_SPEED_SCALE 0.11 / 60.0  * 2.0 * M_PI
   #define MOTOR_LOAD_SCALE 1.0
   #define MOTOR_TEMP_SCALE 1.0
+  #define ENUM_FT_LEFT 0
+  #define ENUM_FT_RIGHT 1
 
   #define DYN_ID_ALL 0xfe
 
   // Motor IDs
   #define ID_CM730 200
   #define ID_DARWIN ID_CM730
-  #define ID_FT 100
+  #define ID_FT_LEFT 101
+  #define ID_FT_RIGHT 100
+  #define ID_FT 1000
+
 
   // Addresses 
   #define CM730_ADDRESS_DYN_POWER 24
@@ -109,10 +114,10 @@ namespace darwin {
   #define FT_ADDRESS_READ_DATA_OFFSET 5
   #define FT_ADDRESS_START 26
   #define FT_ADDRESS_LENGTH 10
-  #define FT_ADDRESS_LEFT_X 26
-  #define FT_ADDRESS_LEFT_Y 28
-  #define FT_ADDRESS_RIGHT_X 30
-  #define FT_ADDRESS_RIGHT_Y 32
+  #define FT_ADDRESS_S1 26
+  #define FT_ADDRESS_S2 28
+  #define FT_ADDRESS_S3 30
+  #define FT_ADDRESS_S4 32
   #define FT_ADDRESS_FSR_X 34
   #define FT_ADDRESS_FSR_Y 35
   #define FT_ADDRESS_VOLTAGE 42
@@ -160,7 +165,7 @@ namespace darwin {
   int ping(int val);
   int get_imu_state();
   int get_imu_state_auto();
-  int get_ft_state();
+  int get_ft_state(uint8_t id);
   int get_ft_state_auto();
   int write(uint8_t id, uint8_t address);
   int write(uint8_t id, uint8_t address, uint8_t d0);
@@ -171,7 +176,7 @@ namespace darwin {
   int update_imu(uint8_t val[]);
   int update_imu_setup();
   int update_imu_slow();
-  int update_ft( uint8_t buff[] );
+  int update_ft(uint8_t id, uint8_t buff[] );
   int update_ft_setup();
   double int2double(uint16_t val); 
   double int2double(uint16_t val, int bit); 
@@ -201,6 +206,7 @@ namespace darwin {
   void print_state_imu_head();
   void print_state();
   void print_state_ft();
+  void print_state_ft(uint8_t id);
   void print_state_ft_head();
   double int2load(uint16_t val);
 
@@ -228,6 +234,18 @@ namespace darwin {
   double voltage = -0.0;
   double voltage_foot = -0.0;
 
+typedef struct ft_state_def {
+	double s0;
+	double s1;
+	double s2;
+	double s3;
+	double x;
+	double y;
+	double voltage;
+	uint8_t raised_x;
+	uint8_t raised_y;
+}__attribute__((packed)) ft_state_def_t;
+
 typedef struct motor_state_def {
 	double pos;	
 	double speed;
@@ -236,7 +254,8 @@ typedef struct motor_state_def {
 	double temp;		
 }__attribute__((packed)) motor_state_def_t;
 
-  motor_state_def_t motor_state[DARWIN_MOTOR_NUM+1];
+motor_state_def_t motor_state[DARWIN_MOTOR_NUM+1];
+ft_state_def_t ft_state[2];
 
 double motor_ref[DARWIN_MOTOR_NUM+1];
 
@@ -248,14 +267,33 @@ void print_state()
 }
 void print_state_ft_head()
 {
-  printf("Left - x:\t\t y:\t\t Right - x:\t\t y:\t\t FSR: - x:\t\t y:\t\t Raised: \n");
+  printf("s0\t s1\t s2\t s3\t com_x\t com_y\t voltage\t raised_x\t raised_y\n");
 }
 
 void print_state_ft()
 {
+  print_state_ft(ID_FT_LEFT);
+  print_state_ft(ID_FT_RIGHT);
+}
+
+void print_state_ft(uint8_t val)
+{
   print_state_ft_head();
-  printf("\t %f\t %f\t\t %f\t %f\t\t %f\t %f\t %d %d\n",
-                 ft_left_x, ft_left_y, ft_right_x, ft_right_y,  ft_fsr_x, ft_fsr_y, ft_fsr_raised_x, ft_fsr_raised_y);
+  int id = -1;
+  if     (val == ID_FT_LEFT) { id = ENUM_FT_LEFT;  printf("FT LEFT:");  }
+  else if(val == ID_FT_RIGHT){ id = ENUM_FT_RIGHT; printf("FT RIGHT:"); }
+  else return;
+  printf("%f, %f, %f, %f, %f, %f, %f, %d, %d\n",
+          ft_state[id].s0,
+          ft_state[id].s1,
+          ft_state[id].s2,
+          ft_state[id].s3,
+          ft_state[id].x,
+          ft_state[id].y,
+          ft_state[id].voltage,
+          ft_state[id].raised_x,
+          ft_state[id].raised_y
+        );
 }
 void print_state_motor_head()
 {
@@ -297,6 +335,7 @@ void print_state_imu()
   {
     memset(&motor_ref, 0, sizeof(motor_ref));
     memset(&motor_state, 0, sizeof(motor_state));
+    memset(&ft_state, 0, sizeof(ft_state));
     int ret = open(the_serial_port);
     sleep(2.0);
     const char* head = "setserial ";
@@ -335,7 +374,10 @@ void print_state_imu()
 
   int set_ft_status_level(int val)
   {
-    return write(ID_FT, FT_ADDRESS_STATUS_RETURN_LEVEL, val);
+    int ret = write(ID_FT_LEFT, FT_ADDRESS_STATUS_RETURN_LEVEL, val);
+    ret +=  write(ID_FT_RIGHT, FT_ADDRESS_STATUS_RETURN_LEVEL, val);
+    if (ret > 0) return RETURN_FAIL;
+    return RETURN_OK;
   }
 
   int set_cm730_status_level()
@@ -482,9 +524,10 @@ void print_state_imu()
     {
       if( (RETURN_OK == check_head(buff)) & (RETURN_OK == check_checksum(buff)) )
       {
-        uint8_t id = buff[BUFFER_ID];
+        uint8_t id = buff[BUFFER_ID];  	
         if      ( id == ID_CM730 )                                    update_imu(buff);
-        else if ( id == ID_FT )                                       update_ft(buff);
+        else if ( id == ID_FT_LEFT )                                  update_ft(id, buff);
+        else if ( id == ID_FT_RIGHT )                                 update_ft(id, buff);
         else if ( (id>=DARWIN_MOTOR_MIN) & (id<=DARWIN_MOTOR_MAX)  )  update_motor_state(buff);
       }
       if ( RETURN_FAIL == get_next_message(buff, &n) ) do_run = false;
@@ -605,18 +648,33 @@ void print_state_imu()
     return RETURN_OK;
   }
 
-  int get_ft_state()
+  int get_ft_state(uint8_t id)
   {
-    return read( ID_FT, FT_ADDRESS_START, FT_ADDRESS_LENGTH + 1 );
+    return read( id, FT_ADDRESS_START, FT_ADDRESS_LENGTH + 1 );
   }
 
   int get_ft_state_auto()
   {
-      get_ft_state();
+      get_ft_state(ID_FT_RIGHT);
       bool do_loop = true;
       double tick = time();
       double tock = time();
       double dt = 0.0;
+      while(do_loop)
+      {
+        int ret = read_buffer();
+        if (ret == RETURN_OK) do_loop = false;
+        tock = time();
+        dt = tock - tick;
+        if(dt > 0.001) do_loop = false;
+        sleep(0.0001);
+      }
+
+      get_ft_state(ID_FT_LEFT);
+      do_loop = true;
+      tick = time();
+      tock = time();
+      dt = 0.0;
       while(do_loop)
       {
         int ret = read_buffer();
@@ -727,7 +785,7 @@ void print_state_imu()
     return RETURN_FAIL;
   }
 
-  int update_ft( uint8_t buff[])
+  int update_ft(uint8_t id, uint8_t buff[])
   {
     if ( RETURN_OK != check_head(buff) ) return RETURN_FAIL;
     if ( RETURN_OK != check_checksum(buff) ) return RETURN_FAIL;
@@ -735,29 +793,29 @@ void print_state_imu()
     // Assign the diata
     uint8_t b0 = 0;
     uint8_t b1 = 0;
-    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_LEFT_X) - FT_ADDRESS_START;
-    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_LEFT_X) - FT_ADDRESS_START + 1;
+    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_S1) - FT_ADDRESS_START;
+    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_S1) - FT_ADDRESS_START + 1;
     b0 = buff[b0];
     b1 = buff[b1];
-    uint16_t buff_left_x = chars2uInt16(b0, b1);
+    uint16_t buff_s1 = chars2uInt16(b0, b1);
     
-    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_LEFT_Y) - FT_ADDRESS_START;
-    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_LEFT_Y) - FT_ADDRESS_START + 1;
+    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_S2) - FT_ADDRESS_START;
+    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_S2) - FT_ADDRESS_START + 1;
     b0 = buff[b0];
     b1 = buff[b1];
-    uint16_t buff_left_y = chars2uInt16(b0, b1);
+    uint16_t buff_s2 = chars2uInt16(b0, b1);
     
-    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_RIGHT_X) - FT_ADDRESS_START;
-    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_RIGHT_X) - FT_ADDRESS_START + 1;
+    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_S3) - FT_ADDRESS_START;
+    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_S3) - FT_ADDRESS_START + 1;
     b0 = buff[b0];
     b1 = buff[b1];
-    uint16_t buff_right_x = chars2uInt16(b0, b1);
+    uint16_t buff_s3 = chars2uInt16(b0, b1);
     
-    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_RIGHT_Y) - FT_ADDRESS_START;
-    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_RIGHT_Y) - FT_ADDRESS_START + 1;
+    b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_S4) - FT_ADDRESS_START;
+    b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_S4) - FT_ADDRESS_START + 1;
     b0 = buff[b0];
     b1 = buff[b1];
-    uint16_t buff_right_y = chars2uInt16(b0, b1);
+    uint16_t buff_s4 = chars2uInt16(b0, b1);
     
     b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_FSR_X) - FT_ADDRESS_START;
     b1 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_FSR_X) - FT_ADDRESS_START + 1;
@@ -770,18 +828,38 @@ void print_state_imu()
     b0 = buff[b0];
     b1 = buff[b1];
     uint16_t buff_fsr_y = chars2uInt16(b0, b1);
+  //#define FT_ADDRESS_VOLTAGE 42
     
+   b0 = (FT_ADDRESS_READ_DATA_OFFSET + FT_ADDRESS_VOLTAGE) - FT_ADDRESS_START;
+   uint8_t vol = b0;
     // Assign the data
 
-    ft_left_x   = int2double(buff_left_x)  * FT_SCALE;
-    ft_left_y   = int2double(buff_left_y)  * FT_SCALE;
-    ft_right_x  = int2double(buff_right_x) * FT_SCALE;
-    ft_right_y  = int2double(buff_right_y) * FT_SCALE;
+    double ft_0   = int2double(buff_s1) * FT_SCALE;
+    double ft_1   = int2double(buff_s2) * FT_SCALE;
+    double ft_2   = int2double(buff_s3) * FT_SCALE;
+    double ft_3   = int2double(buff_s4) * FT_SCALE;
 
-    ft_fsr_x    = ft_char2double(buff_fsr_x, &ft_fsr_raised_x) * FSR_SCALE_X;
-    ft_fsr_y    = ft_char2double(buff_fsr_y, &ft_fsr_raised_y) * FSR_SCALE_Y;
+    double ft_x    = ft_char2double(buff_fsr_x, &ft_fsr_raised_x) * FSR_SCALE_X;
+    double ft_y    = ft_char2double(buff_fsr_y, &ft_fsr_raised_y) * FSR_SCALE_Y;
+    double ft_v    = (double)vol /10.0;
 
-    return 0;
+    int the_index = -1;
+
+    if     ( id == ID_FT_LEFT  ) the_index = ENUM_FT_LEFT;
+    else if( id == ID_FT_RIGHT ) the_index = ENUM_FT_RIGHT;
+    else return RETURN_FAIL;
+
+    ft_state[the_index].s0 = ft_0;
+    ft_state[the_index].s1 = ft_1;
+    ft_state[the_index].s2 = ft_2;
+    ft_state[the_index].s3 = ft_3;
+    ft_state[the_index].x  = ft_x;
+    ft_state[the_index].y  = ft_y;
+    ft_state[the_index].raised_x = ft_fsr_raised_x;
+    ft_state[the_index].raised_y = ft_fsr_raised_y;
+    ft_state[the_index].voltage  = ft_v;
+
+    return RETURN_OK;
   }
 
   double ft_char2double(uint8_t val, int* err)

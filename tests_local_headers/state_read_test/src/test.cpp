@@ -38,7 +38,6 @@ int main()
   double tick = darwin::time();
   double tock = darwin::time();
 
-  int mot_i = 20;
   while(1)
   {
   double tick2 = darwin::time();
