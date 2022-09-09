@@ -6,10 +6,12 @@ cd $INSTALL_DIR/ros2/build/darwin_lofaro
 
 while [ 1 -le 2 ]
 do
-	echo '-------------------------------------'
-	echo '--- Starting Darwin Lofaro Legacy ---'
-	echo '--------------ROS 2 Node-------------'
-	echo '-------------------------------------'
+	echo '-----------------------------------------'
+	echo '----- Starting Darwin Lofaro Legacy -----'
+	echo '----------------ROS 2 Node---------------'
+	echo '-----------------------------------------'
 	./darwin_lofaro
+	echo '!!! Failed - Restarting in 5 seconds !!!'
+	sleep 5
 done
 

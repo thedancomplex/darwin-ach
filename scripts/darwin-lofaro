@@ -18,7 +18,29 @@ LowLatency()
 	sleep 1
 	echo '---- Low Latency Set ----'
 }
+StatusId()
+{
+	screen -S "$DARWIN_SCREEN_NAME" -X quit > /dev/null
+	if ! screen -list | grep -q "$DARWIN_SCREEN_NAME"; then
+		echo 1
+	else 
+		echo 0
+	fi
 
+}
+
+Status()
+{
+	screen -S "$DARWIN_SCREEN_NAME" -X quit
+	if ! screen -list | grep -q "$DARWIN_SCREEN_NAME"; then
+		echo '--- Darwin Lofaro Legacy STOPED ---'
+		exit 1
+	else 
+		echo '--- Darwin Lofaro Legacy RUNNING ---'
+		exit 0
+	fi
+
+}
 DarwinLegacyRos2Stop()
 {
 	echo '--- Stopping Darwin Lofaro Legacy ---'
@@ -80,6 +102,12 @@ ShowUsage()
 	echo 'stop          : Stops the Darwin Lofaro Legacy   '
 	echo '                system                           '
 	echo ''
+	echo 'status        : Checks to see if the system is   '
+	echo '                running: Human readable          '
+	echo ''
+	echo 'status-id     : Checks to see if the system is   '
+	echo '                running: 0 = running, 1 = stoped '
+	echo ''
 	echo 'low-latency   : sets serial to low latency mode  '
 	echo
 }
@@ -87,7 +115,11 @@ ShowUsage()
 
 case "$1" in
 	'status' )
-		InstallRos2 $@
+		Status $@
+	;;
+	
+	'status-id' )
+		StatusId $@
 	;;
 	
         'low-latency' )
