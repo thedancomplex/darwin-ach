@@ -839,8 +839,8 @@ void print_state_imu()
     double ft_2   = int2double(buff_s3) * FT_SCALE;
     double ft_3   = int2double(buff_s4) * FT_SCALE;
 
-    double ft_x    = ft_char2double(buff_fsr_x, &ft_fsr_raised_x) * FSR_SCALE_X;
-    double ft_y    = ft_char2double(buff_fsr_y, &ft_fsr_raised_y) * FSR_SCALE_Y;
+    double ft_x    = ft_char2double(buff_fsr_x, &ft_fsr_raised_x) * FSR_SCALE_X - 127.0;
+    double ft_y    = ft_char2double(buff_fsr_y, &ft_fsr_raised_y) * FSR_SCALE_Y - 127.0;
     double ft_v    = (double)vol /10.0;
 
     int the_index = -1;

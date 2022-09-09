@@ -113,6 +113,8 @@ class DarwinLofaroState : public rclcpp::Node
     }
 
   private:
+    #define ENUM_FT_LEFT 0
+    #define ENUM_FT_RIGHT 1
     void timer_callback()
     {
 
@@ -154,14 +156,16 @@ class DarwinLofaroState : public rclcpp::Node
       message_imu.angular.y     = darwin::imu_gyro_y;
       message_imu.angular.z     = darwin::imu_gyro_z;
 
-      message_ft_left.linear.x  = darwin::ft_left_x;
-      message_ft_left.linear.y  = darwin::ft_left_y;
+      message_ft_left.linear.x  = darwin::ft_state[ENUM_FT_LEFT].x;
+      message_ft_left.linear.y  = darwin::ft_state[ENUM_FT_LEFT].y;
+      message_ft_left.linear.z  = !(darwin::ft_state[ENUM_FT_LEFT].raised_x |
+                                    darwin::ft_state[ENUM_FT_LEFT].raised_y);
 
-      message_ft_right.linear.x = darwin::ft_right_x;
-      message_ft_right.linear.y = darwin::ft_right_y;
+      message_ft_right.linear.x  = darwin::ft_state[ENUM_FT_RIGHT].x;
+      message_ft_right.linear.y  = darwin::ft_state[ENUM_FT_RIGHT].y;
+      message_ft_right.linear.z  = !(darwin::ft_state[ENUM_FT_RIGHT].raised_x |
+                                     darwin::ft_state[ENUM_FT_RIGHT].raised_y);
 
-      message_ft_com.linear.x   = darwin::ft_fsr_x;
-      message_ft_com.linear.y   = darwin::ft_fsr_y;
 //      message.data = "Hello, world! " + std::to_string(count_++);
 //      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
       publisher_imu_->publish(message_imu);
