@@ -21,6 +21,9 @@ using std::placeholders::_1;
 
 class DarwinLofaroRef : public rclcpp::Node
 {
+
+  #define M_PI 3.14159265358979323846
+
   public:
     DarwinLofaroRef() : Node("darwin_lofaro_ref_subscriber")
     {
@@ -49,11 +52,27 @@ class DarwinLofaroRef : public rclcpp::Node
       int i = 0;
       int length = dout.size();
 
-      if( length     <  2 ) return;
-      if( (length%2) != 0 ) return;
+      if( length     <  3 ) return;
+      if( (length%2) != 1 ) return;
 //      printf("length = %d\n", length);
 
-      for( int i = 0; i < length; i = i + 2 )
+      
+      std::string s_head = dout[0];
+      double scale = 1.0;
+      if     ( s_head.compare("d") == 0 )
+      { 
+         scale = M_PI / 180.0;
+      }
+      else if( s_head.compare("r") == 0 )
+      {
+         scale = 1.0;
+      }
+      else
+      {
+         return;
+      }
+
+      for( int i = 1; i < length; i = i + 2 )
       { 
 //        printf("i = %d\n",i);
         try
@@ -61,7 +80,7 @@ class DarwinLofaroRef : public rclcpp::Node
          std::string s0 = dout[i];
          std::string s1 = dout[i+1];
          int    mot_num = std::stoi(s0);
-         double mot_val = std::stod(s1);
+         double mot_val = std::stod(s1) * scale;
 
          if(mot_val >  (M_PI / 2.0)) return;
          if(mot_val < -(M_PI / 2.0)) return;

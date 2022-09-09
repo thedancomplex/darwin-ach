@@ -424,6 +424,7 @@ void print_state_imu()
     for( int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++ )
     {
       ret += write(i, DYN_ADDRESS_DYN_POWER, DYN_ON);
+      sleep(0.05);
     }
 
     if( ret > 0 ) return RETURN_FAIL;
@@ -957,6 +958,7 @@ void print_state_imu()
 
   int open(const char* the_serial_port)
   {
+    sleep(0.5);
     return lofaro::do_open(the_serial_port);
   }
 
