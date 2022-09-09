@@ -31,7 +31,8 @@ int main()
   darwin::sleep(1.0);
 
 
-  darwin::set_status_level(1);
+  //darwin::set_status_level(1);
+  darwin::set_ft_status_level(1);
 
 
   // wait 1 second for power off

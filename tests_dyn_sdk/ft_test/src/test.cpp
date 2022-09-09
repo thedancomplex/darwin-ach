@@ -45,7 +45,7 @@ int main()
             darwin::ft_fsr_raised_x,
             darwin::ft_fsr_raised_y);
 
-    usleep(10000);
+    usleep(5000000);
   }
 
 

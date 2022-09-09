@@ -36,10 +36,13 @@ int main()
   // Get Dynamixel model number
 
   // read 1 byte from address 5
-  uint8_t buff = darwin::read1byte(ID_CM730, 5);
-  //uint8_t buff = darwin::read1byte(ID_CM730, CM730_ADDRESS_ID);
+  for( int i = 0; i < 232; i++ )
+  {
+    uint8_t buff = darwin::read1byte(i, 3);
+    //uint8_t buff = darwin::read1byte(ID_CM730, CM730_ADDRESS_ID);
 
-  printf("buff = %d\n",buff);
+    printf("i = %d, buff = %d\n",i, buff);
+  }
 
   // Turn off motor power
   darwin::off(ID_DARWIN);

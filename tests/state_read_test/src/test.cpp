@@ -46,7 +46,8 @@ int main()
     //lofaro::do_read(200, 3);
     darwin::get_imu_state_auto();
     darwin::get_ft_state_auto();
-//    darwin::get_motor_state_auto(1);
+//    darwin::get_motor_state();
+    darwin::get_motor_state_auto(1);
     darwin::sleep(0.002);
     
     bool do_loop = true;
@@ -65,6 +66,7 @@ int main()
     printf("dt = %f\t f = %f\n", dt2, 1/dt2);
     darwin::print_state_imu();
     darwin::print_state_ft();
+    darwin::print_state_motor();
     printf("----------------------------\n");
     printf("%f, %f, %f\n", darwin::imu_acc_x, darwin::imu_acc_y, darwin::imu_acc_z);
   }
