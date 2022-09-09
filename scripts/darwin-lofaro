@@ -20,18 +20,15 @@ LowLatency()
 }
 StatusId()
 {
-	screen -S "$DARWIN_SCREEN_NAME" -X quit > /dev/null
 	if ! screen -list | grep -q "$DARWIN_SCREEN_NAME"; then
 		echo 1
 	else 
 		echo 0
 	fi
-
 }
 
 Status()
 {
-	screen -S "$DARWIN_SCREEN_NAME" -X quit
 	if ! screen -list | grep -q "$DARWIN_SCREEN_NAME"; then
 		echo '--- Darwin Lofaro Legacy STOPED ---'
 		exit 1
@@ -39,18 +36,16 @@ Status()
 		echo '--- Darwin Lofaro Legacy RUNNING ---'
 		exit 0
 	fi
-
 }
 DarwinLegacyRos2Stop()
 {
 	echo '--- Stopping Darwin Lofaro Legacy ---'
-	screen -S "$DARWIN_SCREEN_NAME" -X quit
+	screen -S "$DARWIN_SCREEN_NAME" -X quit > /dev/null
 	if ! screen -list | grep -q "$DARWIN_SCREEN_NAME"; then
 		echo '--- Darwin Lofaro Legacy Stopped ---'
 	else 
 		echo '--- Darwin Lofaro Legacy Failed to Stop ---'
 	fi
-
 }
 
 

@@ -135,6 +135,7 @@ DarwinLegacyRos2()
 	sudo chmod +x $BIN_NAME
 	cd $INSTALL_DIR/ros2
 	chmod +x $ROS_BUILD_FILE
+	sudo rm /usr/bin/$BIN_NAME
 	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
 	chmod +x $ROS_RUN_FILE
 	source $ROS_BUILD_FILE
