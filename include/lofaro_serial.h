@@ -80,6 +80,37 @@ int do_open(const char* the_serial_port)
   // config to this struct
 //  struct termios tty;
 
+bool do_robotis = true;
+
+if(do_robotis)
+{
+  serial_port = open(the_serial_port, O_RDWR|O_NOCTTY|O_NONBLOCK);
+  bzero(&tty, sizeof(tty)); // clear struct for new port settings
+
+  tty.c_cflag = B1000000 | CS8 | CLOCAL | CREAD;
+  tty.c_iflag = IGNPAR;
+  tty.c_oflag      = 0;
+  tty.c_lflag      = 0;
+  tty.c_cc[VTIME]  = 0;
+  tty.c_cc[VMIN]   = 0;
+
+  // clean the buffer and activate the settings for the port
+  tcflush(serial_port, TCIFLUSH);
+  tcsetattr(serial_port, TCSANOW, &tty);
+
+  if (serial_port < 0) {
+    printf("Error %i from open: %s\n", errno, strerror(errno));
+    return 1;
+  }
+  if(tcgetattr(serial_port, &tty) != 0) {
+    printf("Error %i from tcgetattr: %s\n", errno, strerror(errno));
+    return 1;
+  }
+  return 0;
+}
+else
+{
+  serial_port = open(the_serial_port, O_RDWR);
   tty.c_cflag &= ~PARENB; // Clear parity bit, disabling parity (most common)
   // tty.c_cflag |= PARENB;  // Set parity bit, enabling parity
 
@@ -93,6 +124,7 @@ int do_open(const char* the_serial_port)
   // tty.c_cflag |= CRTSCTS;  // Enable RTS/CTS hardware flow control
 
   tty.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines (CLOCAL = 1)
+  tty.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines (CLOCAL = 1)
 
   tty.c_lflag &= ~ICANON;  // Disable Canonical mode (i.e. do not wait for a new line
 
@@ -103,6 +135,9 @@ int do_open(const char* the_serial_port)
   tty.c_lflag &= ~ISIG; // Disable interpretation of INTR, QUIT and SUSP
 
   tty.c_iflag &= ~(IXON | IXOFF | IXANY); // Turn off s/w flow ctrl
+
+
+
 
   tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
   tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
@@ -119,15 +154,6 @@ int do_open(const char* the_serial_port)
 
   cfsetispeed(&tty, B1000000);
   cfsetospeed(&tty, B1000000);
-
-
-
-
-
-  serial_port = open(the_serial_port, O_RDWR);
-
- // serial_port = open("/dev/ttyUSB0", O_RDWR);
-
   // Check for errors
   if (serial_port < 0) {
     printf("Error %i from open: %s\n", errno, strerror(errno));
@@ -138,12 +164,19 @@ int do_open(const char* the_serial_port)
   // NOTE: This is important! POSIX states that the struct passed to tcsetattr()
   // must have been initialized with a call to tcgetattr() overwise behaviour
   // is undefined
+
+//  tcflush(serial_port, TCIFLUSH);
+
   if(tcgetattr(serial_port, &tty) != 0) {
     printf("Error %i from tcgetattr: %s\n", errno, strerror(errno));
     return 1;
   }
 
   return 0;
+}
+
+ // serial_port = open("/dev/ttyUSB0", O_RDWR);
+  return 1;
 }
 
 int do_close()

@@ -237,7 +237,7 @@ class DarwinLofaroCmd : public rclcpp::Node
              printf("Turning on actuators\n");
              darwin::on();
              darwin::sleep(2.0);
-             printf("Setting up ROS\n");
+             printf("Actuators On\n");
            }
            else
            {
