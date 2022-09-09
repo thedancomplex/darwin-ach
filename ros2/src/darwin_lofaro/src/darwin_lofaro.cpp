@@ -130,7 +130,7 @@ class DarwinLofaroState : public rclcpp::Node
       darwin::get_imu_state_auto();
       darwin::get_ft_state_auto();
       darwin::get_motor_state_auto(1);
-      darwin::sleep(0.002);
+      darwin::sleep(0.001);
 
       bool do_loop = true;
       double tick = darwin::time();
@@ -158,19 +158,17 @@ class DarwinLofaroState : public rclcpp::Node
 
       message_ft_left.linear.x  = darwin::ft_state[ENUM_FT_LEFT].x;
       message_ft_left.linear.y  = darwin::ft_state[ENUM_FT_LEFT].y;
-      message_ft_left.linear.z  = !(darwin::ft_state[ENUM_FT_LEFT].raised_x |
-                                    darwin::ft_state[ENUM_FT_LEFT].raised_y);
+      message_ft_left.linear.z  = darwin::ft_state[ENUM_FT_LEFT].raised_x | darwin::ft_state[ENUM_FT_LEFT].raised_y;
 
       message_ft_right.linear.x  = darwin::ft_state[ENUM_FT_RIGHT].x;
       message_ft_right.linear.y  = darwin::ft_state[ENUM_FT_RIGHT].y;
-      message_ft_right.linear.z  = !(darwin::ft_state[ENUM_FT_RIGHT].raised_x |
-                                     darwin::ft_state[ENUM_FT_RIGHT].raised_y);
+      message_ft_right.linear.z  = darwin::ft_state[ENUM_FT_RIGHT].raised_x | darwin::ft_state[ENUM_FT_RIGHT].raised_y;
 
 //      message.data = "Hello, world! " + std::to_string(count_++);
 //      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
       publisher_imu_->publish(message_imu);
-      publisher_ft_left_->publish(message_ft_left);
       publisher_ft_right_->publish(message_ft_right);
+      publisher_ft_left_->publish(message_ft_left);
       publisher_ft_com_->publish(message_ft_com);
     }
     rclcpp::TimerBase::SharedPtr timer_;
@@ -215,7 +213,8 @@ class DarwinLofaroCmd : public rclcpp::Node
       if( s0.compare("open") == 0 )
       {
          RCLCPP_INFO(this->get_logger(), "Darwin-Lofaro Legacy: Startup");
-         darwin::setup("/dev/ttyUSB0", true);
+         darwin::setup("/dev/ttyUSB0", false);
+         //darwin::setup("/dev/ttyUSB0", true);
          return;
       }
       else if( s0.compare("close") == 0 )

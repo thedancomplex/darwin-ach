@@ -98,14 +98,14 @@ if(do_robotis)
   tcflush(serial_port, TCIFLUSH);
   tcsetattr(serial_port, TCSANOW, &tty);
 
-  if (serial_port < 0) {
-    printf("Error %i from open: %s\n", errno, strerror(errno));
-    return 1;
-  }
   if(tcgetattr(serial_port, &tty) != 0) {
-    printf("Error %i from tcgetattr: %s\n", errno, strerror(errno));
     return 1;
   }
+
+  if (serial_port < 0) {
+    return 1;
+  }
+
   return 0;
 }
 else
@@ -156,7 +156,6 @@ else
   cfsetospeed(&tty, B1000000);
   // Check for errors
   if (serial_port < 0) {
-    printf("Error %i from open: %s\n", errno, strerror(errno));
     return 1;
   }
 
@@ -168,7 +167,6 @@ else
 //  tcflush(serial_port, TCIFLUSH);
 
   if(tcgetattr(serial_port, &tty) != 0) {
-    printf("Error %i from tcgetattr: %s\n", errno, strerror(errno));
     return 1;
   }
 
@@ -181,6 +179,7 @@ else
 
 int do_close()
 {
+  if(check_serial()) return 1;
   close(serial_port);
   return 0;
 }
