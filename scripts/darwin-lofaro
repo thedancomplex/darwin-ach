@@ -1,0 +1,114 @@
+#!/bin/bash
+HUMBLE_INSTALL_DIR=~/ros2_humble/
+DEB_VERSION=$(env -i bash -c '. /etc/os-release; echo $VERSION_CODENAME')
+PACKAGE_NAME=darwin-legacy
+INSTALL_DIR=/etc/$PACKAGE_NAME
+INCLUDE_DIR=/usr/include/$PACKAGE_NAME
+ROS_BUILD_FILE=do_build.sh
+ROS_RUN_FILE=run_darwin_lofaro.sh
+
+DARWIN_SCREEN_NAME=darwin-lofaro
+
+LowLatency()
+{
+	setserial /dev/ttyUSB0 low_latency
+#	sudo setserial /dev/ttyUSB0 low_latency
+	sync
+#	sudo sync
+	sleep 1
+	echo '---- Low Latency Set ----'
+}
+
+DarwinLegacyRos2Stop()
+{
+	echo '--- Stopping Darwin Lofaro Legacy ---'
+	screen -S "$DARWIN_SCREEN_NAME" -X quit
+	if ! screen -list | grep -q "$DARWIN_SCREEN_NAME"; then
+		echo '--- Darwin Lofaro Legacy Stopped ---'
+	else 
+		echo '--- Darwin Lofaro Legacy Failed to Stop ---'
+	fi
+
+}
+
+
+DarwinLegacyRos2()
+{
+	cd $INSTALL_DIR/ros2
+#	if ! screen -list | grep -q $DARWIN_SCREEN_NAME; then
+	if ! screen -list | grep -q "$DARWIN_SCREEN_NAME"; then
+		echo '--- Starting Darwin Lofaro Legacy ---'
+		screen -d -m -S $DARWIN_SCREEN_NAME /bin/bash -c ./$ROS_RUN_FILE
+	else 
+		echo '--- Darwin Lofaro Legacy already running ---'
+	fi
+}
+
+DarwinLegacy()
+{
+	THE_DIR=$(pwd)
+	sudo rm -rf $INSTALL_DIR
+	sudo mkdir -p $INSTALL_DIR
+	echo $INSTALL_DIR
+        sudo cp -r ../include/ $INSTALL_DIR/
+        sudo cp -r ../ros2/ $INSTALL_DIR/
+#	sudo mkdir /etc/rc.local.d
+#	chmod +x darwin-legacy.sh
+#	sudo cp darwin-legacy.sh /etc/rc.local.d/
+#	echo $INCLUDE_DIR
+#	sudo rm $INCLUDE_DIR
+#        sudo ln -s $INSTALL_DIR/include $INCLUDE_DIR
+
+}
+
+ShowUsage()
+{
+	echo 
+	echo '================================================='
+	echo '================================================='
+	echo '============  Darwin Lofaro Legacy  ============='
+	echo '============   for the Darwin OP    ============='
+	echo '================================================='
+	echo '=============== Daniel M. Lofaro ================'
+	echo '=============== dan@danlofaro.com ==============='
+	echo '================================================='
+	echo '================================================='
+	echo ''
+	echo 'start         : Starts the Darwin Lofaro Legacy  '
+	echo '                system                           '
+	echo ''
+	echo 'stop          : Stops the Darwin Lofaro Legacy   '
+	echo '                system                           '
+	echo ''
+	echo 'low-latency   : sets serial to low latency mode  '
+	echo
+}
+
+
+case "$1" in
+	'status' )
+		InstallRos2 $@
+	;;
+	
+        'low-latency' )
+		LowLatency $@
+	;;
+
+	'start' )
+		DarwinLegacyRos2 $@
+	;;
+	'stop' )
+		DarwinLegacyRos2Stop $@
+	;;
+	
+	
+	
+	* )
+		ShowUsage
+		exit 1
+esac
+
+exit 0
+
+
+
