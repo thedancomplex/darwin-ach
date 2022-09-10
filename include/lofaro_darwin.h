@@ -184,6 +184,7 @@ namespace darwin {
   double ft_char2double(uint8_t val, int* err);
   uint8_t read1byte(uint8_t id, uint8_t address);
   int flush();
+  int flush_final();
   uint16_t chars2uInt16(uint8_t d_lsb, uint8_t d_msb);
   int check_head( uint8_t buff[] );
   int check_checksum( uint8_t buff[] );
@@ -258,6 +259,11 @@ motor_state_def_t motor_state[DARWIN_MOTOR_NUM+1];
 ft_state_def_t ft_state[2];
 
 double motor_ref[DARWIN_MOTOR_NUM+1];
+
+int flush_final()
+{
+  return lofaro::do_flush_final();
+}
 
 void print_state()
 {

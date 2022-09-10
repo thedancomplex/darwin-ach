@@ -49,7 +49,8 @@ int       do_read(uint8_t id, uint8_t address, uint8_t length);
 int       do_read(uint8_t id, uint8_t buff[], uint8_t buff_length);
 int       do_read_buffer(uint8_t buff[1024], int *the_length);
 int       check_serial();
-void do_flush();
+void      do_flush();
+int       do_flush_final();
 
 struct termios tty;
 
@@ -80,10 +81,11 @@ int do_open(const char* the_serial_port)
   // config to this struct
 //  struct termios tty;
 
-bool do_robotis = true;
+int  do_choice = 1;
 
-if(do_robotis)
+if(do_choice == 0)
 {
+  // Robotis 
   serial_port = open(the_serial_port, O_RDWR|O_NOCTTY|O_NONBLOCK);
   bzero(&tty, sizeof(tty)); // clear struct for new port settings
 
@@ -108,7 +110,7 @@ if(do_robotis)
 
   return 0;
 }
-else
+else if (do_choice == 1)
 {
   serial_port = open(the_serial_port, O_RDWR);
   tty.c_cflag &= ~PARENB; // Clear parity bit, disabling parity (most common)
@@ -169,12 +171,45 @@ else
   if(tcgetattr(serial_port, &tty) != 0) {
     return 1;
   }
+}
+else if (do_choice == 2)
+{
+
+
+  serial_port = open(the_serial_port, O_RDWR|O_NOCTTY|O_NONBLOCK);
+  bzero(&tty, sizeof(tty)); // clear struct for new port settings
+
+  tty.c_cflag = B1000000 | CS8 | CLOCAL | CREAD;
+  tty.c_iflag = IGNPAR;
+  tty.c_oflag      = 0;
+  tty.c_lflag      = 0;
+  tty.c_cc[VTIME]  = 0;
+  tty.c_cc[VMIN]   = 0;
+  tty.c_lflag &= ~ICANON;  // Disable Canonical mode (i.e. do not wait for a new line
+
+  // clean the buffer and activate the settings for the port
+  tcflush(serial_port, TCIFLUSH);
+  tcflush(serial_port, TCIOFLUSH);
+  tcsetattr(serial_port, TCSANOW, &tty);
+
+  if(tcgetattr(serial_port, &tty) != 0) {
+    return 1;
+  }
+
+  if (serial_port < 0) {
+    return 1;
+  }
+
+}
 
   return 0;
 }
 
- // serial_port = open("/dev/ttyUSB0", O_RDWR);
-  return 1;
+int do_flush_final()
+{
+  if(check_serial()) return 1;
+  tcflush(serial_port, TCIOFLUSH);
+  return 0;
 }
 
 int do_close()

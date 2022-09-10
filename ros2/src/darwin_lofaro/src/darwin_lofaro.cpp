@@ -170,6 +170,8 @@ class DarwinLofaroState : public rclcpp::Node
       publisher_ft_right_->publish(message_ft_right);
       publisher_ft_left_->publish(message_ft_left);
       publisher_ft_com_->publish(message_ft_com);
+
+      darwin::flush_final();
     }
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_imu_;
@@ -307,7 +309,8 @@ int main(int argc, char * argv[])
 */
   rclcpp::init(argc, argv);
 
-  rclcpp::executors::SingleThreadedExecutor exec;
+  rclcpp::executors::MultiThreadedExecutor exec;
+  //rclcpp::executors::SingleThreadedExecutor exec;
 
   auto node_darwin_ref   = std::make_shared<DarwinLofaroRef>();
   auto node_darwin_state = std::make_shared<DarwinLofaroState>();
