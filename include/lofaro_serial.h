@@ -81,7 +81,7 @@ int do_open(const char* the_serial_port)
   // config to this struct
 //  struct termios tty;
 
-int  do_choice = 1;
+int  do_choice = 0;
 
 if(do_choice == 0)
 {

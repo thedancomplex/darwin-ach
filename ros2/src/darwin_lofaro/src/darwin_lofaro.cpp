@@ -42,6 +42,8 @@ class DarwinLofaroRef : public rclcpp::Node
   private:
     void topic_callback(const std_msgs::msg::String & msg) const
     {
+try
+{
   //    RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data);
       std::string str_msg = msg.data;
 
@@ -92,6 +94,8 @@ class DarwinLofaroRef : public rclcpp::Node
       }
 
       return;
+}
+catch(...){}
     }
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 };
@@ -103,6 +107,8 @@ class DarwinLofaroState : public rclcpp::Node
     DarwinLofaroState()
     : Node("darwin_lofaro_state_publisher"), count_(0)
     {
+try
+{
       publisher_imu_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/imu", 10);
       publisher_ft_left_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/left", 10);
       publisher_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/right", 10);
@@ -110,6 +116,8 @@ class DarwinLofaroState : public rclcpp::Node
       //publisher_ = this->create_publisher<std_msgs::msg::String>("/darwin/ref", 10);
       timer_ = this->create_wall_timer(
       10ms, std::bind(&DarwinLofaroState::timer_callback, this));
+}
+catch(...){}
     }
 
   private:
@@ -117,6 +125,8 @@ class DarwinLofaroState : public rclcpp::Node
     #define ENUM_FT_RIGHT 1
     void timer_callback()
     {
+try
+{
 
       // read 1 byte from address 5
       //lofaro::do_read(200, 3);
@@ -172,6 +182,8 @@ class DarwinLofaroState : public rclcpp::Node
       publisher_ft_com_->publish(message_ft_com);
 
       darwin::flush_final();
+}
+catch(...){}
     }
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_imu_;
@@ -195,6 +207,8 @@ class DarwinLofaroCmd : public rclcpp::Node
 
     void topic_callback(const std_msgs::msg::String & msg) const
     {
+try
+{
       std::string str_msg = msg.data;
 
       const char delim = ' ';
@@ -291,6 +305,9 @@ class DarwinLofaroCmd : public rclcpp::Node
   
   
       RCLCPP_INFO(this->get_logger(), "Message: '%s'", msg.data.c_str());
+}
+catch(...){}
+
     }
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 };
