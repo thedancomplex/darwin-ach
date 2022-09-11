@@ -1,28 +1,6 @@
 #include "darwin_lofaro_head.h"
 
-using namespace std::chrono_literals;
-
-/* Darwin-Legacy */
-#include <lofaro_darwin.h>
-#include <lofaro_utils_ros2.h>
-using std::placeholders::_1;
-
-
-class DarwinLofaro : public rclcpp::Node
-{
-
-    #define ENUM_FT_LEFT 0
-    #define ENUM_FT_RIGHT 1
-    #define M_PI 3.14159265358979323846
-
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_ref_;
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_cmd_;
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_imu_;
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_left_;
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_right_;
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_com_;
-
-    int setupSubscription()
+int DarwinLofaro::setupSubscription()
     {
       try
       {
@@ -95,7 +73,7 @@ class DarwinLofaro : public rclcpp::Node
       return 0;
     }
 
-  void theLoop()
+void DarwinLofaro::theLoop()
   {
     try
       {
@@ -158,7 +136,7 @@ class DarwinLofaro : public rclcpp::Node
   }
 
 
-  int getCmd(const std_msgs::msg::String & msg) 
+int DarwinLofaro::getCmd(const std_msgs::msg::String & msg) 
   {
     try
     {
@@ -256,33 +234,4 @@ class DarwinLofaro : public rclcpp::Node
     catch(...){}
     return 0;
   }
-};
 
-int main(int argc, char * argv[])
-{
-  rclcpp::init(argc, argv);
-
-//  rclcpp::executors::MultiThreadedExecutor exec;
-  rclcpp::executors::SingleThreadedExecutor exec;
-
-//  auto node_darwin_ref   = std::make_shared<DarwinLofaroRef>();
-//  auto node_darwin_state = std::make_shared<DarwinLofaroState>();
-//  auto node_darwin_cmd   = std::make_shared<DarwinLofaroCmd>();
-
-  auto node_darwin_daemon   = std::make_shared<DarwinLofaro>();
-
-//  exec.add_node(node_darwin_ref);
-//  exec.add_node(node_darwin_state);
-//  exec.add_node(node_darwin_cmd);
-
-  exec.add_node(node_darwin_daemon);
-
-  printf("ROS about to spin\n");
-
-  //std::shared_ptr node1 = std::make_shared<DarwinLofaroRef>(1);
-  //auto node1 = std::make_shared<DarwinLofaroRef>(1);
-  exec.spin();
-//  rclcpp::spin(std::make_shared<MinimalSubscriber>());
-  rclcpp::shutdown();
-  return 0;
-}
