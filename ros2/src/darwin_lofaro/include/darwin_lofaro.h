@@ -1,15 +1,4 @@
-#include <chrono>
-#include <functional>
-#include <memory>
-#include <string>
-
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
-#include "geometry_msgs/msg/twist.hpp"
-//#include "darwin_lofaro_msgs/msg/motor_ref_stamped.hpp"
-//#include "darwin_lofaro_msgs/msg/string.hpp"
-//#include "darwin_lofaro_msgs/msg/motor_ref.hpp"
-//#include "darwin_lofaro_msgs/msg/MotorRefStamped.hpp"
+#include "darwin_lofaro_head.h"
 
 using namespace std::chrono_literals;
 
