@@ -34,6 +34,8 @@ int main()
   // Try to ping the Dynamixel
   // Get Dynamixel model number
 
+  double tick2 = darwin::time();
+  double tock2 = darwin::time();
 
   while(1)
   {
@@ -62,8 +64,20 @@ int main()
       darwin::sleep(0.0001);
     }
 
+    bool do_loop2 = true;
+    double dt = 0.0;
+    while(do_loop2)
+    {
+      tock2 = darwin::time();
+      dt = tock2-tick2;
+      if(dt >= 0.01){ tick2 = tock2; do_loop2 = false; }
+      else darwin::sleep(0.0001);
+    }
+    double f = 1/dt;
     printf("----------------------------\n");
-    printf("%f, %f, %f\n", darwin::imu_acc_x, darwin::imu_acc_y, darwin::imu_acc_z);
+    printf("dt(sec) = %f, f(hz)=%f, %f, %f, %f\n", dt, f, darwin::imu_acc_x, darwin::imu_acc_y, darwin::imu_acc_z);
+      
+
   }
   // Turn off motor power
   darwin::off(ID_DARWIN);
