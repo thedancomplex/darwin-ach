@@ -90,6 +90,7 @@ if(do_choice == 0)
   bzero(&tty, sizeof(tty)); // clear struct for new port settings
 
   tty.c_cflag = B1000000 | CS8 | CLOCAL | CREAD;
+  //tty.c_cflag = B1000000 | CS8 | CLOCAL | CREAD;
   tty.c_iflag = IGNPAR;
   tty.c_oflag      = 0;
   tty.c_lflag      = 0;

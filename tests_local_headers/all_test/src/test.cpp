@@ -35,38 +35,33 @@ int main()
   // Get Dynamixel model number
 
 
-  double tick = darwin::time();
-  double tock = darwin::time();
-
-  int mot_i = 20;
   while(1)
   {
-  double tick2 = darwin::time();
-    // read 1 byte from address 5
-    //lofaro::do_read(200, 3);
+
+    for (int i = 1; i <= 20; i++)
+    {
+//      darwin::set_motor_pos(i, 0.0);
+      darwin::set_motor_pos_set(i, darwin::motor_ref[i]);
+    }
+    darwin::write_send();
+
     darwin::get_imu_state_auto();
     darwin::get_ft_state_auto();
-//    darwin::get_motor_state();
     darwin::get_motor_state_auto(1);
-    darwin::sleep(0.002);
-    
+    darwin::sleep(0.001);
+
     bool do_loop = true;
-    while(do_loop) 
-    { 
+    double tick = darwin::time();
+    double tock = darwin::time();
+    while(do_loop)
+    {
       tock = darwin::time();
       double dt = tock - tick;
       if (dt > 0.001) do_loop = false;
-      darwin::read_buffer(); 
+      darwin::read_buffer();
       darwin::sleep(0.0001);
     }
 
-
-    double tock2 = darwin::time();
-    double dt2 = tock2 - tick2;
-    printf("dt = %f\t f = %f\n", dt2, 1/dt2);
-    darwin::print_state_imu();
-    //darwin::print_state_ft();
-    //darwin::print_state_motor();
     printf("----------------------------\n");
     printf("%f, %f, %f\n", darwin::imu_acc_x, darwin::imu_acc_y, darwin::imu_acc_z);
   }
