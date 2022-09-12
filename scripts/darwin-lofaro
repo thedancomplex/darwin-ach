@@ -6,7 +6,9 @@ INSTALL_DIR=/etc/$PACKAGE_NAME
 INCLUDE_DIR=/usr/include/$PACKAGE_NAME
 ROS_BUILD_FILE=do_build.sh
 ROS_RUN_FILE=run_darwin_lofaro.sh
+ROS_CLOCK_RUN_FILE=run_darwin_clock_lofaro.sh
 
+DARWIN_CLOCK_SCREEN_NAME=darwin-lofaro-clock
 DARWIN_SCREEN_NAME=darwin-lofaro
 
 LowLatency()
@@ -37,6 +39,19 @@ Status()
 		exit 0
 	fi
 }
+
+Start()
+{
+  DarwinLegacyRos2
+  DarwinLegacyClockRos2Start
+}
+
+Stop()
+{
+  DarwinLegacyClockRos2Stop
+  DarwinLegacyRos2Stop
+}
+
 DarwinLegacyRos2Stop()
 {
 	echo '--- Stopping Darwin Lofaro Legacy ---'
@@ -58,6 +73,28 @@ DarwinLegacyRos2()
 		screen -d -m -S $DARWIN_SCREEN_NAME /bin/bash -c ./$ROS_RUN_FILE
 	else 
 		echo '--- Darwin Lofaro Legacy already running ---'
+	fi
+}
+
+DarwinLegacyClockRos2Start()
+{
+	cd $INSTALL_DIR/ros2
+#	if ! screen -list | grep -q $DARWIN_CLOCK_SCREEN_NAME; then
+	if ! screen -list | grep -q "$DARWIN_CLOCK_SCREEN_NAME"; then
+		echo '--- Starting Darwin Lofaro Legacy Clock ---'
+		screen -d -m -S $DARWIN_CLOCK_SCREEN_NAME /bin/bash -c ./$ROS_CLOCK_RUN_FILE
+	else 
+		echo '--- Darwin Lofaro Legacy Clock already running ---'
+	fi
+}
+DarwinLegacyClockRos2Stop()
+{
+	echo '--- Stopping Darwin Lofaro Legacy Clock ---'
+	screen -S "$DARWIN_CLOCK_SCREEN_NAME" -X quit > /dev/null
+	if ! screen -list | grep -q "$DARWIN_CLOCK_SCREEN_NAME"; then
+		echo '--- Darwin Lofaro Legacy Clock Stopped ---'
+	else 
+		echo '--- Darwin Lofaro Legacy Clock Failed to Stop ---'
 	fi
 }
 
@@ -92,10 +129,10 @@ ShowUsage()
 	echo '================================================='
 	echo ''
 	echo 'start         : Starts the Darwin Lofaro Legacy  '
-	echo '                system                           '
+	echo '                system and clock                 '
 	echo ''
 	echo 'stop          : Stops the Darwin Lofaro Legacy   '
-	echo '                system                           '
+	echo '                system and clock                 '
 	echo ''
 	echo 'status        : Checks to see if the system is   '
 	echo '                running: Human readable          '
@@ -104,6 +141,19 @@ ShowUsage()
 	echo '                running: 0 = running, 1 = stoped '
 	echo ''
 	echo 'low-latency   : sets serial to low latency mode  '
+	echo ''
+	echo 'start-daemon  : Starts the Darwin Lofaro Legacy  '
+	echo '                system                           '
+	echo ''
+	echo 'start-clock   : Starts the Darwin Lofaro Legacy  '
+	echo '                clock                            '
+	echo ''
+	echo 'stop-daemon   : Stops the Darwin Lofaro Legacy   '
+	echo '                system                           '
+	echo ''
+	echo 'stop-clock    : Stops the Darwin Lofaro Legacy   '
+	echo '                clock                            '
+	echo ''
 	echo
 }
 
@@ -122,10 +172,22 @@ case "$1" in
 	;;
 
 	'start' )
+		Stop $@
+	;;
+	'start-daemon' )
 		DarwinLegacyRos2 $@
+	;;
+	'start-clock' )
+		DarwinLegacyClockRos2Start $@
 	;;
 	'stop' )
 		DarwinLegacyRos2Stop $@
+	;;
+	'stop-daemon' )
+		DarwinLegacyRos2Stop $@
+	;;
+	'stop-clock' )
+		DarwinLegacyClockRos2Stop $@
 	;;
 	
 	
