@@ -65,11 +65,6 @@ class DarwinLofaroLoop : public rclcpp::Node
 
   public:
     DarwinLofaroLoop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec);
-    void theLoop(darwin::darwin_data_def_t *darwin_data);
-    void timerLoop();
-    void loop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec);
-    void rtLoop();
-    void rtLoopSetup();
 
   private:
     rclcpp::TimerBase::SharedPtr timer_;
@@ -78,6 +73,13 @@ class DarwinLofaroLoop : public rclcpp::Node
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_left_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_right_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_com_;
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
+    const void topic_callback(const std_msgs::msg::String & msg);
+    void theLoop(darwin::darwin_data_def_t *darwin_data);
+    void timerLoop();
+    void loop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec);
+    void rtLoop();
+    void rtLoopSetup();
 
 };
 

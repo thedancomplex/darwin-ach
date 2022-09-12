@@ -1,8 +1,5 @@
 #include "darwin_lofaro_head.h"
 
-// RT Loop - Start
-// RT Loop - Stop
-
 
 DarwinLofaroRef::DarwinLofaroRef(darwin::darwin_data_def_t *darwin_data) : Node("darwin_lofaro_ref_subscriber")
 {
@@ -81,15 +78,22 @@ DarwinLofaroState::DarwinLofaroState(darwin::darwin_data_def_t *darwin_data) : N
 
 DarwinLofaroLoop::DarwinLofaroLoop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec) : Node("darwin_lofaro_loop")
 {
+  const char* top = "/darwin/clock";
+  subscription_ = this->create_subscription<std_msgs::msg::String>(top, 10, std::bind(&DarwinLofaroLoop::topic_callback, this, _1));
   publisher_imu_      = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/imu", 10);
   publisher_ft_left_  = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/left", 10);
   publisher_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/right", 10);
   publisher_ft_com_   = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/com", 10);
       //timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroState::theLoop, this));
-  loop(darwin_data, exec);
-  rtLoopSetup();
+//  loop(darwin_data, exec);
+//  rtLoopSetup();
 //  rtLoop();
 //  timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLoop::timerLoop, this));
+}
+
+const void DarwinLofaroLoop::topic_callback(const std_msgs::msg::String & msg)
+{
+  theLoop(&darwin::darwin_data);
 }
 
 void DarwinLofaroLoop::loop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec)
