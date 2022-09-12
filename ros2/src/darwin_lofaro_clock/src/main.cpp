@@ -24,9 +24,10 @@ class DarwinLofaroClock : public rclcpp::Node
     void theLoop()
     {
       auto message = std_msgs::msg::String();
-      message.data = "Hello, world! " + std::to_string(count_++);
+      message.data = std::to_string(count_++);
 //      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
       publisher_clock_->publish(message);
+      return;
     }
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_clock_;
