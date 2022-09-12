@@ -73,8 +73,8 @@ namespace darwin {
   // Motor IDs
   #define ID_CM730 200
   #define ID_DARWIN ID_CM730
-  #define ID_FT_LEFT 101
-  #define ID_FT_RIGHT 100
+  #define ID_FT_LEFT 112
+  #define ID_FT_RIGHT 111
   #define ID_FT 1000
 
 
@@ -464,7 +464,7 @@ void print_state_imu()
   int set_ft_delay(int id, int val)
   {
     if( (id != ID_FT_RIGHT) | (id != ID_FT_LEFT) ) return RETURN_FAIL;
-    if( (val < 0) | (val > 3) ) return RETURN_FAIL;
+    if( (val < 0) | (val > 250) ) return RETURN_FAIL;
 
     write(id, FT_ADDRESS_DELAY, val);
     sleep(0.1); 

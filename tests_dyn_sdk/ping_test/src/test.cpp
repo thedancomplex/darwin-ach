@@ -44,6 +44,10 @@ int main()
 
   // ping the force sensor
   darwin::ping(100);
+  darwin::ping(101);
+  darwin::ping(102);
+  darwin::ping(111);
+  darwin::ping(112);
 
   // ping the CM730
   darwin::ping(200);
