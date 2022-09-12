@@ -5,6 +5,7 @@ INSTALL_DIR=/etc/$PACKAGE_NAME
 INCLUDE_DIR=/usr/include/$PACKAGE_NAME
 ROS_BUILD_FILE=do_build.sh
 ROS_RUN_FILE=run_darwin_lofaro.sh
+ROS_CLOCK_RUN_FILE=run_darwin_clock_lofaro.sh
 BIN_NAME=darwin-lofaro
 
 InstallRos2()
@@ -130,6 +131,7 @@ DarwinLegacyRos2()
 	sudo chmod -R 777 $INSTALL_DIR/ros2
 	cp ../scripts/$ROS_BUILD_FILE $INSTALL_DIR/ros2
 	cp ../scripts/$ROS_RUN_FILE $INSTALL_DIR/ros2
+	cp ../scripts/$ROS_CLOCK_RUN_FILE $INSTALL_DIR/ros2
 	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
 	cd $INSTALL_DIR
 	sudo chmod +x $BIN_NAME

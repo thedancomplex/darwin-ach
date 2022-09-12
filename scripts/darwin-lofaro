@@ -42,7 +42,7 @@ Status()
 
 Start()
 {
-  DarwinLegacyRos2
+  DarwinLegacyRos2Start
   DarwinLegacyClockRos2Start
 }
 
@@ -64,7 +64,7 @@ DarwinLegacyRos2Stop()
 }
 
 
-DarwinLegacyRos2()
+DarwinLegacyRos2Start()
 {
 	cd $INSTALL_DIR/ros2
 #	if ! screen -list | grep -q $DARWIN_SCREEN_NAME; then
@@ -170,18 +170,17 @@ case "$1" in
         'low-latency' )
 		LowLatency $@
 	;;
-
 	'start' )
-		Stop $@
+		Start $@
 	;;
 	'start-daemon' )
-		DarwinLegacyRos2 $@
+		DarwinLegacyRos2Start $@
 	;;
 	'start-clock' )
 		DarwinLegacyClockRos2Start $@
 	;;
 	'stop' )
-		DarwinLegacyRos2Stop $@
+		Stop $@
 	;;
 	'stop-daemon' )
 		DarwinLegacyRos2Stop $@

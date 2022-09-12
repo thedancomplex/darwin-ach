@@ -135,17 +135,15 @@ void DarwinLofaroLoop::timerLoop()
 void DarwinLofaroLoop::theLoop(darwin::darwin_data_def_t *darwin_data)
 {
 //dan  try {
-/*
       for (int i = 1; i <= 20; i++)
       {
         darwin::set_motor_pos_set(i, darwin::motor_ref[i]);
       }
       darwin::write_send();
-*/
 
       darwin::get_imu_state_auto();
 //      darwin::get_ft_state_auto();
-//      darwin::get_motor_state_auto(1);
+      darwin::get_motor_state_auto(1);
       darwin::sleep(0.001);
 
       bool do_loop = true;
