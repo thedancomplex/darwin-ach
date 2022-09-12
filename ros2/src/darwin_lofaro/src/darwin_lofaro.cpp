@@ -12,12 +12,12 @@ int main(int argc, char * argv[])
   auto node_darwin_ref   = std::make_shared<DarwinLofaroRef>(&darwin::darwin_data);
   auto node_darwin_state = std::make_shared<DarwinLofaroState>(&darwin::darwin_data);
   auto node_darwin_cmd   = std::make_shared<DarwinLofaroCmd>(&darwin::darwin_data);
-//  auto node_darwin_loop  = std::make_shared<DarwinLofaroLoop>(&darwin::darwin_data);
+  auto node_darwin_loop  = std::make_shared<DarwinLofaroLoop>(&darwin::darwin_data, &exec);
   //std::shared_ptr<DarwinLofaroRef> node_darwin = std::make_shared<DarwinLofaroRef>(i);
   exec.add_node(node_darwin_ref);
   exec.add_node(node_darwin_state);
   exec.add_node(node_darwin_cmd);
-//  exec.add_node(node_darwin_loop);
+  exec.add_node(node_darwin_loop);
 
   printf("ROS about to spin\n");
 

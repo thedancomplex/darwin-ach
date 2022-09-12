@@ -37,7 +37,6 @@ class DarwinLofaroState : public rclcpp::Node
 {
   public:
     DarwinLofaroState(darwin::darwin_data_def_t *darwin_data);
-    void theLoop();
 
   private:
     #define ENUM_FT_LEFT 0
@@ -64,8 +63,18 @@ class DarwinLofaroCmd : public rclcpp::Node
 class DarwinLofaroLoop : public rclcpp::Node
 {
   public:
-    DarwinLofaroLoop(darwin::darwin_data_def_t *darwin_data);
-    void loop(darwin::darwin_data_def_t *darwin_data);
+    DarwinLofaroLoop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec);
+    void theLoop(darwin::darwin_data_def_t *darwin_data);
+    void timerLoop();
+    void loop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec);
+
+  private:
+    rclcpp::TimerBase::SharedPtr timer_;
+    size_t count_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_imu_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_left_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_right_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_com_;
 };
 
 

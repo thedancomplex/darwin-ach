@@ -73,39 +73,57 @@ DarwinLofaroState::DarwinLofaroState(darwin::darwin_data_def_t *darwin_data) : N
       publisher_ft_left_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/left", 10);
       publisher_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/right", 10);
       publisher_ft_com_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/com", 10);
-      timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroState::theLoop, this));
+      //timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroState::theLoop, this));
       //publisher_ = this->create_publisher<std_msgs::msg::String>("/darwin/ref", 10);
 //dan  } catch(...){}
 }
 
-DarwinLofaroLoop::DarwinLofaroLoop(darwin::darwin_data_def_t *darwin_data) : Node("darwin_lofaro_loop")
+DarwinLofaroLoop::DarwinLofaroLoop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec) : Node("darwin_lofaro_loop")
 {
-  loop(darwin_data);
+  publisher_imu_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/imu", 10);
+  publisher_ft_left_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/left", 10);
+  publisher_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/right", 10);
+  publisher_ft_com_ = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/com", 10);
+      //timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroState::theLoop, this));
+//  loop(darwin_data, exec);
+  timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLoop::timerLoop, this));
 }
 
-void DarwinLofaroLoop::loop(darwin::darwin_data_def_t *darwin_data)
+void DarwinLofaroLoop::loop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec)
 {
   double tick = darwin::time();
   double tock = darwin::time();
   double T = 0.01;
   bool do_loop = true;
+//  auto d_state = new DarwinLofaroState(darwin_data);
+//  double t_sec = 0.00001;
+//  std::chrono::nanoseconds t_long = (std::chrono::nanoseconds)(t_sec * 1e9); 
   while(do_loop)
   {
 //    DarwinLofaroState::theLoop();
 
-    printf("%f, %f, %f\n", darwin_data->imu_state.acc_x, darwin_data->imu_state.acc_y, darwin_data->imu_state.acc_z);
+    theLoop(darwin_data);
+//    printf("%f, %f, %f\n", darwin_data->imu_state.acc_x, darwin_data->imu_state.acc_y, darwin_data->imu_state.acc_z);
+//    d_state->theLoop(darwin_data);
 
     double dt = tock - tick;
     while( dt < T )
     {
-      tock = darwin::sleep(0.00001);
-      dt = tock - tick;
+      exec->spin_once((std::chrono::nanoseconds)10000);
+      tock = darwin::time();
+      //darwin::sleep(0.00001);
+      dt = tock - tick;		
     }
     tick = tock;
   }
 }
 
-void DarwinLofaroState::theLoop()
+void DarwinLofaroLoop::timerLoop()
+{
+  theLoop(&darwin::darwin_data);
+}
+
+void DarwinLofaroLoop::theLoop(darwin::darwin_data_def_t *darwin_data)
 {
 //dan  try {
       for (int i = 1; i <= 20; i++)
@@ -136,20 +154,37 @@ void DarwinLofaroState::theLoop()
       auto message_ft_right     = geometry_msgs::msg::Twist();
       auto message_ft_com       = geometry_msgs::msg::Twist();
 
+/*
       message_imu.linear.x      = darwin::imu_acc_x;
       message_imu.linear.y      = darwin::imu_acc_y;
       message_imu.linear.z      = darwin::imu_acc_z;
       message_imu.angular.x     = darwin::imu_gyro_x;
       message_imu.angular.y     = darwin::imu_gyro_y;
       message_imu.angular.z     = darwin::imu_gyro_z;
+*/
+      message_imu.linear.x      = darwin_data->imu_state.acc_x;
+      message_imu.linear.y      = darwin_data->imu_state.acc_y;
+      message_imu.linear.z      = darwin_data->imu_state.acc_z;
+      message_imu.angular.x     = darwin_data->imu_state.gyro_x;
+      message_imu.angular.y     = darwin_data->imu_state.gyro_y;
+      message_imu.angular.z     = darwin_data->imu_state.gyro_z;
 
-      message_ft_left.linear.x  = darwin::ft_state[ENUM_FT_LEFT].x;
+/*      message_ft_left.linear.x  = darwin::ft_state[ENUM_FT_LEFT].x;
       message_ft_left.linear.y  = darwin::ft_state[ENUM_FT_LEFT].y;
       message_ft_left.linear.z  = darwin::ft_state[ENUM_FT_LEFT].raised_x | darwin::ft_state[ENUM_FT_LEFT].raised_y;
 
       message_ft_right.linear.x  = darwin::ft_state[ENUM_FT_RIGHT].x;
       message_ft_right.linear.y  = darwin::ft_state[ENUM_FT_RIGHT].y;
       message_ft_right.linear.z  = darwin::ft_state[ENUM_FT_RIGHT].raised_x | darwin::ft_state[ENUM_FT_RIGHT].raised_y;
+*/
+
+      message_ft_left.linear.x  = darwin_data->ft_state[ENUM_FT_LEFT].x;
+      message_ft_left.linear.y  = darwin_data->ft_state[ENUM_FT_LEFT].y;
+      message_ft_left.linear.z  = darwin_data->ft_state[ENUM_FT_LEFT].raised_x | darwin::ft_state[ENUM_FT_LEFT].raised_y;
+
+      message_ft_right.linear.x = darwin_data->ft_state[ENUM_FT_RIGHT].x;
+      message_ft_right.linear.y = darwin_data->ft_state[ENUM_FT_RIGHT].y;
+      message_ft_right.linear.z = darwin_data->ft_state[ENUM_FT_RIGHT].raised_x | darwin::ft_state[ENUM_FT_RIGHT].raised_y;
 
 //      message.data = "Hello, world! " + std::to_string(count_++);
 //      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
