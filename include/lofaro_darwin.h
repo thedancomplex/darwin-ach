@@ -121,6 +121,7 @@ namespace darwin {
   #define FT_ADDRESS_FSR_X 34
   #define FT_ADDRESS_FSR_Y 35
   #define FT_ADDRESS_VOLTAGE 42
+  #define FT_ADDRESS_DELAY 5
 
 
   #define SERIAL_PORT_DEFAULT "/dev/ttyUSB0"
@@ -210,6 +211,9 @@ namespace darwin {
   void print_state_ft(uint8_t id);
   void print_state_ft_head();
   double int2load(uint16_t val);
+  int set_ft_delay(int id, int val);
+  int set_ft_delay(int val);
+
 
   // IMU data
   double imu_gyro_x = -0.0; 
@@ -456,6 +460,25 @@ void print_state_imu()
     }
     return RETURN_OK;
   }
+
+  int set_ft_delay(int id, int val)
+  {
+    if( (id != ID_FT_RIGHT) | (id != ID_FT_LEFT) ) return RETURN_FAIL;
+    if( (val < 0) | (val > 3) ) return RETURN_FAIL;
+
+    write(id, FT_ADDRESS_DELAY, val);
+    sleep(0.1); 
+
+    return RETURN_OK;
+  }
+  int set_ft_delay(int val)
+  {
+    int ret = set_ft_delay(ID_FT_LEFT);
+    ret    += set_ft_delay(ID_FT_RIGHT);
+    if( ret > 0 ) return RETURN_FAIL;
+    return RETURN_OK;
+  }
+
 
   int set_motor_delays()
   {
