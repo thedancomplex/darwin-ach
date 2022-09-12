@@ -284,7 +284,7 @@ typedef struct darwin_data_def {
   motor_ref_def_t     motor_ref[DARWIN_MOTOR_NUM+1];
   motor_state_def_t   motor_state[DARWIN_MOTOR_NUM+1];
   imu_state_def_t     imu_state;
-  ft_state_def_t      ft_state;
+  ft_state_def_t      ft_state[2];
 }__attribute__((packed)) darwin_data_def_t;
 
 darwin_data_def_t darwin_data;
