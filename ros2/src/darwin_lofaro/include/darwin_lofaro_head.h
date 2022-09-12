@@ -62,11 +62,14 @@ class DarwinLofaroCmd : public rclcpp::Node
 
 class DarwinLofaroLoop : public rclcpp::Node
 {
+
   public:
     DarwinLofaroLoop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec);
     void theLoop(darwin::darwin_data_def_t *darwin_data);
     void timerLoop();
     void loop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec);
+    void rtLoop();
+    void rtLoopSetup();
 
   private:
     rclcpp::TimerBase::SharedPtr timer_;
@@ -75,6 +78,7 @@ class DarwinLofaroLoop : public rclcpp::Node
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_left_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_right_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_com_;
+
 };
 
 
@@ -88,10 +92,10 @@ class DarwinData
     darwin::motor_ref_def_t   motor_ref;
     DarwinData()
     {
-      memset(&darwin_data, 0, sizeof(darwin_data));
-      memset(&motor_ref, 0, sizeof(motor_ref));
-      memset(&motor_state, 0, sizeof(motor_state));
-      memset(&ft_state, 0, sizeof(ft_state));
-      memset(&imu_state, 0, sizeof(imu_state));
+      memset(&darwin_data,  0, sizeof(darwin_data));
+      memset(&motor_ref,    0, sizeof(motor_ref));
+      memset(&motor_state,  0, sizeof(motor_state));
+      memset(&ft_state,     0, sizeof(ft_state));
+      memset(&imu_state,    0, sizeof(imu_state));
     }
 };
