@@ -235,6 +235,17 @@ namespace darwin {
   double voltage = -0.0;
   double voltage_foot = -0.0;
 
+
+typedef struct imu_state_def {
+	double acc_x;
+	double acc_y;
+	double acc_z;
+	double gyro_x;
+	double gyro_y;
+	double gyro_z;
+        double voltage;
+}__attribute__((packed)) imu_state_def_t;
+
 typedef struct ft_state_def {
 	double s0;
 	double s1;
@@ -255,10 +266,28 @@ typedef struct motor_state_def {
 	double temp;		
 }__attribute__((packed)) motor_state_def_t;
 
+typedef struct motor_ref_def {
+	double pos;	
+	double speed;
+	double load;	
+	double voltage;	
+}__attribute__((packed)) motor_ref_def_t;
+
 motor_state_def_t motor_state[DARWIN_MOTOR_NUM+1];
+motor_ref_def_t motor_ref2[DARWIN_MOTOR_NUM+1];
+imu_state_def_t imu_state;
 ft_state_def_t ft_state[2];
 
 double motor_ref[DARWIN_MOTOR_NUM+1];
+
+typedef struct darwin_data_def {
+  motor_ref_def_t     motor_ref[DARWIN_MOTOR_NUM+1];
+  motor_state_def_t   motor_state[DARWIN_MOTOR_NUM+1];
+  imu_state_def_t     imu_state;
+  ft_state_def_t      ft_state;
+}__attribute__((packed)) darwin_data_def_t;
+
+darwin_data_def_t darwin_data;
 
 int flush_final()
 {
@@ -339,9 +368,12 @@ void print_state_imu()
 
   int setup(const char* the_serial_port, bool low_latency)
   {
+    memset(&darwin_data, 0, sizeof(darwin_data));
     memset(&motor_ref, 0, sizeof(motor_ref));
+    memset(&motor_ref2, 0, sizeof(motor_ref2));
     memset(&motor_state, 0, sizeof(motor_state));
     memset(&ft_state, 0, sizeof(ft_state));
+    memset(&imu_state, 0, sizeof(imu_state));
     int ret = open(the_serial_port);
     sleep(2.0);
     const char* head = "setserial ";
@@ -865,6 +897,18 @@ void print_state_imu()
     ft_state[the_index].raised_y = ft_fsr_raised_y;
     ft_state[the_index].voltage  = ft_v;
 
+    darwin_data.ft_state[the_index].s0 = ft_0;
+    darwin_data.ft_state[the_index].s1 = ft_1;
+    darwin_data.ft_state[the_index].s2 = ft_2;
+    darwin_data.ft_state[the_index].s3 = ft_3;
+    darwin_data.ft_state[the_index].x  = ft_x;
+    darwin_data.ft_state[the_index].y  = ft_y;
+    darwin_data.ft_state[the_index].raised_x = ft_fsr_raised_x;
+    darwin_data.ft_state[the_index].raised_y = ft_fsr_raised_y;
+    darwin_data.ft_state[the_index].voltage  = ft_v;
+
+    //darwin_data.ft_state = ft_state;
+
     return RETURN_OK;
   }
 
@@ -934,6 +978,13 @@ void print_state_imu()
     motor_state[id].load    = int2load(buff_load);
     motor_state[id].voltage = (double)buff_voltage       * MOTOR_VOLTAGE_SCALE;
     motor_state[id].temp    = (double)buff_temp          * MOTOR_TEMP_SCALE;
+
+    darwin_data.motor_state[id].pos     = enc2rad(buff_pos);
+    darwin_data.motor_state[id].speed   = enc2radPerSec(buff_speed);
+    darwin_data.motor_state[id].load    = int2load(buff_load);
+    darwin_data.motor_state[id].voltage = (double)buff_voltage       * MOTOR_VOLTAGE_SCALE;
+    darwin_data.motor_state[id].temp    = (double)buff_temp          * MOTOR_TEMP_SCALE;
+    //darwin_data.motor_state = motor_state;
 
     return RETURN_OK;
   }
@@ -1026,7 +1077,23 @@ void print_state_imu()
     imu_acc_y  = int2double(buff_acc_y)  * IMU_ACC_SCALE;
     imu_acc_z  = int2double(buff_acc_z)  * IMU_ACC_SCALE;
     voltage    = (double)buff_voltage / VOLTAGE_SCALE;
+    imu_state.gyro_x = imu_gyro_x;
+    imu_state.gyro_y = imu_gyro_y;
+    imu_state.gyro_z = imu_gyro_z;
+    imu_state.acc_x  = imu_acc_x;
+    imu_state.acc_y  = imu_acc_y;
+    imu_state.acc_z  = imu_acc_z;
+    imu_state.voltage = voltage;
 
+    darwin_data.imu_state.gyro_x = imu_gyro_x;
+    darwin_data.imu_state.gyro_y = imu_gyro_y;
+    darwin_data.imu_state.gyro_z = imu_gyro_z;
+    darwin_data.imu_state.acc_x  = imu_acc_x;
+    darwin_data.imu_state.acc_y  = imu_acc_y;
+    darwin_data.imu_state.acc_z  = imu_acc_z;
+    darwin_data.imu_state.voltage = voltage;
+
+    //darwin_data.imu_state = imu_state;
     return 0;
   }
 
