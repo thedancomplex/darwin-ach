@@ -26,7 +26,7 @@ int main()
 
 
   // Turn on motor power
-  darwin::on(ID_DARWIN);
+  darwin::on();
  
   // Wait 1 second for power to turn on
   darwin::sleep(1.0);
@@ -37,10 +37,10 @@ int main()
 
   double tick = darwin::time();
   double tock = darwin::time();
+  double tick2 = darwin::time();
 
   while(1)
   {
-  double tick2 = darwin::time();
     // read 1 byte from address 5
     //lofaro::do_read(200, 3);
     darwin::get_imu_state_auto();
@@ -59,15 +59,25 @@ int main()
     }
 
 
+
+
     double tock2 = darwin::time();
     double dt2 = tock2 - tick2;
-    printf("dt = %f\t f = %f\n", dt2, 1/dt2);
-    darwin::print_state();
-    printf("----------------------------\n");
-    printf("%f, %f, %f\n", darwin::imu_acc_x, darwin::imu_acc_y, darwin::imu_acc_z);
+    while( dt2 < 0.01 )
+    {
+      darwin::sleep(0.00001);
+      tock2 = darwin::time();
+      dt2 = tock2 - tick2;
+    }    
+    tick2 = tock2;
+
+//    printf("dt = %f\t f = %f\n", dt2, 1/dt2);
+  //  darwin::print_state();
+//    printf("----------------------------\n");
+    printf("dt = %f, f= %f, %f, %f, %f\n",dt2, 1/dt2, darwin::imu_acc_x, darwin::imu_acc_y, darwin::imu_acc_z);
   }
   // Turn off motor power
-  darwin::off(ID_DARWIN);
+  darwin::off();
 
   // Close port
   darwin::close();
