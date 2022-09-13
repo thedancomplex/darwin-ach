@@ -13,6 +13,19 @@
 
 #include "dynamixel_sdk/dynamixel_sdk.h"
 
+// Initialize PortHandler instance
+// Set the port path
+// Get methods and members of PortHandlerLinux or PortHandlerWindows
+dynamixel::PortHandler *portHandler;
+
+// Initialize PacketHandler instance
+// Set the protocol version
+// Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
+dynamixel::PacketHandler *packetHandler;
+
+
+// Initialize GroupBulkRead instance
+dynamixel::GroupBulkRead groupBulkRead(portHandler, packetHandler);
 
 namespace lofaro {
 #include "lofaro_utils.h"
@@ -63,21 +76,7 @@ int       check_serial();
 void      do_flush();
 int       do_flush_final();
 int getch();
-int kbhit(void)
-
-struct termios tty;
-
-
-// Initialize PortHandler instance
-// Set the port path
-// Get methods and members of PortHandlerLinux or PortHandlerWindows
-dynamixel::PortHandler *portHandler;
-
-// Initialize PacketHandler instance
-// Set the protocol version
-// Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
-dynamixel::PacketHandler *packetHandler;
-
+int kbhit(void);
 
 
 bool PORT_STATUS = false;
@@ -99,12 +98,18 @@ int do_open(const char* the_serial_port)
     // Initialize PortHandler instance
     // Set the port path
     // Get methods and members of PortHandlerLinux or PortHandlerWindows
-    *portHandler = dynamixel::PortHandler::getPortHandler(the_serial_port);
+    portHandler = dynamixel::PortHandler::getPortHandler(the_serial_port);
 
     // Initialize PacketHandler instance
     // Set the protocol version
     // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
-    *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
+    packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
+
+    // Initialize GroupBulkRead instance
+    dynamixel::GroupBulkRead groupBulkRead(portHandler, packetHandler);
+
+
+
 
     portHandler->setPacketTimeout(0.001);
     // Open port
@@ -192,8 +197,11 @@ int do_close()
 
 int do_write(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
 {
-    int buff[] = {d0, d1};
+    uint16_t buff = 0;
+    buff = buff & d1;
+    buff = (buff << 8) & d0;
     uint8_t dxl_error = 0;                          // Dynamixel error
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
 
     dxl_comm_result = packetHandler->write2ByteTxRx(portHandler, id, address, buff, &dxl_error);
     if (dxl_comm_result != COMM_SUCCESS)
@@ -212,6 +220,12 @@ int do_write_set(uint8_t id, uint8_t address, uint8_t d0)
 {
   return 0;
 }
+
+int do_write_set(uint8_t id, uint8_t address, uint8_t d0, uint8_t d1)
+{
+  return 0;
+}
+
 
 int do_write(uint8_t id, uint8_t address, uint8_t d0)
 {
@@ -254,43 +268,22 @@ void do_flush()
 
 int do_read(uint8_t id, uint8_t buff[], uint8_t buff_length)
 {
-  int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-
-  // Initialize GroupBulkRead instance
-  dynamixel::GroupBulkRead gb = new groupBulkRead(portHandler, packetHandler);
-  // Add parameter storage for Dynamixel#1 present position value
-  dxl_addparam_result = gb.groupBulkRead.addParam(id, address, length_read);
-
-  // Bulkread present position and moving status
-  dxl_comm_result = gb.groupBulkRead.txRxPacket();
-  if (dxl_comm_result != COMM_SUCCESS)
-  {
-    printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
-  }
-  else if (groupBulkRead.getError(id, &dxl_error))
-  {
-    printf("[ID:%03d] %s\n", DXL1_ID, packetHandler->getRxPacketError(dxl_error));
-  }
-
-  dxl_getdata_result = groupBulkRead.isAvailable(id, address, length_read);
-  if (dxl_getdata_result != true)
-  {
-    fprintf(stderr, "[ID:%03d] groupBulkRead getdata failed", DXL1_ID);
-    return 0;
-  }
-    // Get Dynamixel#1 present position value
-    buff = gb.groupBulkRead.getData(id, address, buff_length);
-
   /* this is the bulk read */
   return 0;
 }
 
 int do_read(uint8_t id, uint8_t address, uint8_t length_read)
 {
+  bool dxl_addparam_result = false;               // addParam result
+  bool dxl_getdata_result = false;                // GetParam result
+  uint8_t dxl_error = 0;                          // Dynamixel error
+
+
+
   int dxl_comm_result = COMM_TX_FAIL;             // Communication result
 
   uint16_t buff_out_2byte = 0;
-  uint8_t  buff_out_1byte = 0;
+  uint16_t buff_out_1byte = 0;
 
   if(length_read == 2)
   {
@@ -299,6 +292,38 @@ int do_read(uint8_t id, uint8_t address, uint8_t length_read)
   else if(length_read == 1)
   {
     dxl_comm_result = packetHandler->read2ByteTxRx(portHandler, id, address, &buff_out_1byte, &dxl_error);
+  }
+  else if(length_read > 2)
+  {
+
+    uint32_t buff = 0;
+
+    // clear paramaters
+    groupBulkRead.clearParam();
+
+    // Add parameter storage for Dynamixel#1 present position value
+    dxl_addparam_result = groupBulkRead.addParam(id, address, length_read);
+
+    // Bulkread present position and moving status
+    dxl_comm_result = groupBulkRead.txRxPacket();
+    if (dxl_comm_result != COMM_SUCCESS)
+    {
+      printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    }
+    else if (groupBulkRead.getError(id, &dxl_error))
+    {
+      printf("[ID:%03d] %s\n", id, packetHandler->getRxPacketError(dxl_error));
+    }
+
+    dxl_getdata_result = groupBulkRead.isAvailable(id, address, length_read);
+    if (dxl_getdata_result != true)
+    {
+      fprintf(stderr, "[ID:%03d] groupBulkRead getdata failed", id);
+      return 0;
+    }
+    // Get Dynamixel#1 present position value
+    buff = groupBulkRead.getData(id, address, length_read);
+
   }
   else 
   {
@@ -310,6 +335,26 @@ int do_read(uint8_t id, uint8_t address, uint8_t length_read)
 int do_read(uint8_t id, uint8_t address)
 {
   return do_read(id, address, 1);
+}
+
+uint8_t get_checksum(uint8_t *rxpacket)
+{
+  uint8_t checksum    = 0;
+  uint8_t wait_length = rxpacket[SERIAL_PKT_LENGTH] + SERIAL_PKT_LENGTH + 1;
+
+
+  // calculate checksum
+  for (uint16_t i = 2; i < wait_length - 1; i++)   // except header, checksum
+  {
+    checksum += rxpacket[i];
+  }
+  checksum = ~checksum;
+  return checksum;
+}
+
+int do_read_buffer(uint8_t buff[1024], int *the_length)
+{
+  return 0;
 }
 
 
