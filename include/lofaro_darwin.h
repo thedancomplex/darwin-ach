@@ -814,9 +814,7 @@ void print_state_imu()
 
   int get_motor_state(int id)
   {
-printf("aa\n");
     int ret = lofaro::do_read(id, MX_ADDRESS_STATE_START, MX_ADDRESS_STATE_LENGTH);
-printf("bb\n");
 
     if( ret == 0 ) return RETURN_OK;
     return RETURN_FAIL;
@@ -1043,9 +1041,11 @@ printf("bb\n");
   {
 // ff ff c8 f 0 0 2 0 2 0  2  5  2  bc 1  79 2  7b 68 0
 // 1  2  3  4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-
+printf("imu update\n");
     if ( RETURN_OK != check_head(buff) ) return RETURN_FAIL;
     if ( RETURN_OK != check_checksum(buff) ) return RETURN_FAIL;
+
+printf("imu update - 2\n");
 
     // Assign the diata
     uint8_t b0 = 0;
@@ -1113,6 +1113,7 @@ printf("bb\n");
     darwin_data.imu_state.acc_z  = imu_acc_z;
     darwin_data.imu_state.voltage = voltage;
 
+    printf("imu - 3\n");
     //darwin_data.imu_state = imu_state;
     return 0;
   }

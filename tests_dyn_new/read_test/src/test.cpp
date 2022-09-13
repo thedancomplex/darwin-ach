@@ -38,25 +38,20 @@ int main()
   // Try to ping the Dynamixel
   // Get Dynamixel model number
 
-printf("1\n");
   double tick = darwin::time();
   double tock = darwin::time();
   int mot_i = 20;
   while(1)
   {
-printf("2\n");
     // read 1 byte from address 5
-    lofaro::do_read(200, 3);
-//    darwin::get_imu_state();
+    //lofaro::do_read(200, 3);
+    darwin::get_imu_state_auto();
 //    darwin::get_motor_state(mot_i);
-printf("3\n");
     darwin::sleep(0.002);
     
-printf("4\n");
     bool do_loop = true;
     while(do_loop) 
     { 
-printf("5\n");
       tock = darwin::time();
       double dt = tock - tick;
       if (dt > 0.01) do_loop = false;
@@ -64,8 +59,14 @@ printf("5\n");
       darwin::sleep(0.0001);
     }
 
+    printf("%f\t %f\t %f\n", 
+           darwin::darwin_data.imu_state.acc_x,
+           darwin::darwin_data.imu_state.acc_y,
+           darwin::darwin_data.imu_state.acc_z);
+
+
     tock = darwin::time();
-    darwin::print_state_motor(mot_i);
+//    darwin::print_state_motor(mot_i);
   }
   // Turn off motor power
   darwin::off();

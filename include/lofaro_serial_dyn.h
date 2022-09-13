@@ -13,16 +13,18 @@
 
 #include "dynamixel_sdk/dynamixel_sdk.h"
 
+// Protocol version
+#define PROTOCOL_VERSION                1.0                 // See which protocol version is used in the Dynamixel
+
 // Initialize PortHandler instance
 // Set the port path
 // Get methods and members of PortHandlerLinux or PortHandlerWindows
-dynamixel::PortHandler *portHandler;
+dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
 
 // Initialize PacketHandler instance
 // Set the protocol version
 // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
-dynamixel::PacketHandler *packetHandler;
-
+dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
 
 // Initialize GroupBulkRead instance
 dynamixel::GroupBulkRead groupBulkRead(portHandler, packetHandler);
@@ -30,8 +32,6 @@ dynamixel::GroupBulkRead groupBulkRead(portHandler, packetHandler);
 namespace lofaro {
 #include "lofaro_utils.h"
 
-// Protocol version
-#define PROTOCOL_VERSION                1.0  
 #define BAUDRATE                        1000000
 #define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
 #define ESC_ASCII_VALUE                 0x1b
@@ -101,22 +101,6 @@ int do_open()
 int do_open(const char* the_serial_port)
 {
     memset(&rx_buff, 0, sizeof(rx_buff));
-
-    // Initialize PortHandler instance
-    // Set the port path
-    // Get methods and members of PortHandlerLinux or PortHandlerWindows
-    portHandler = dynamixel::PortHandler::getPortHandler(the_serial_port);
-
-    // Initialize PacketHandler instance
-    // Set the protocol version
-    // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
-    packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
-
-    // Initialize GroupBulkRead instance
-    dynamixel::GroupBulkRead groupBulkRead(portHandler, packetHandler);
-
-
-
 
     portHandler->setPacketTimeout(0.001);
     // Open port
@@ -281,7 +265,6 @@ int do_read(uint8_t id, uint8_t buff[], uint8_t buff_length)
 
 int do_read(uint8_t id, uint8_t address, uint8_t length_read)
 {
-printf("z\n");
   bool dxl_addparam_result = false;               // addParam result
   bool dxl_getdata_result = false;                // GetParam result
   uint8_t dxl_error = 0;                          // Dynamixel error
@@ -291,20 +274,16 @@ printf("z\n");
   uint16_t buff_out_2byte = 0;
   uint16_t buff_out_1byte = 0;
 
-printf("a\n");
   if( length_read <= 0 ) return 1;
 
   // clear paramaters
   groupBulkRead.clearParam();
-printf("b\n");
 
   // Add parameter storage for Dynamixel#1 present position value
   dxl_addparam_result = groupBulkRead.addParam(id, address, length_read);
-printf("c\n");
 
   // Bulkread present position and moving status
   dxl_comm_result = groupBulkRead.txRxPacket();
-printf("d\n");
 
   if (dxl_comm_result != COMM_SUCCESS)
   {
@@ -315,25 +294,20 @@ printf("d\n");
     printf("[ID:%03d] %s\n", id, packetHandler->getRxPacketError(dxl_error));
   }
   dxl_getdata_result = groupBulkRead.isAvailable(id, address, length_read);
-printf("e\n");
   if (dxl_getdata_result != true)
   {
     fprintf(stderr, "[ID:%03d] groupBulkRead getdata failed", id);
     return 1;
   }
 
-printf("f\n");
   memset(&rx_buff, 0, sizeof(rx_buff));
-printf("g\n");
   rx_buff[0] = 0xff;
   rx_buff[1] = 0xff;
   rx_buff[2] = id;
   rx_buff[3] = length_read;
-printf("h\n");
   int current_i = 4;
   for (int i = 0; i < (length_read + 4); i = i+4)
   {
-  printf("i=%d\n",i);
     int read_length_2 = length_read - i;
     int address_2 = address + i;
     uint32_t buff = 0;
@@ -351,13 +325,11 @@ printf("h\n");
     rx_buff[io+2] = b2;
     rx_buff[io+3] = b3;
   }
-printf("i\n");
 
   uint8_t the_checksum = get_checksum(rx_buff);
 
   rx_buff[length_read + 3] = the_checksum;
 
-printf("j\n");
   return 0;
 }
 
