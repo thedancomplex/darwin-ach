@@ -814,7 +814,9 @@ void print_state_imu()
 
   int get_motor_state(int id)
   {
+printf("aa\n");
     int ret = lofaro::do_read(id, MX_ADDRESS_STATE_START, MX_ADDRESS_STATE_LENGTH);
+printf("bb\n");
 
     if( ret == 0 ) return RETURN_OK;
     return RETURN_FAIL;
