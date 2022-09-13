@@ -28,50 +28,9 @@ int main()
   darwin::setup("/dev/ttyUSB0");
   //darwin::setup("/dev/ttyDARWIN1");
 
-
-  // Turn on motor power
-  printf("Power = %d\n", darwin::on());
- 
   // Wait 1 second for power to turn on
   darwin::sleep(1.0);
 
-  // Try to ping the Dynamixel
-  // Get Dynamixel model number
-
-  double tick = darwin::time();
-  double tock = darwin::time();
-  int mot_i = 20;
-  while(1)
-  {
-    // read 1 byte from address 5
-    //lofaro::do_read(200, 3);
-    darwin::get_imu_state_auto();
-//    darwin::get_motor_state(mot_i);
-    darwin::sleep(0.002);
-    
-    bool do_loop = true;
-    while(do_loop) 
-    { 
-      tock = darwin::time();
-      double dt = tock - tick;
-      if (dt > 0.01) do_loop = false;
-      darwin::read_buffer(); 
-      darwin::sleep(0.0001);
-    }
-
-    printf("%f\t %f\t %f\t %f\n", 
-           darwin::darwin_data.imu_state.voltage,
-//           darwin::darwin_data.imu_state.gyro_x,
-//           darwin::darwin_data.imu_state.gyro_y,
-//           darwin::darwin_data.imu_state.gyro_z,
-           darwin::darwin_data.imu_state.acc_x,
-           darwin::darwin_data.imu_state.acc_y,
-           darwin::darwin_data.imu_state.acc_z);
-
-
-    tock = darwin::time();
-//    darwin::print_state_motor(mot_i);
-  }
   // Turn off motor power
   darwin::off();
 

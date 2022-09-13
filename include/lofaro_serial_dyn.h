@@ -305,7 +305,14 @@ int do_read(uint8_t id, uint8_t address, uint8_t length_read)
   rx_buff[1] = 0xff;
   rx_buff[2] = id;
   rx_buff[3] = length_read;
-  int current_i = 4;
+  rx_buff[4] = 0x00;
+  int current_i = 5;
+
+  for (int i = 0; i < length_read; i++)
+  {
+    rx_buff[current_i+i] = (uint8_t)groupBulkRead.getData(id, address+i, 1);
+  }
+/*
   for (int i = 0; i < (length_read + 4); i = i+4)
   {
     int read_length_2 = length_read - i;
@@ -325,6 +332,7 @@ int do_read(uint8_t id, uint8_t address, uint8_t length_read)
     rx_buff[io+2] = b2;
     rx_buff[io+3] = b3;
   }
+*/
 
   uint8_t the_checksum = get_checksum(rx_buff);
 
@@ -373,8 +381,19 @@ int do_get_length( uint8_t buff[] )
 int do_read_buffer(uint8_t buff[1024], int *the_length)
 {
 //  strncpy(buff, rx_buff, sizeof(rx_buff));
+/*
+  for(int i = 0; i < 1024; i++)
+  {
+    buff[i] = rx_buff[i];
+  }
+*/
   memcpy(buff, rx_buff, sizeof(rx_buff));
   *the_length = do_get_length(buff);
+  for(int i = 0; i < *the_length+3; i++) printf("%x ",buff[i]);
+  printf("\n");
+  for(int i = 0; i < *the_length+3; i++) printf("%x ",rx_buff[i]);
+  printf("\n");
+  printf("%d\n", *the_length);
   return 0;
 }
 

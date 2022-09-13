@@ -52,6 +52,7 @@ namespace darwin {
   #define DYN_OFF CM730_OFF
   #define DARWIN_ON  CM730_ON
   #define DARWIN_OFF CM730_OFF
+//  #define IMU_ACC_SCALE 1.0
   #define IMU_ACC_SCALE 70.67723342939482
   #define IMU_GYRO_SCALE 500.0
   #define VOLTAGE_SCALE 10.0
@@ -1041,11 +1042,9 @@ void print_state_imu()
   {
 // ff ff c8 f 0 0 2 0 2 0  2  5  2  bc 1  79 2  7b 68 0
 // 1  2  3  4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-printf("imu update\n");
     if ( RETURN_OK != check_head(buff) ) return RETURN_FAIL;
     if ( RETURN_OK != check_checksum(buff) ) return RETURN_FAIL;
 
-printf("imu update - 2\n");
 
     // Assign the diata
     uint8_t b0 = 0;
@@ -1113,7 +1112,6 @@ printf("imu update - 2\n");
     darwin_data.imu_state.acc_z  = imu_acc_z;
     darwin_data.imu_state.voltage = voltage;
 
-    printf("imu - 3\n");
     //darwin_data.imu_state = imu_state;
     return 0;
   }
