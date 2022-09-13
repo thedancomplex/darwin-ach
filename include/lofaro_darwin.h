@@ -167,6 +167,7 @@ namespace darwin {
   int get_imu_state();
   int get_imu_state_auto();
   int get_ft_state(uint8_t id);
+  int get_ft_state_auto(uint8_t id);
   int get_ft_state_auto();
   int write(uint8_t id, uint8_t address);
   int write(uint8_t id, uint8_t address, uint8_t d0);
@@ -714,38 +715,32 @@ void print_state_imu()
     return read( id, FT_ADDRESS_START, FT_ADDRESS_LENGTH + 1 );
   }
 
+  int get_ft_state_auto(uint8_t id)
+  {
+    if( (id != ID_FT_LEFT) & (id != ID_FT_RIGHT) ) return RETURN_FAIL;
+    get_ft_state(id);
+    bool do_loop = true;
+    double tick = time();
+    double tock = time();
+    double dt = 0.0;
+    while(do_loop)
+    {
+      int ret = read_buffer();
+      if (ret == RETURN_OK) do_loop = false;
+      tock = time();
+      dt = tock - tick;
+      if(dt > 0.0015) do_loop = false;
+      sleep(0.0001);
+    }
+      
+    return RETURN_OK;
+  }
+
   int get_ft_state_auto()
   {
-      get_ft_state(ID_FT_RIGHT);
-      bool do_loop = true;
-      double tick = time();
-      double tock = time();
-      double dt = 0.0;
-      while(do_loop)
-      {
-        int ret = read_buffer();
-        if (ret == RETURN_OK) do_loop = false;
-        tock = time();
-        dt = tock - tick;
-        if(dt > 0.0015) do_loop = false;
-        sleep(0.0001);
-      }
-
-      get_ft_state(ID_FT_LEFT);
-      do_loop = true;
-      tick = time();
-      tock = time();
-      dt = 0.0;
-      while(do_loop)
-      {
-        int ret = read_buffer();
-        if (ret == RETURN_OK) do_loop = false;
-        tock = time();
-        dt = tock - tick;
-        if(dt > 0.0015) do_loop = false;
-        sleep(0.0001);
-      }
-      
+    int ret = get_ft_state_auto(ID_FT_RIGHT);
+    ret    += get_ft_state_auto(ID_FT_LEFT);
+    if (ret > 0) return RETURN_FAIL;
     return RETURN_OK;
   }
 
