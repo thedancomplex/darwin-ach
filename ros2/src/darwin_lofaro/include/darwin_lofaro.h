@@ -148,7 +148,7 @@ void DarwinLofaroLoop::theLoop(darwin::darwin_data_def_t *darwin_data)
 
       darwin::get_imu_state_auto();
       darwin::get_motor_state_auto(1);
-      darwin::get_ft_state_auto(ID_FT_RIGHT);
+//      darwin::get_ft_state_auto(ID_FT_RIGHT);
       //darwin::get_ft_state_auto();
       darwin::sleep(0.001);
 
