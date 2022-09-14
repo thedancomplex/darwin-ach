@@ -1,3 +1,7 @@
+#ifndef DARWIN_INCLUDES
+#include "lofaro_includes.h"
+#endif 
+
 #ifndef DARWIN_TYPES
 #include "lofaro_types.h"
 #endif

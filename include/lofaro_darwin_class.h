@@ -6,13 +6,7 @@
 #include "lofaro_utils.h"
 #endif
 
-#ifdef DARWIN_LOFARO_DAN
-#include "lofaro_darwin_dan.h"
-#endif
-
-#ifdef DARWIN_LOFARO_DYN
-#include "lofaro_darwin_dyn.h"
-#endif
+#include "dynamixel_sdk/dynamixel_sdk.h"
 
 class DarwinLofaro
 {
@@ -72,7 +66,7 @@ class DarwinLofaro
 
 
   /* State and Reference Data */
-  darwin_data_def_t darwin_data;
+  static darwin_data_def_t darwin_data;
 
   private:
     /* Open Port */
@@ -82,24 +76,12 @@ class DarwinLofaro
     int open(char *port);
 
     /* Sets low-latency for serial port */
-    int setLowLatency(bool low_latency);
+    int setLowLatency(char* the_serial_port, bool low_latency);
 
-    // Initialize PortHandler instance
-    // Set the port path
-    // Get methods and members of PortHandlerLinux or PortHandlerWindows
-    dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
+    LofaroUtils* lut = new LofaroUtils();
 
-    // Initialize PacketHandler instance
-    // Set the protocol version
-    // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
-    dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
-
-    // Initialize GroupBulkRead instance
-    dynamixel::GroupBulkRead groupBulkReadImu(portHandler, packetHandler);
-    dynamixel::GroupBulkRead groupBulkReadFt(portHandler, packetHandler);
-
-    auto lut = new LofaroUtils();
-
+    /* IMU specific int to double */
+    double int2double(uint16_t val);
 
 
 
