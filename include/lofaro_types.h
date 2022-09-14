@@ -4,6 +4,8 @@
 #include "lofaro_defines.h"
 #endif
 
+#include <stdint.h>
+
 typedef struct imu_state_def {
         double acc_x;
         double acc_y;
