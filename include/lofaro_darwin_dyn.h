@@ -16,7 +16,7 @@
 
 /* Author: Daniel M. Lofaro */
 
-#ifndef DARWIN_DEFINE
+#ifndef DARWIN_DEFINES
 #include "lofaro_define.h"
 #endif
 

@@ -1,42 +1,31 @@
+#define LOFARO_UTILS 1
 #include <sys/time.h>
 
-
-
-/*
-// String Split
-#include <iostream>
-#include <vector>
-#include <sstream>
-#include <string>
-
-
-
-void do_split(std::string const &str, const char delim,
-    std::vector<std::string> &out)
+class LofaroUtils
 {
- // construct a stream from the string
- std::stringstream ss(str);
+  public:
+    DarwinLofaro() {}
 
- std::string s;
- while (std::getline(ss, s, delim)) {
-     out.push_back(s);
- }
-}
+    double getTime()
+    {
+      long seconds, useconds;
+      double duration;
+      timeval the_time;
+      gettimeofday(&the_time, NULL);
+      seconds = the_time.tv_sec;
+      useconds = the_time.tv_usec;
 
-*/
+      duration = seconds + useconds / 1000000.0;
 
-double get_time()
-{
-  long seconds, useconds;
-  double duration;
-  timeval the_time;
-  gettimeofday(&the_time, NULL);
-  seconds = the_time.tv_sec;
-  useconds = the_time.tv_usec;
+     //  printf("%f\n", duration);
+      return duration;
+    }
 
-  duration = seconds + useconds / 1000000.0;
+    int sleep(double val)
+    {
+      long usec = (long)(val * 1000000);
+      return usleep(usec);
+    }
 
-//  printf("%f\n", duration);
-  return duration;
-}
+};
 

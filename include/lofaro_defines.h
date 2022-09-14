@@ -1,4 +1,4 @@
-# define DARWIN_DEFINE 1
+# define DARWIN_DEFINES 1
 
 # define M_PI                              3.14159265358979323846
 
@@ -93,6 +93,8 @@
 #define DARWIN_MOTOR_NUM                   20
 #define DARWIN_MOTOR_MIN                   1
 #define DARWIN_MOTOR_MAX                   20
+#define DARWIN_FT_NUM                      2
+
 
 #define ERROR                              1
 #define NO_ERROR                           0
@@ -101,4 +103,4 @@
 
 #define BAUDRATE                           1000000
 #define STDIN_FILENO                       0
-
+#define SERIAL_PORT_LOW_LATENCY_DEFAULT    false
