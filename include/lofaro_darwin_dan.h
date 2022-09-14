@@ -16,30 +16,21 @@
 
 /* Author: Daniel M. Lofaro */
 
-#include <fcntl.h>
-#include <termios.h>
-#define STDIN_FILENO 0
+#ifndef DARWIN_DEFINE
+#include "lofaro_define.h"
+#endif
 
-#include <stdio.h>
-
-#define BAUDRATE                        1000000
-//#define DEVICENAME                      "/dev/ttyUSB1"      // Check which port is being used on your controller
-#define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
-
-#include <sys/ioctl.h>
+#ifndef DARWIN_INCLUDE
+#include "lofaro_include.h"
+#endif
 
 
 #include "lofaro_serial.h"
 #include "lofaro_coms.h"
 
-#ifndef DARWIN_DEFINE
-#include "lofaro_define.h"
-#endif
 
 
 namespace darwin {
-
-
 
   int sleep(double val);
   double time();

@@ -86,6 +86,8 @@
 #define FT_ADDRESS_DELAY                   5
 
 #define SERIAL_PORT_DEFAULT                "/dev/ttyUSB0"
+#define DEVICENAME                         SERIAL_PORT_DEFAULT
+
 
 #define DARWIN_MOTOR_BROADCAST             0Xfe
 #define DARWIN_MOTOR_NUM                   20
@@ -96,4 +98,7 @@
 #define NO_ERROR                           0
 #define RAISED                             1
 #define NOT_RAISED                         0
+
+#define BAUDRATE                           1000000
+#define STDIN_FILENO                       0
 
