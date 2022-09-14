@@ -16,6 +16,16 @@
 
 /* Author: Daniel M. Lofaro */
 
+#ifndef DARWIN_DEFINE
+#include "lofaro_define.h"
+#endif
+
+#ifndef DARWIN_INCLUDE
+#include "lofaro_include.h"
+#endif
+
+
+
 
 #if !defined(DYN_CM730)
 #define DYN_CM730 1
@@ -40,54 +50,6 @@ int DXL_ID = 200;                   // Dynamixel ID: 200 - cm730
 
 
 namespace darwin {
-  // Enumbs and defines
-  #define CM730_ON  1
-  #define CM730_OFF 0
-  #define DARWIN_ON  CM730_ON
-  #define DARWIN_OFF CM730_OFF
-  #define IMU_ACC_SCALE 70.67723342939482
-  #define IMU_GYRO_SCALE 500.0
-  #define VOLTAGE_SCALE 10.0
-  #define FT_SCALE 1/1000.0
-  #define FSR_SCALE_X 1.0
-  #define FSR_SCALE_Y 1.0
-
-  // Motor IDs
-  #define ID_CM730 200
-  #define ID_DARWIN ID_CM730
-  #define ID_FT 100
-
-  // Addresses 
-  #define CM730_ADDRESS_DYN_POWER 24
-  #define CM730_ADDRESS_ID 3
-
-  #define CM730_ADDRESS_IMU_START 38
-  #define CM730_ADDRESS_IMU_LENGTH 12
-
-  #define CM730_ADDRESS_IMU_GYRO_Z 38
-  #define CM730_ADDRESS_IMU_GYRO_Y 40
-  #define CM730_ADDRESS_IMU_GYRO_X 42
-  #define CM730_ADDRESS_IMU_ACC_X 44
-  #define CM730_ADDRESS_IMU_ACC_Y 46
-  #define CM730_ADDRESS_IMU_ACC_Z 48
-
-  #define CM730_ADDRESS_VOLTAGE 50
-
-  #define FT_ADDRESS_START 26
-  #define FT_ADDRESS_LENGTH 10
-  #define FT_ADDRESS_LEFT_X 26
-  #define FT_ADDRESS_LEFT_Y 28
-  #define FT_ADDRESS_RIGHT_X 30
-  #define FT_ADDRESS_RIGHT_Y 32
-  #define FT_ADDRESS_FSR_X 34
-  #define FT_ADDRESS_FSR_Y 35
-  #define FT_ADDRESS_VOLTAGE 42
-
-
-  #define ERROR 1
-  #define NO_ERROR 0
-  #define RAISED 1
-  #define NOT_RAISED 0
 
   int close();
   int open();
@@ -181,12 +143,12 @@ namespace darwin {
     // Check if data is avaliable
     dxl_getdata_result = groupBulkReadFt.isAvailable(ID_FT, FT_ADDRESS_START, FT_ADDRESS_LENGTH);
     if (dxl_getdata_result != true) return 1;
-    
+
     // Assign the data
-    uint16_t buff_left_x   = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_LEFT_X, 2);
-    uint16_t buff_left_y   = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_LEFT_Y, 2);
-    uint16_t buff_right_x  = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_RIGHT_X, 2);
-    uint16_t buff_right_y  = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_RIGHT_Y, 2);
+    uint16_t buff_left_x   = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_S1, 2);
+    uint16_t buff_left_y   = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_S2, 2);
+    uint16_t buff_right_x  = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_S3, 2);
+    uint16_t buff_right_y  = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_S4, 2);
     uint16_t buff_fsr_x    = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_FSR_X, 2);
     uint16_t buff_fsr_y    = groupBulkReadFt.getData(ID_FT, FT_ADDRESS_FSR_Y, 2);
 
