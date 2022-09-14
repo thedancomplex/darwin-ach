@@ -162,20 +162,13 @@ namespace darwin {
     return (double)(val) / 65535.0;
   }
 
-  bool update_ft_setup_first = true;
-  int update_ft_setup()
+  int get_ft()
   {
     groupBulkReadFt.clearParam();
     // Add parameter storage for Dynamixel#1 present position value
     // +1 is added to read the voltage
     dxl_addparam_result = groupBulkReadFt.addParam(ID_FT, FT_ADDRESS_START, FT_ADDRESS_LENGTH);
-    if (dxl_addparam_result != true) return 1;
 
-    return 1;
-  }
-  int update_ft()
-  {
-    update_ft_setup();
     bool dxl_getdata_result = false;                // GetParam result
     uint8_t dxl_error = 0;                          // Dynamixel error
 
@@ -221,20 +214,13 @@ namespace darwin {
     return the_out;
   }
 
-  int update_imu_setup()
+  int get_imu()
   {
     groupBulkReadImu.clearParam();
     // Add parameter storage for Dynamixel#1 present position value
     // +1 is added to read the voltage
     dxl_addparam_result = groupBulkReadImu.addParam(ID_CM730, CM730_ADDRESS_IMU_START, CM730_ADDRESS_IMU_LENGTH+1);
     if (dxl_addparam_result != true) return 1;
-
-    return 0;
-  }
-
-  int update_imu()
-  {
-    update_imu_setup();
     bool dxl_getdata_result = false;                // GetParam result
     uint8_t dxl_error = 0;                          // Dynamixel error
 
@@ -265,7 +251,6 @@ namespace darwin {
     imu_acc_z  = int2double(buff_acc_z)  * IMU_ACC_SCALE;
     voltage    = (double)buff_voltage / VOLTAGE_SCALE;
 
-
     return 0;
   }
 
@@ -274,7 +259,9 @@ namespace darwin {
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
     uint8_t dxl_error = 0;                          // Dynamixel error
     uint8_t buff = 0;
+
     dxl_comm_result = packetHandler->read1ByteTxRx(portHandler, id, address, &buff, &dxl_error);
+
     if (dxl_error == 0)
     {
       packetHandler->getTxRxResult(dxl_comm_result);
