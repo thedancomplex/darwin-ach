@@ -104,3 +104,5 @@
 #define BAUDRATE                           1000000
 #define STDIN_FILENO                       0
 #define SERIAL_PORT_LOW_LATENCY_DEFAULT    false
+
+#define PROTOCOL_VERSION                   1.0

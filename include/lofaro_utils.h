@@ -1,10 +1,13 @@
 #define LOFARO_UTILS 1
 #include <sys/time.h>
+#include <unistd.h>
+#include <cstddef>
+
 
 class LofaroUtils
 {
   public:
-    DarwinLofaro() {}
+    LofaroUtils() {}
 
     double getTime()
     {
