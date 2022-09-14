@@ -19,6 +19,18 @@ class DarwinLofaro
   /* Open Port and change port number */
   int open(char *port);
 
+  /* Setup system with default values */
+  int setup();
+
+  /* Setup system with optional port */
+  int open(char *port);
+
+  /* Setup system with low latency flag */
+  int open(bool low_latency);
+
+  /* Setup system with optional port and low latency flag */
+  int open(char *port, bool low_latency);
+
   /* Set Motor Position */
   int setMotor(int mot, double val);
 
