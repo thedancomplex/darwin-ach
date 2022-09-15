@@ -63,14 +63,23 @@ class DarwinLofaro
   /* Turn off "id" */
   int off(int id);
 
-
   /* Pass through for the sleep method */
   int sleep(double val);
 
   /* Stops and turns off everything */
   int stop();
 
+  /* State and Reference Data */
+  darwin_data_def_t darwin_data;
 
+  /* set the rate for the auto sleeping timer */
+  int rate(double hz);
+
+  /* Sleep for the remainder of time needed to keep a rate of hz as defined by rate() */
+  int sleep();
+
+  /* Gets the time in seconds from the wall clock */
+  double time();
 
   private:
     /* Open Port */
@@ -90,8 +99,6 @@ class DarwinLofaro
     /* IMU specific int to double */
     double int2double(uint16_t val);
 
-    /* State and Reference Data */
-    darwin_data_def_t darwin_data;
 
 
 

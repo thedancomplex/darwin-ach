@@ -24,7 +24,7 @@ int main()
 
   DarwinLofaro dl = DarwinLofaro();
   // Open
-  dl.setup("/dev/ttyUSB0");
+  dl.setup("/dev/ttyUSB0", true);
   //darwin::setup("/dev/ttyDARWIN1");
 
 
@@ -33,6 +33,34 @@ int main()
  
   // Wait 1 second for power to turn on
   dl.sleep(1.0);
+
+  /* Set the sleep rate for 100hz*/
+  dl.rate(100.0);
+
+  double tick = dl.time();
+  double tock = dl.time();
+  while(1)
+  {
+    tock = dl.time();
+    double dt = tock - tick;
+    double f = 1.0/dt;
+    tick = tock;
+    dl.getImu();
+    printf("%f, %f, %f, %f, %f, %f, %f, %f, %f\n", 
+           dt,
+           f,
+           dl.darwin_data.imu.gyro_x,
+           dl.darwin_data.imu.gyro_y,
+           dl.darwin_data.imu.gyro_z,
+           dl.darwin_data.imu.acc_x,
+           dl.darwin_data.imu.acc_y,
+           dl.darwin_data.imu.acc_z,
+           dl.darwin_data.imu.voltage);
+    dl.sleep();
+  }
+
+  // Close port
+  dl.stop();
 
   return 0;
 }

@@ -27,12 +27,11 @@ int main()
   dl.setup("/dev/ttyUSB0");
   //darwin::setup("/dev/ttyDARWIN1");
 
-
-  // Turn on motor power
-  printf("Power = %d\n", dl.on());
- 
   // Wait 1 second for power to turn on
   dl.sleep(1.0);
+
+  // Close port
+  dl.stop();
 
   return 0;
 }

@@ -7,7 +7,12 @@
 class LofaroUtils
 {
   public:
-    LofaroUtils() {}
+    LofaroUtils() 
+    {
+      this->tick = this->getTime();
+      this->tock = this->getTime();
+      this->T    = 1.0/this->hz;
+    }
 
     double getTime()
     {
@@ -29,6 +34,30 @@ class LofaroUtils
       long usec = (long)(val * 1000000);
       return usleep(usec);
     }
+
+    int sleep()
+    {
+      tock = this->getTime();
+      double dt = T - (tock - tick);
+      if (dt < 0) dt = 0.0;
+      this->sleep(dt);
+      tick = this->getTime();
+      return 0;
+    }
+
+    int rate(double hz_des)
+    {
+      if(hz_des <= 0) return 1;
+      this->hz = hz_des;
+      this->T  = 1.0/hz_des;
+      return 0;
+    }
+
+  private:
+    double tick = 0.0;
+    double tock = 0.0;   
+    double hz   = 100.0;
+    double T    = 0.01;
 
 };
 

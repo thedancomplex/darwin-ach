@@ -34,5 +34,8 @@ int main()
   // Wait 1 second for power to turn on
   dl.sleep(1.0);
 
+  // Close port
+  dl.stop();
+
   return 0;
 }

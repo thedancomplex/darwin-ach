@@ -309,7 +309,20 @@ int DarwinLofaro::close()
 }
 
 
+int DarwinLofaro::sleep()
+{
+  return this->lut->sleep();
+}
 
+int DarwinLofaro::rate(double hz)
+{
+  return this->lut->rate(hz);
+}
+
+double DarwinLofaro::time()
+{
+  return this->lut->getTime();
+}
 
 
 
