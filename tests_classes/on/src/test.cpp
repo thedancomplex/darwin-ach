@@ -21,19 +21,21 @@
 
 int main()
 {
+
+  DarwinLofaro dl = DarwinLofaro();
   // Open
-  darwin::setup("/dev/ttyUSB0");
+  dl.setup("/dev/ttyUSB0");
   //darwin::setup("/dev/ttyDARWIN1");
 
 
   // Turn on motor power
-  printf("Power = %d\n", darwin::on());
+  printf("Power = %d\n", dl.on());
  
   // Wait 1 second for power to turn on
-  darwin::sleep(1.0);
+  dl.sleep(1.0);
 
   // Close port
-  darwin::close();
+  dl.stop();
 
   return 0;
 }

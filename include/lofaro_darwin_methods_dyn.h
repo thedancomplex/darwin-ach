@@ -15,14 +15,25 @@ dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHan
 dynamixel::GroupBulkRead groupBulkReadImu(portHandler, packetHandler);
 dynamixel::GroupBulkRead groupBulkReadFt(portHandler, packetHandler);
 
+/* init */
+DarwinLofaro::DarwinLofaro()
+{
+  return;
+}
+
 /* Open Port */
 int DarwinLofaro::open()
 {
-  return this->open(SERIAL_PORT_DEFAULT);
+  std::string str  = SERIAL_PORT_DEFAULT;
+  char *cstr = new char[str.length() + 1];
+  strcpy(cstr, str.c_str());
+  int ret = this->open(cstr);
+  delete [] cstr;
+  return ret;
 }
 
 /* Open Port and change port number */
-int DarwinLofaro::open(char *port)
+int DarwinLofaro::open(const char *port)
 {
   portHandler->setPacketTimeout(0.001);
 
@@ -54,11 +65,25 @@ int DarwinLofaro::open(char *port)
 /* Setup system with default values */
 int DarwinLofaro::setup()
 {
-  return this->setup(SERIAL_PORT_DEFAULT, SERIAL_PORT_LOW_LATENCY_DEFAULT);
+  std::string str  = SERIAL_PORT_DEFAULT;
+  char *cstr = new char[str.length() + 1];
+  strcpy(cstr, str.c_str());
+  int ret = this->setup(cstr, SERIAL_PORT_LOW_LATENCY_DEFAULT);
+  delete [] cstr;
+  return ret;
+}
+
+int DarwinLofaro::setup(std::string str)
+{
+  char *cstr = new char[str.length() + 1];
+  strcpy(cstr, str.c_str());
+  int ret = this->setup(cstr);
+  delete [] cstr;
+  return ret;
 }
 
 /* Setup system with optional port */
-int DarwinLofaro::setup(char *port)
+int DarwinLofaro::setup(const char *port)
 {
   return this->setup(port, SERIAL_PORT_LOW_LATENCY_DEFAULT);
 }
@@ -66,11 +91,25 @@ int DarwinLofaro::setup(char *port)
 /* Setup system with low latency flag */
 int DarwinLofaro::setup(bool low_latency)
 {
-  return this->setup(SERIAL_PORT_DEFAULT, low_latency);
+  std::string str  = SERIAL_PORT_DEFAULT;
+  char *cstr = new char[str.length() + 1];
+  strcpy(cstr, str.c_str());
+  int ret = this->setup(cstr, low_latency);
+  delete [] cstr;
+  return ret;
+}
+
+int DarwinLofaro::setup(std::string str, bool low_latency)
+{
+  char *cstr = new char[str.length() + 1];
+  strcpy(cstr, str.c_str());
+  int ret = this->setup(cstr, low_latency);
+  delete [] cstr;
+  return ret;
 }
 
 /* Setup system with optional port and low latency flag */
-int DarwinLofaro::setup(char *port, bool low_latency)
+int DarwinLofaro::setup(const char *port, bool low_latency)
 {
   memset(&darwin_data, 0, sizeof(darwin_data));
   this->open(port);
@@ -79,7 +118,7 @@ int DarwinLofaro::setup(char *port, bool low_latency)
 }
 
 /* Sets low-latency for serial port */
-int DarwinLofaro::setLowLatency(char* the_serial_port, bool low_latency)
+int DarwinLofaro::setLowLatency(const char* the_serial_port, bool low_latency)
 {
   if( low_latency )
   {
@@ -97,7 +136,7 @@ int DarwinLofaro::setLowLatency(char* the_serial_port, bool low_latency)
 }
 
 /* Get IMU State */
-int getImu()
+int DarwinLofaro::getImu()
 {
   bool dxl_addparam_result = false;               // addParam result
   groupBulkReadImu.clearParam();
@@ -133,7 +172,7 @@ int getImu()
   uint16_t buff_acc_z   = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_IMU_ACC_Z, 2);
   uint8_t  buff_voltage = groupBulkReadImu.getData(ID_CM730, CM730_ADDRESS_VOLTAGE, 1);
 
-  darwin_data.imu.gyro_x  = this->int2double(buff_gyro_x) * IMU_GYRO_SCALE;
+  this->darwin_data.imu.gyro_x  = this->int2double(buff_gyro_x) * IMU_GYRO_SCALE;
   this->darwin_data.imu.gyro_y  = this->int2double(buff_gyro_y) * IMU_GYRO_SCALE;
   this->darwin_data.imu.gyro_z  = this->int2double(buff_gyro_z) * IMU_GYRO_SCALE;
   this->darwin_data.imu.acc_x   = this->int2double(buff_acc_x)  * IMU_ACC_SCALE;
@@ -149,15 +188,15 @@ int DarwinLofaro::on()
 {
   int ret = 0;
   ret += this->on(ID_CM730);
-  lut.sleep(2.0);
+  this->lut->sleep(2.0);
   ret += this->on(ID_FT_RIGHT);
-  lut.sleep(0.1);
+  this->lut->sleep(0.1);
   ret += this->on(ID_FT_LEFT);
-  lut.sleep(0.1);
+  this->lut->sleep(0.1);
   for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
   {
     ret += this->on(i);
-    lut.sleep(0.05);
+    this->lut->sleep(0.05);
   }
   if( ret > 0 ) return RETURN_FAIL;
   return RETURN_OK;
@@ -191,20 +230,25 @@ int DarwinLofaro::on(int id)
     return RETURN_OK;;
 }
 
+int DarwinLofaro::sleep(double val)
+{
+  return this->lut->sleep(val);
+}
+
 /* Turn off all */
-int off()
+int DarwinLofaro::off()
 {
   int ret = 0;
   ret += this->off(ID_CM730);
-  lut.sleep(2.0);
+  this->lut->sleep(2.0);
   ret += this->off(ID_FT_RIGHT);
-  lut.sleep(0.1);
+  this->lut->sleep(0.1);
   ret += this->off(ID_FT_LEFT);
-  lut.sleep(0.1);
+  this->lut->sleep(0.1);
   for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
   {
     ret += this->off(i);
-    lut.sleep(0.05);
+    this->lut->sleep(0.05);
   }
   if( ret > 0 ) return RETURN_FAIL;
   return RETURN_OK;
@@ -212,7 +256,7 @@ int off()
 
 
 /* Turn off "id" */
-int off(int id)
+int DarwinLofaro::off(int id)
 {
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
     uint8_t dxl_error = 0;                          // Dynamixel error
@@ -247,9 +291,22 @@ double DarwinLofaro::int2double(uint16_t val)
 
 
 
+/* Stops and turns off everything */
+int DarwinLofaro::stop()
+{
+  int ret = off();
+  ret += close();
+  if( ret > 0 ) return RETURN_FAIL;
+  return RETURN_OK;  
+}
 
-
-
+/* Closes port */
+int DarwinLofaro::close()
+{
+  // Close port
+  portHandler->closePort();
+  return RETURN_OK;
+}
 
 
 

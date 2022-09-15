@@ -17,13 +17,15 @@ class DarwinLofaro
     int setup();
 
     /* Setup system with optional port */
-    int setup(char *port);
+    int setup(std::string str);
+    int setup(const char *port);
 
     /* Setup system with low latency flag */
     int setup(bool low_latency);
 
     /* Setup system with optional port and low latency flag */
-    int setup(char *port, bool low_latency);
+    int setup(std::string sport, bool low_latency);
+    int setup(const char *port, bool low_latency);
 
   /* Set Motor Position */
   int setMotor(int mot, double val);
@@ -62,26 +64,35 @@ class DarwinLofaro
   int off(int id);
 
 
+  /* Pass through for the sleep method */
+  int sleep(double val);
+
+  /* Stops and turns off everything */
+  int stop();
 
 
-
-  /* State and Reference Data */
-  static darwin_data_def_t darwin_data;
 
   private:
     /* Open Port */
     int open();
 
     /* Open Port and change port number */
-    int open(char *port);
+    int open(const char *port);
+
+    /* Closes port */
+    int close();
 
     /* Sets low-latency for serial port */
-    int setLowLatency(char* the_serial_port, bool low_latency);
+    int setLowLatency(const char* the_serial_port, bool low_latency);
 
     LofaroUtils* lut = new LofaroUtils();
 
     /* IMU specific int to double */
     double int2double(uint16_t val);
+
+    /* State and Reference Data */
+    darwin_data_def_t darwin_data;
+
 
 
 
