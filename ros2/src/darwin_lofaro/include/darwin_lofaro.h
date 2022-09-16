@@ -1,8 +1,9 @@
 #include "darwin_lofaro_head.h"
 
 
-DarwinLofaroRef::DarwinLofaroRef(darwin::darwin_data_def_t *darwin_data) : Node("darwin_lofaro_ref_subscriber")
+DarwinLofaroRef::DarwinLofaroRef(std::shared_ptr<DarwinLofaro> d) : Node("darwin_lofaro_ref_subscriber")
 {
+  dl = d;
   const char* top = "/darwin/ref";
   subscription_ = this->create_subscription<std_msgs::msg::String>(top, 10, std::bind(&DarwinLofaroRef::topic_callback, this, _1));
 }
@@ -53,7 +54,7 @@ const void DarwinLofaroRef::topic_callback(const std_msgs::msg::String & msg)
          if(mot_val >  (M_PI / 2.0)) return;
          if(mot_val < -(M_PI / 2.0)) return;
 
-         darwin::motor_ref[mot_num] = mot_val;
+         dl.darwin_data.motor_ref[mot_num].pos = mot_val;
          throw 1;
         }
         catch(...){}
@@ -64,8 +65,9 @@ const void DarwinLofaroRef::topic_callback(const std_msgs::msg::String & msg)
 }
 
 
-DarwinLofaroState::DarwinLofaroState(darwin::darwin_data_def_t *darwin_data) : Node("darwin_lofaro_state_publisher"), count_(0)
+DarwinLofaroState::DarwinLofaroState(std::shared_ptr<DarwinLofaro> d) : Node("darwin_lofaro_state_publisher"), count_(0)
 {
+  dl = d;
 //dan  try {
       publisher_imu_      = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/imu", 10);
       publisher_ft_left_  = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/ft/left", 10);
@@ -76,8 +78,9 @@ DarwinLofaroState::DarwinLofaroState(darwin::darwin_data_def_t *darwin_data) : N
 //dan  } catch(...){}
 }
 
-DarwinLofaroLoop::DarwinLofaroLoop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec) : Node("darwin_lofaro_loop")
+DarwinLofaroLoop::DarwinLofaroLoop(std::shared_ptr<DarwinLofaro> d, rclcpp::executors::MultiThreadedExecutor *exec) : Node("darwin_lofaro_loop")
 {
+  dl = d;
   const char* top = "/darwin/clock";
   subscription_ = this->create_subscription<std_msgs::msg::String>(top, 10, std::bind(&DarwinLofaroLoop::topic_callback, this, _1));
   publisher_imu_      = this->create_publisher<geometry_msgs::msg::Twist>("/darwin/imu", 10);
@@ -93,76 +96,34 @@ DarwinLofaroLoop::DarwinLofaroLoop(darwin::darwin_data_def_t *darwin_data, rclcp
 
 const void DarwinLofaroLoop::topic_callback(const std_msgs::msg::String & msg)
 {
-  theLoop(&darwin::darwin_data);
+  this->theLoop();
 }
 
-void DarwinLofaroLoop::loop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec)
+void DarwinLofaroLoop::loop(rclcpp::executors::MultiThreadedExecutor *exec)
 {
-  double tick = darwin::time();
-  double tock = darwin::time();
-  double T = 0.01;
-  bool do_loop = true;
-//  auto d_state = new DarwinLofaroState(darwin_data);
-//  double t_sec = 0.00001;
-//  std::chrono::nanoseconds t_long = (std::chrono::nanoseconds)(t_sec * 1e9); 
-  while(do_loop)
-  {
-//    DarwinLofaroState::theLoop();
-
-    theLoop(darwin_data);
-//    printf("%f, %f, %f\n", darwin_data->imu_state.acc_x, darwin_data->imu_state.acc_y, darwin_data->imu_state.acc_z);
-//    d_state->theLoop(darwin_data);
-
-    double dt = tock - tick;
-    int i = 0;
-    while( dt < T )
-    {
-      exec->spin_once((std::chrono::nanoseconds)1000);
-      tock = darwin::time();
-      //darwin::sleep(0.00001);
-      dt = tock - tick;		
-      printf("%d\n",i++);
-    }
-    tick = tock;
-  }
 }
 
 void DarwinLofaroLoop::timerLoop()
 {
-  theLoop(&darwin::darwin_data);
+  this->theLoop();
 }
 
 
-#define ID_FT_LEFT 112
-#define ID_FT_RIGHT 111
+#define DARWIN_MOTOR_MIN 1
+#define DARWIN_MOTOR_MAX 20
 
-
-void DarwinLofaroLoop::theLoop(darwin::darwin_data_def_t *darwin_data)
+void DarwinLofaroLoop::theLoop()
 {
-//dan  try {
-      for (int i = 1; i <= 20; i++)
-      {
-        darwin::set_motor_pos_set(i, darwin::motor_ref[i]);
-      }
-      darwin::write_send();
+      dl.getImu();
+      dl.getFt();
 
-      darwin::get_imu_state_auto();
-      darwin::get_motor_state_auto(1);
-//      darwin::get_ft_state_auto(ID_FT_RIGHT);
-      //darwin::get_ft_state_auto();
-      darwin::sleep(0.001);
-
-      bool do_loop = true;
-      double tick = darwin::time();
-      double tock = darwin::time();
-      while(do_loop)
+      for( int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++ )
       {
-        tock = darwin::time();
-        double dt = tock - tick;
-        if (dt > 0.001) do_loop = false;
-        darwin::read_buffer();
-        darwin::sleep(0.0001);
+        dl.setMotSpeed(i,  0.75);
+        dl.setMotTorque(i, 0.5);
       }
+      dl.stageMotor();
+      dl.putMotor();
 
       auto message_imu          = geometry_msgs::msg::Twist();
       auto message_ft_left      = geometry_msgs::msg::Twist();
@@ -170,36 +131,36 @@ void DarwinLofaroLoop::theLoop(darwin::darwin_data_def_t *darwin_data)
       auto message_ft_com       = geometry_msgs::msg::Twist();
 
 /*
-      message_imu.linear.x      = darwin::imu_acc_x;
-      message_imu.linear.y      = darwin::imu_acc_y;
-      message_imu.linear.z      = darwin::imu_acc_z;
-      message_imu.angular.x     = darwin::imu_gyro_x;
-      message_imu.angular.y     = darwin::imu_gyro_y;
-      message_imu.angular.z     = darwin::imu_gyro_z;
+      message_imu.linear.x      = dl.imu_acc_x;
+      message_imu.linear.y      = dl.imu_acc_y;
+      message_imu.linear.z      = dl.imu_acc_z;
+      message_imu.angular.x     = dl.imu_gyro_x;
+      message_imu.angular.y     = dl.imu_gyro_y;
+      message_imu.angular.z     = dl.imu_gyro_z;
 */
-      message_imu.linear.x      = darwin_data->imu_state.acc_x;
-      message_imu.linear.y      = darwin_data->imu_state.acc_y;
-      message_imu.linear.z      = darwin_data->imu_state.acc_z;
-      message_imu.angular.x     = darwin_data->imu_state.gyro_x;
-      message_imu.angular.y     = darwin_data->imu_state.gyro_y;
-      message_imu.angular.z     = darwin_data->imu_state.gyro_z;
+      message_imu.linear.x      = dl.darwin_data.imu_state.acc_x;
+      message_imu.linear.y      = dl.darwin_data.imu_state.acc_y;
+      message_imu.linear.z      = dl.darwin_data.imu_state.acc_z;
+      message_imu.angular.x     = dl.darwin_data.imu_state.gyro_x;
+      message_imu.angular.y     = dl.darwin_data.imu_state.gyro_y;
+      message_imu.angular.z     = dl.darwin_data.imu_state.gyro_z;
 
-/*      message_ft_left.linear.x  = darwin::ft_state[ENUM_FT_LEFT].x;
-      message_ft_left.linear.y  = darwin::ft_state[ENUM_FT_LEFT].y;
-      message_ft_left.linear.z  = darwin::ft_state[ENUM_FT_LEFT].raised_x | darwin::ft_state[ENUM_FT_LEFT].raised_y;
+/*      message_ft_left.linear.x  = dl.ft_state[ENUM_FT_LEFT].x;
+      message_ft_left.linear.y  = dl.ft_state[ENUM_FT_LEFT].y;
+      message_ft_left.linear.z  = dl.ft_state[ENUM_FT_LEFT].raised_x | darwin::ft_state[ENUM_FT_LEFT].raised_y;
 
-      message_ft_right.linear.x  = darwin::ft_state[ENUM_FT_RIGHT].x;
-      message_ft_right.linear.y  = darwin::ft_state[ENUM_FT_RIGHT].y;
-      message_ft_right.linear.z  = darwin::ft_state[ENUM_FT_RIGHT].raised_x | darwin::ft_state[ENUM_FT_RIGHT].raised_y;
+      message_ft_right.linear.x  = dl.ft_state[ENUM_FT_RIGHT].x;
+      message_ft_right.linear.y  = dl.ft_state[ENUM_FT_RIGHT].y;
+      message_ft_right.linear.z  = dl.ft_state[ENUM_FT_RIGHT].raised_x | darwin::ft_state[ENUM_FT_RIGHT].raised_y;
 */
 
-      message_ft_left.linear.x  = darwin_data->ft_state[ENUM_FT_LEFT].x;
-      message_ft_left.linear.y  = darwin_data->ft_state[ENUM_FT_LEFT].y;
-      message_ft_left.linear.z  = darwin_data->ft_state[ENUM_FT_LEFT].raised_x | darwin::ft_state[ENUM_FT_LEFT].raised_y;
+      message_ft_left.linear.x  = dl.darwin_data.ft_state[ENUM_FT_LEFT].x;
+      message_ft_left.linear.y  = dl.darwin_data.ft_state[ENUM_FT_LEFT].y;
+      message_ft_left.linear.z  = dl.darwin_data.ft_state[ENUM_FT_LEFT].raised_x | dl.darwin_data.ft_state[ENUM_FT_LEFT].raised_y;
 
-      message_ft_right.linear.x = darwin_data->ft_state[ENUM_FT_RIGHT].x;
-      message_ft_right.linear.y = darwin_data->ft_state[ENUM_FT_RIGHT].y;
-      message_ft_right.linear.z = darwin_data->ft_state[ENUM_FT_RIGHT].raised_x | darwin::ft_state[ENUM_FT_RIGHT].raised_y;
+      message_ft_right.linear.x = dl.darwin_data.ft_state[ENUM_FT_RIGHT].x;
+      message_ft_right.linear.y = dl.darwin_data.ft_state[ENUM_FT_RIGHT].y;
+      message_ft_right.linear.z = dl.darwin_data.ft_state[ENUM_FT_RIGHT].raised_x | dl.darwin_data.ft_state[ENUM_FT_RIGHT].raised_y;
 
 //      message.data = "Hello, world! " + std::to_string(count_++);
 //      RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
@@ -207,14 +168,12 @@ void DarwinLofaroLoop::theLoop(darwin::darwin_data_def_t *darwin_data)
       publisher_ft_right_->publish(message_ft_right);
       publisher_ft_left_->publish(message_ft_left);
       publisher_ft_com_->publish(message_ft_com);
-
-      darwin::flush_final();
-//dan  } catch(...){}
 }
 
 
-DarwinLofaroCmd::DarwinLofaroCmd(darwin::darwin_data_def_t *darwin_data) : Node("darwin_lofaro_cmd_subscriber")
+DarwinLofaroCmd::DarwinLofaroCmd(std::shared_ptr<DarwinLofaro> d) : Node("darwin_lofaro_cmd_subscriber")
 {
+  dl = d;
   const char* top = "/darwin/cmd";
   subscription_ = this->create_subscription<std_msgs::msg::String>(top, 10, std::bind(&DarwinLofaroCmd::topic_callback, this, _1));
 }
@@ -242,14 +201,14 @@ const void DarwinLofaroCmd::topic_callback(const std_msgs::msg::String & msg)
       if( s0.compare("open") == 0 )
       {
          RCLCPP_INFO(this->get_logger(), "Darwin-Lofaro Legacy: Startup");
-         darwin::setup("/dev/ttyUSB0", false);
-         //darwin::setup("/dev/ttyUSB0", true);
+         //dl.setup("/dev/ttyUSB0", false);
+         dl.setup("/dev/ttyUSB0", true);
          return;
       }
       else if( s0.compare("close") == 0 )
       {
          RCLCPP_INFO(this->get_logger(), "Darwin-Lofaro Legacy: Close");
-         darwin::close();
+         dl.close();
          return;
       }
       else if( s0.compare("on") == 0 )
@@ -260,15 +219,15 @@ const void DarwinLofaroCmd::topic_callback(const std_msgs::msg::String & msg)
            {
              /*
              RCLCPP_INFO(this->get_logger(), "Turing on Darwin-Lofaro Legacy");
-             darwin::setup("/dev/ttyUSB0");
-             darwin::on();
+             dl.setup("/dev/ttyUSB0");
+             dl.on();
              */
              printf("Setting up Darwin-Lofaro Legacy\n");
-             darwin::setup("/dev/ttyUSB0", true);
-             darwin::sleep(2.0);
+             dl.setup("/dev/ttyUSB0", true);
+             dl.sleep(2.0);
              printf("Turning on actuators\n");
-             darwin::on();
-             darwin::sleep(2.0);
+             dl.on();
+             dl.sleep(2.0);
              printf("Actuators On\n");
            }
            else
@@ -277,7 +236,7 @@ const void DarwinLofaroCmd::topic_callback(const std_msgs::msg::String & msg)
               {
                 int mot_num = std::stoi(s1);
                 RCLCPP_INFO(this->get_logger(), "Turing on Darwin-Lofaro Legacy Mot: %d", mot_num);
-                darwin::on(mot_num);
+                dl.on(mot_num);
                 return;
                 throw 1;
               }
@@ -295,8 +254,8 @@ const void DarwinLofaroCmd::topic_callback(const std_msgs::msg::String & msg)
            if( s1.compare("all") == 0 )
            {
              RCLCPP_INFO(this->get_logger(), "Turing off Darwin-Lofaro Legacy");
-             darwin::off();
-             darwin::close();
+             dl.off();
+             dl.close();
            }
            else
            {
@@ -304,7 +263,7 @@ const void DarwinLofaroCmd::topic_callback(const std_msgs::msg::String & msg)
               {
                 int mot_num = std::stoi(s1);
                 RCLCPP_INFO(this->get_logger(), "Turing off Darwin-Lofaro Legacy Mot: %d", mot_num);
-                darwin::off(mot_num);
+                dl.off(mot_num);
                 return;
                 throw 1;
               }

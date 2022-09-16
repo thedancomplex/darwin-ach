@@ -6,13 +6,19 @@ int main(int argc, char * argv[])
 
 //  DarwinData::DarwinData darwin_data = new DarwinData::DarwinData();
 
+
+  /* Main Darwin Lofaro Legacy Object */
+//  DarwinLofaro dl = DarwinLofaro();
+//  std::shared_ptr<DarwinLofaro>
+  std::shared_ptr<DarwinLofaro> dl = std::make_shared<DarwinLofaro>();
+
   rclcpp::executors::MultiThreadedExecutor exec;
   //rclcpp::executors::SingleThreadedExecutor exec;
 
-  auto node_darwin_ref   = std::make_shared<DarwinLofaroRef>(&darwin::darwin_data);
-  auto node_darwin_state = std::make_shared<DarwinLofaroState>(&darwin::darwin_data);
-  auto node_darwin_cmd   = std::make_shared<DarwinLofaroCmd>(&darwin::darwin_data);
-  auto node_darwin_loop  = std::make_shared<DarwinLofaroLoop>(&darwin::darwin_data, &exec);
+  auto node_darwin_ref   = std::make_shared<DarwinLofaroRef>(dl);
+  auto node_darwin_state = std::make_shared<DarwinLofaroState>(dl);
+  auto node_darwin_cmd   = std::make_shared<DarwinLofaroCmd>(dl);
+  auto node_darwin_loop  = std::make_shared<DarwinLofaroLoop>(dl, &exec);
   //std::shared_ptr<DarwinLofaroRef> node_darwin = std::make_shared<DarwinLofaroRef>(i);
   exec.add_node(node_darwin_ref);
   exec.add_node(node_darwin_state);

@@ -14,10 +14,10 @@
 using namespace std::chrono_literals;
 
 /* Darwin-Legacy */
-#include <lofaro_darwin.h>
+#include "lofaro_darwin.h"
 #include <lofaro_utils_ros2.h>
-using std::placeholders::_1;
 
+using std::placeholders::_1;
 
 class DarwinLofaroRef : public rclcpp::Node
 {
@@ -25,9 +25,10 @@ class DarwinLofaroRef : public rclcpp::Node
   #define M_PI 3.14159265358979323846
 
   public:
-    DarwinLofaroRef(darwin::darwin_data_def_t *darwin_data);
+    DarwinLofaroRef(std::shared_ptr<DarwinLofaro> d);
 
   private:
+    std::shared_ptr<DarwinLofaro> dl;
     const void topic_callback(const std_msgs::msg::String & msg);
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 };
@@ -36,11 +37,12 @@ class DarwinLofaroRef : public rclcpp::Node
 class DarwinLofaroState : public rclcpp::Node
 {
   public:
-    DarwinLofaroState(darwin::darwin_data_def_t *darwin_data);
+    DarwinLofaroState(std::shared_ptr<DarwinLofaro> d);
 
   private:
     #define ENUM_FT_LEFT 0
     #define ENUM_FT_RIGHT 1
+    std::shared_ptr<DarwinLofaro> dl;
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_imu_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_left_;
@@ -53,9 +55,10 @@ class DarwinLofaroState : public rclcpp::Node
 class DarwinLofaroCmd : public rclcpp::Node
 {
   public:
-    DarwinLofaroCmd(darwin::darwin_data_def_t *darwin_data);
+    DarwinLofaroCmd(std::shared_ptr<DarwinLofaro> d);
 
   private:
+    std::shared_ptr<DarwinLofaro> dl;
     const void topic_callback(const std_msgs::msg::String & msg);
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 };
@@ -64,9 +67,10 @@ class DarwinLofaroLoop : public rclcpp::Node
 {
 
   public:
-    DarwinLofaroLoop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec);
+    DarwinLofaroLoop(std::shared_ptr<DarwinLofaro> d, rclcpp::executors::MultiThreadedExecutor *exec);
 
   private:
+    std::shared_ptr<DarwinLofaro> dl;
     rclcpp::TimerBase::SharedPtr timer_;
     size_t count_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_imu_;
@@ -75,9 +79,9 @@ class DarwinLofaroLoop : public rclcpp::Node
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_ft_com_;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
     const void topic_callback(const std_msgs::msg::String & msg);
-    void theLoop(darwin::darwin_data_def_t *darwin_data);
+    void theLoop();
     void timerLoop();
-    void loop(darwin::darwin_data_def_t *darwin_data, rclcpp::executors::MultiThreadedExecutor *exec);
+    void loop(rclcpp::executors::MultiThreadedExecutor *exec);
     void rtLoop();
     void rtLoopSetup();
 
