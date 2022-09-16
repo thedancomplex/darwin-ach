@@ -1,5 +1,8 @@
 #define DARWIN_METHODS_DYN 1
 
+#include "dynamixel_sdk/dynamixel_sdk.h"
+
+
 
 // Initialize PortHandler instance
 // Set the port path
@@ -18,6 +21,10 @@ dynamixel::GroupBulkRead groupBulkReadFt(portHandler, packetHandler);
 /* init */
 DarwinLofaro::DarwinLofaro()
 {
+  portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
+
+  packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
+
   memset(&this->darwin_data, 0, sizeof(this->darwin_data));
   for( int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++ )
   {
@@ -142,6 +149,7 @@ int DarwinLofaro::setLowLatency(const char* the_serial_port, bool low_latency)
 /* Get IMU State */
 int DarwinLofaro::getImu()
 {
+//  dynamixel::GroupBulkRead groupBulkReadImu(portHandler, packetHandler);
   bool dxl_addparam_result = false;               // addParam result
   groupBulkReadImu.clearParam();
 
@@ -359,6 +367,7 @@ double DarwinLofaro::ft_char2double(uint8_t val, int* err)
 /* Get "id" FT state */
 int DarwinLofaro::getFt(int id)
 { 
+//  dynamixel::GroupBulkRead groupBulkReadFt(portHandler, packetHandler);
 
   int the_index = -1;
   if      (id == ID_FT_LEFT)  the_index = ENUM_FT_LEFT;

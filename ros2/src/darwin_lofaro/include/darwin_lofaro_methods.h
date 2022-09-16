@@ -1,6 +1,7 @@
-#include "lofaro_darwin.h"
-
 using namespace std::chrono_literals;
+
+#define ENUM_FT_LEFT                       0
+#define ENUM_FT_RIGHT                      1
 
 
 #define DARWIN_TOPIC_REF_POS         "/darwin/ref/position"
@@ -18,11 +19,11 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
 
   subscription_ref_tor_ = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_TOR, 10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_tor, this, _1));
 
-publisher_state_imu_ = this->create_publisher<std_msgs::msg::String>(DARWIN_TOPIC_STATE_IMU, 1);
+publisher_state_imu_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_IMU, 1);
 
-publisher_state_ft_left_  = this->create_publisher<std_msgs::msg::String>(DARWIN_TOPIC_STATE_FT_LEFT, 1);
+publisher_state_ft_left_  = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_LEFT, 1);
 
-publisher_state_ft_right_ = this->create_publisher<std_msgs::msg::String>(DARWIN_TOPIC_STATE_FT_RIGHT, 1);
+publisher_state_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_RIGHT, 1);
 
 timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
 
@@ -32,28 +33,57 @@ timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_
 
 void DarwinLofaroLegacyRos2::timer_callback_main_loop()
 {
-  auto message = std_msgs::msg::String();
-  message.data = "Hello, world! " + std::to_string(count_++);
-  RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
-  publisher_state_imu_->publish(message);
-  publisher_state_ft_left_->publish(message);
-  publisher_state_ft_right_->publish(message);
+  auto buff_imu      = geometry_msgs::msg::Twist();
+  auto buff_ft_left  = geometry_msgs::msg::Twist();
+  auto buff_ft_right = geometry_msgs::msg::Twist();
+ 
+
+  this->dl.getImu();
+  this->dl.getFt();
+
+  buff_imu.linear.x  = dl.darwin_data.imu.acc_x;
+  buff_imu.linear.y  = dl.darwin_data.imu.acc_y;
+  buff_imu.linear.z  = dl.darwin_data.imu.acc_z;
+  buff_imu.angular.x = dl.darwin_data.imu.gyro_x;
+  buff_imu.angular.y = dl.darwin_data.imu.gyro_y;
+  buff_imu.angular.z = dl.darwin_data.imu.gyro_z;
+
+  int id = ENUM_FT_LEFT;
+  buff_ft_left.linear.x = dl.darwin_data.ft[id].x;
+  buff_ft_left.linear.y = dl.darwin_data.ft[id].y;
+  buff_ft_left.linear.z = ( (dl.darwin_data.ft[id].raised_x) | 
+                             (dl.darwin_data.ft[id].raised_y) );
+  buff_ft_left.angular.x = dl.darwin_data.ft[id].raised_x ;
+  buff_ft_left.angular.y = dl.darwin_data.ft[id].raised_y;
+
+
+  id = ENUM_FT_RIGHT;
+  buff_ft_right.linear.x = dl.darwin_data.ft[id].x;
+  buff_ft_right.linear.y = dl.darwin_data.ft[id].y;
+  buff_ft_right.linear.z = ( (dl.darwin_data.ft[id].raised_x) | 
+                             (dl.darwin_data.ft[id].raised_y) );
+  buff_ft_right.angular.x = dl.darwin_data.ft[id].raised_x ;
+  buff_ft_right.angular.y = dl.darwin_data.ft[id].raised_y;
+
+  publisher_state_imu_->publish(buff_imu);
+  publisher_state_ft_left_->publish(buff_ft_left);
+  publisher_state_ft_right_->publish(buff_ft_right);
 }
 
 
 
 
-const void DarwinLofaroLegacyRos2::topic_callback_ref_pos(const std_msgs::msg::String & msg)
+void DarwinLofaroLegacyRos2::topic_callback_ref_pos(const std_msgs::msg::String & msg)
 {
   RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
 }
 
-const void DarwinLofaroLegacyRos2::topic_callback_ref_vel(const std_msgs::msg::String & msg)
+void DarwinLofaroLegacyRos2::topic_callback_ref_vel(const std_msgs::msg::String & msg)
 {
   RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
 }
 
-const void DarwinLofaroLegacyRos2::topic_callback_ref_tor(const std_msgs::msg::String & msg)
+void DarwinLofaroLegacyRos2::topic_callback_ref_tor(const std_msgs::msg::String & msg)
 {
   RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
 }

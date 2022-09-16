@@ -122,7 +122,13 @@ class DarwinLofaro
     uint16_t double2uint16(double val);
 
 
+    #ifdef DARWIN_LOFARO_DYN
+    /* port handler for Darwin */
+//    dynamixel::PortHandler *portHandler;
 
+    /* Packet Handler for Darwin */
+//    dynamixel::PacketHandler *packetHandler;
+    #endif
 
 
 };
