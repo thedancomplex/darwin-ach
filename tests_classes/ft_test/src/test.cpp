@@ -29,7 +29,7 @@ int main()
 
 
   // Turn on motor power
-  printf("Power = %d\n", dl.on());
+  printf("Power = %d\n", dl.on(ID_CM730));
  
   // Wait 1 second for power to turn on
   dl.sleep(1.0);

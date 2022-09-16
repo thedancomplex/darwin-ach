@@ -29,6 +29,8 @@
 #define MOTOR_TEMP_SCALE                   1.0
 #define ENUM_FT_LEFT                       0
 #define ENUM_FT_RIGHT                      1
+#define MOTOR_REF_SPEED_SCALE              0.114 / 60.0 * 2.0 * M_PI
+#define MOTOR_TORQUE_MAX                   1.0
 
 #define DYN_ID_ALL                         0xfe
 
@@ -63,6 +65,13 @@
 #define MX_ADDRESS_READ_DATA_OFFSET        5
 #define MX_ADDRESS_STATE_START             36
 #define MX_ADDRESS_STATE_LENGTH            8
+
+#define MX_ADDRESS_POS_GOAL                30
+#define MX_ADDRESS_VEL_GOAL                32
+#define MX_ADDRESS_TORQUE_MAX              34
+#define MX_ADDRESS_REF_LENGTH              6
+#define MX_ADDRESS_REF_START               MX_ADDRESS_POS_GOAL
+
 #define MX_ADDRESS_POS                     36
 #define MX_ADDRESS_SPEED                   38
 #define MX_ADDRESS_LOAD                    40

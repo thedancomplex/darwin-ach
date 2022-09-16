@@ -39,7 +39,7 @@ typedef struct motor_state_def {
 typedef struct motor_ref_def {
         double pos;
         double speed;
-        double load;
+        double torque;
         double voltage;
 }__attribute__((packed)) motor_ref_def_t;
 

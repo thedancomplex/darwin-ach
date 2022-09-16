@@ -18,6 +18,11 @@ dynamixel::GroupBulkRead groupBulkReadFt(portHandler, packetHandler);
 /* init */
 DarwinLofaro::DarwinLofaro()
 {
+  memset(&this->darwin_data, 0, sizeof(this->darwin_data));
+  for( int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++ )
+  {
+    this->darwin_data.motor_ref[i].torque = MOTOR_TORQUE_MAX;
+  }
   return;
 }
 
@@ -111,7 +116,6 @@ int DarwinLofaro::setup(std::string str, bool low_latency)
 /* Setup system with optional port and low latency flag */
 int DarwinLofaro::setup(const char *port, bool low_latency)
 {
-  memset(&darwin_data, 0, sizeof(darwin_data));
   this->open(port);
   this->setLowLatency(port, low_latency);
   return RETURN_OK;
@@ -415,6 +419,93 @@ return RETURN_OK;
 
 
 
+uint16_t DarwinLofaro::double2uint16(double val)
+{
+  uint16_t the_out = 0;
+
+  the_out = (uint16_t)((val / M_PI * 0x800) + 0x800);
+
+  if(the_out > 0xfff) the_out = 0xfff;
+  else if( the_out < 0) the_out = 0;
+
+  return the_out;
+}
+
+int DarwinLofaro::setMotTorque(int mot, double val)
+{
+  /* Sets the motor desired max load in percentage */
+  if( ( mot > DARWIN_MOTOR_MAX ) | ( mot < DARWIN_MOTOR_MIN ) ) return RETURN_FAIL;
+  int id = mot;
+
+  if(val < 0) return RETURN_FAIL;
+
+  this->darwin_data.motor_ref[id].torque = val;
+  return RETURN_OK;
+}
+
+int DarwinLofaro::setMotSpeed(int mot, double val)
+{
+  /* Sets the motor desired speed in rad/sec */
+  if( ( mot > DARWIN_MOTOR_MAX ) | ( mot < DARWIN_MOTOR_MIN ) ) return RETURN_FAIL;
+  int id = mot;
+
+  if(val < 0) return RETURN_FAIL;
+
+  this->darwin_data.motor_ref[id].speed = val;
+  return RETURN_OK;
+}
+
+/* Stage Motor Position */
+int DarwinLofaro::stageMotor(int mot, double val)
+{ 
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+    uint8_t dxl_error = 0;                          // Dynamixel error
+
+    if( ( mot > DARWIN_MOTOR_MAX ) | ( mot < DARWIN_MOTOR_MIN ) ) return RETURN_FAIL;
+
+    uint8_t id = (uint8_t)mot;
+    uint8_t address = MX_ADDRESS_REF_START;
+    uint8_t length  = MX_ADDRESS_REF_LENGTH;
+    uint16_t pos = this->double2uint16(val);    
+    uint16_t vel = (uint16_t)(this->darwin_data.motor_ref[id].speed / MOTOR_REF_SPEED_SCALE);
+    if ( vel > 0x3ff ) vel = 0;
+    uint16_t tor = (uint16_t)(this->darwin_data.motor_ref[id].torque * 0x3ff);
+    if ( tor > 0x3ff ) tor = 0x3ff;
+
+
+    uint8_t pos_0 =  pos       & 0xff;
+    uint8_t pos_1 = (pos >> 8) & 0xff;
+    uint8_t vel_0 =  vel       & 0xff;
+    uint8_t vel_1 = (vel >> 8) & 0xff;
+    uint8_t tor_0 =  tor       & 0xff;
+    uint8_t tor_1 = (tor >> 8) & 0xff;
+
+    uint8_t data[] = {pos_0, pos_1, vel_0, vel_1, tor_0, tor_1};
+
+    dxl_comm_result = packetHandler->regWriteTxOnly(portHandler, 
+                                                    id,
+                                                    address,
+                                                    length,
+                                                    data);
+    
+
+    if (dxl_comm_result != COMM_SUCCESS) return RETURN_FAIL;
+    else if (dxl_error != 0)             return RETURN_FAIL;
+    else                                 return RETURN_OK;
+
+
+/*
+    dxl_comm_result = packetHandler->regWriteTx(portHandler, 
+                                mot,
+                                address,
+                                length,
+                                data,
+                                &dxl_error);
+*/
+
+  return RETURN_OK; 
+}
+
 
 
 
@@ -426,9 +517,6 @@ return RETURN_OK;
   int getMotor(int id)
   { return RETURN_OK; }
 
-  /* Stage Motor Position */
-  int stageMotor(int mot, double val)
-  { return RETURN_OK; }
 
   /* Send staged motor positions to all motors */
   int putMotor()
