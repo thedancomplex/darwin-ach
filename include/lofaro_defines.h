@@ -75,7 +75,7 @@
 #define FT_ADDRESS_STATUS_RETURN_LEVEL     16
 #define FT_ADDRESS_READ_DATA_OFFSET        5
 #define FT_ADDRESS_START                   26
-#define FT_ADDRESS_LENGTH                  10
+#define FT_ADDRESS_LENGTH                  16
 #define FT_ADDRESS_S1                      26
 #define FT_ADDRESS_S2                      28
 #define FT_ADDRESS_S3                      30

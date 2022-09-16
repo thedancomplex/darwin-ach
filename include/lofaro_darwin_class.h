@@ -100,6 +100,8 @@ class DarwinLofaro
     double int2double(uint16_t val);
 
 
+   /* FT specific char to double */
+   double ft_char2double(uint8_t val, int* err);
 
 
 

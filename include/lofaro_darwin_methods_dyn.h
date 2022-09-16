@@ -326,6 +326,93 @@ double DarwinLofaro::time()
 
 
 
+/* Get Left and Right FT states */
+int DarwinLofaro::getFt()
+{ 
+  int ret = getFt(ID_FT_LEFT);
+  ret    += getFt(ID_FT_RIGHT);
+  if( ret > 0 ) return RETURN_FAIL;
+  return RETURN_OK; 
+}
+
+
+/* FT specific char 2 double */
+double DarwinLofaro::ft_char2double(uint8_t val, int* err)
+{
+    if( val == 255)
+    {
+      *err = RAISED;
+      return 0.0;
+    }
+
+    double the_out = (double)val - 127.0 / 127.0;
+    *err = NOT_RAISED;
+    return the_out;
+}
+
+
+
+/* Get "id" FT state */
+int DarwinLofaro::getFt(int id)
+{ 
+
+  int the_index = -1;
+  if      (id == ID_FT_LEFT)  the_index = ENUM_FT_LEFT;
+  else if (id == ID_FT_RIGHT) the_index = ENUM_FT_RIGHT;
+  else return RETURN_FAIL;
+
+
+  bool dxl_addparam_result = false;               // addParam result
+  groupBulkReadFt.clearParam();
+
+  // Add parameter storage for Dynamixel#1 present position value
+  // +1 is added to read the voltage
+  dxl_addparam_result = groupBulkReadFt.addParam(id, FT_ADDRESS_START, FT_ADDRESS_LENGTH);
+  if (dxl_addparam_result != true) return RETURN_FAIL;
+
+
+  bool dxl_getdata_result = false;                // GetParam result
+  uint8_t dxl_error = 0;                          // Dynamixel error
+
+  int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+
+  dxl_comm_result = groupBulkReadFt.txRxPacket();
+  packetHandler->getTxRxResult(dxl_comm_result);
+  if (groupBulkReadFt.getError(id, &dxl_error)) return RETURN_FAIL;
+
+  // Check if data is avaliable
+  dxl_getdata_result = groupBulkReadFt.isAvailable(id, FT_ADDRESS_START, FT_ADDRESS_LENGTH);
+  if (dxl_getdata_result != true) return RETURN_FAIL;
+
+  // Assign the data
+  uint16_t buff_s1       = groupBulkReadFt.getData(id, FT_ADDRESS_S1, 2);
+  uint16_t buff_s2       = groupBulkReadFt.getData(id, FT_ADDRESS_S2, 2);
+  uint16_t buff_s3       = groupBulkReadFt.getData(id, FT_ADDRESS_S3, 2);
+  uint16_t buff_s4       = groupBulkReadFt.getData(id, FT_ADDRESS_S4, 2);
+  uint16_t buff_fsr_x    = groupBulkReadFt.getData(id, FT_ADDRESS_FSR_X, 2);
+  uint16_t buff_fsr_y    = groupBulkReadFt.getData(id, FT_ADDRESS_FSR_Y, 2);
+  uint8_t  buff_voltage  = groupBulkReadFt.getData(id, FT_ADDRESS_VOLTAGE, 1);
+
+
+  this->darwin_data.ft[the_index].s0   = this->int2double(buff_s1)  * FT_SCALE;
+  this->darwin_data.ft[the_index].s1   = this->int2double(buff_s2)  * FT_SCALE;
+  this->darwin_data.ft[the_index].s2   = this->int2double(buff_s3)  * FT_SCALE;
+  this->darwin_data.ft[the_index].s3   = this->int2double(buff_s4)  * FT_SCALE;
+
+  int ft_fsr_raised_x = 0;
+  int ft_fsr_raised_y = 0;
+
+  this->darwin_data.ft[the_index].x    = this->ft_char2double(buff_fsr_x, &ft_fsr_raised_x) * FSR_SCALE_X;
+  this->darwin_data.ft[the_index].y    = this->ft_char2double(buff_fsr_y, &ft_fsr_raised_y) * FSR_SCALE_Y;
+
+  this->darwin_data.ft[the_index].raised_x = ft_fsr_raised_x;
+  this->darwin_data.ft[the_index].raised_y = ft_fsr_raised_y;
+   
+  this->darwin_data.ft[the_index].voltage  = (double)buff_voltage / VOLTAGE_SCALE;
+
+return RETURN_OK; 
+}
+
 
 
 
@@ -351,11 +438,5 @@ double DarwinLofaro::time()
   int putMotor(int mot)
   { return RETURN_OK; }
 
-  /* Get Left and Right FT states */
-  int getFt()
-  { return RETURN_OK; }
 
-  /* Get "id" FT state */
-  int getFt(int id)
-  { return RETURN_OK; }
 
