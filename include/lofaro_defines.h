@@ -33,6 +33,7 @@
 #define MOTOR_TORQUE_MAX                   1.0
 
 #define DYN_ID_ALL                         0xfe
+#define ID_ALL                             DYN_ID_ALL
 
 // Motor IDs
 #define ID_CM730                           200

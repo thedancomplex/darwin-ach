@@ -87,7 +87,8 @@ class DarwinLofaro
   /* Sets the motor desired speed in rad/sec */
   int setMotSpeed(int mot, double val);
 
-
+  /* Set the motor desired reference in rad */
+  int setMotPos(int mot, double val);
 
 
 

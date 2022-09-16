@@ -431,6 +431,17 @@ uint16_t DarwinLofaro::double2uint16(double val)
   return the_out;
 }
 
+int DarwinLofaro::setMotPos(int mot, double val)
+{
+  /* Sets the motor desired position in rad */
+  if( ( mot > DARWIN_MOTOR_MAX ) | ( mot < DARWIN_MOTOR_MIN ) ) return RETURN_FAIL;
+  int id = mot;
+
+  this->darwin_data.motor_ref[id].pos = val;
+  return RETURN_OK;
+}
+
+
 int DarwinLofaro::setMotTorque(int mot, double val)
 {
   /* Sets the motor desired max load in percentage */
@@ -466,7 +477,7 @@ int DarwinLofaro::stageMotor(int mot, double val)
     uint8_t id = (uint8_t)mot;
     uint8_t address = MX_ADDRESS_REF_START;
     uint8_t length  = MX_ADDRESS_REF_LENGTH;
-    uint16_t pos = this->double2uint16(val);    
+    uint16_t pos = this->double2uint16(this->darwin_data.motor_ref[id].pos);    
     uint16_t vel = (uint16_t)(this->darwin_data.motor_ref[id].speed / MOTOR_REF_SPEED_SCALE);
     if ( vel > 0x3ff ) vel = 0;
     uint16_t tor = (uint16_t)(this->darwin_data.motor_ref[id].torque * 0x3ff);
@@ -506,6 +517,24 @@ int DarwinLofaro::stageMotor(int mot, double val)
   return RETURN_OK; 
 }
 
+/* Send staged motor positions to all motors */
+int DarwinLofaro::putMotor()
+{
+  return this->putMotor(ID_ALL); 
+}
+
+/* Send staged motor positions to motor "mot" */
+int DarwinLofaro::putMotor(int mot)
+{
+  int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+
+  dxl_comm_result = packetHandler->action(portHandler, mot);
+
+  if (dxl_comm_result != COMM_SUCCESS) return RETURN_FAIL;
+
+  return RETURN_OK; 
+}
+
 
 
 
@@ -516,15 +545,5 @@ int DarwinLofaro::stageMotor(int mot, double val)
   /* Get Motor State */
   int getMotor(int id)
   { return RETURN_OK; }
-
-
-  /* Send staged motor positions to all motors */
-  int putMotor()
-  { return RETURN_OK; }
-
-  /* Send staged motor positions to motor "mot" */
-  int putMotor(int mot)
-  { return RETURN_OK; }
-
 
 
