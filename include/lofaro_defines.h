@@ -29,7 +29,11 @@
 #define MOTOR_TEMP_SCALE                   1.0
 #define ENUM_FT_LEFT                       0
 #define ENUM_FT_RIGHT                      1
-#define MOTOR_REF_SPEED_SCALE              0.114 / 60.0 * 2.0 * M_PI
+#define MOTOR_REF_SPEED_SCALE              0x3ff / (116.62 / 60.0 * 2.0 * M_PI)
+//#define MOTOR_REF_SPEED_SCALE              0.114 / 60.0 * 2.0 * M_PI
+// 0.114 Revolutions / Minute / tick * 1 Minute / 60.0 Seconds * 2.0 * M_PI Rad / Revolution
+// 0.114 / 60.0 * 2.0 * M_PI Rad / Sec / tick
+
 #define MOTOR_TORQUE_MAX                   1.0
 
 #define DYN_ID_ALL                         0xfe

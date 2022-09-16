@@ -34,7 +34,7 @@ class DarwinLofaro
   int getMotor(int id);
 
   /* Stage Motor Position */
-  int stageMotor(int mot, double val);
+  int stageMotor(int mot);
 
   /* Send staged motor positions to all motors */
   int putMotor();

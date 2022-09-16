@@ -467,21 +467,32 @@ int DarwinLofaro::setMotSpeed(int mot, double val)
 }
 
 /* Stage Motor Position */
-int DarwinLofaro::stageMotor(int mot, double val)
+int DarwinLofaro::stageMotor(int mot)
 { 
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
     uint8_t dxl_error = 0;                          // Dynamixel error
 
     if( ( mot > DARWIN_MOTOR_MAX ) | ( mot < DARWIN_MOTOR_MIN ) ) return RETURN_FAIL;
 
-    uint8_t id = (uint8_t)mot;
-    uint8_t address = MX_ADDRESS_REF_START;
-    uint8_t length  = MX_ADDRESS_REF_LENGTH;
-    uint16_t pos = this->double2uint16(this->darwin_data.motor_ref[id].pos);    
-    uint16_t vel = (uint16_t)(this->darwin_data.motor_ref[id].speed / MOTOR_REF_SPEED_SCALE);
+    uint8_t  id = (uint8_t)mot;
+    uint8_t  address = MX_ADDRESS_REF_START;
+    uint8_t  length  = MX_ADDRESS_REF_LENGTH;
+    uint16_t pos     = this->double2uint16(this->darwin_data.motor_ref[id].pos);    
+    double   vel_d   = (this->darwin_data.motor_ref[id].speed * MOTOR_REF_SPEED_SCALE);
+    uint16_t vel     = (uint16_t) (vel_d);
+    double   tor_d   = (this->darwin_data.motor_ref[id].torque * 0x3ff);
+    uint16_t tor     = (uint16_t)(tor_d);
+
+    printf("vel: %d\t tor: %d\n",vel, tor);
+    printf("vel: %f\t tor: %f\n",vel_d, tor_d);
+    printf("vel: %f\t tor: %f\n",
+            this->darwin_data.motor_ref[id].speed, 
+            this->darwin_data.motor_ref[id].torque);
+
     if ( vel > 0x3ff ) vel = 0;
-    uint16_t tor = (uint16_t)(this->darwin_data.motor_ref[id].torque * 0x3ff);
     if ( tor > 0x3ff ) tor = 0x3ff;
+
+
 
 
     uint8_t pos_0 =  pos       & 0xff;
