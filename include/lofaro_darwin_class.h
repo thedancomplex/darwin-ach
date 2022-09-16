@@ -115,12 +115,11 @@ class DarwinLofaro
     /* IMU specific int to double */
     double int2double(uint16_t val);
 
+    /* FT specific char to double */
+    double ft_char2double(uint8_t val, int* err);
 
-     /* FT specific char to double */
-     double ft_char2double(uint8_t val, int* err);
-
-     /* double to uint16 for motor pos set */
-     uint16_t double2uint16(double val);
+    /* double to uint16 for motor pos set */
+    uint16_t double2uint16(double val);
 
 
 
