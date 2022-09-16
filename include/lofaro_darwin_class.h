@@ -36,6 +36,9 @@ class DarwinLofaro
   /* Stage Motor Position */
   int stageMotor(int mot);
 
+  /* Stage all motor positions torques and speeds */
+  int stageMotor();
+
   /* Send staged motor positions to all motors */
   int putMotor();
 

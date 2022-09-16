@@ -61,13 +61,14 @@ int main()
       pos = -pos;
     }
 
-
-
-    dl.setMotPos(mot, pos);
-    dl.setMotSpeed(mot,  1.0);
-    dl.setMotTorque(mot, 0.5);
-    dl.stageMotor(mot);
-    dl.putMotor(mot);
+    for( int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++ )
+    {
+      dl.setMotPos(i, 0.0);
+      dl.setMotSpeed(i,  0.75);
+      dl.setMotTorque(i, 0.5);
+    }
+    dl.stageMotor();
+    dl.putMotor();
 
 
 

@@ -466,6 +466,19 @@ int DarwinLofaro::setMotSpeed(int mot, double val)
   return RETURN_OK;
 }
 
+
+int DarwinLofaro::stageMotor()
+{
+  /* Stage all motor positions torques and speeds */
+  int ret = 0;
+  for (int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
+  {
+    ret += this->stageMotor(i);
+  }
+  if (ret > 0) return RETURN_FAIL;
+  return RETURN_OK;
+}
+
 /* Stage Motor Position */
 int DarwinLofaro::stageMotor(int mot)
 { 
@@ -483,17 +496,8 @@ int DarwinLofaro::stageMotor(int mot)
     double   tor_d   = (this->darwin_data.motor_ref[id].torque * 0x3ff);
     uint16_t tor     = (uint16_t)(tor_d);
 
-    printf("vel: %d\t tor: %d\n",vel, tor);
-    printf("vel: %f\t tor: %f\n",vel_d, tor_d);
-    printf("vel: %f\t tor: %f\n",
-            this->darwin_data.motor_ref[id].speed, 
-            this->darwin_data.motor_ref[id].torque);
-
     if ( vel > 0x3ff ) vel = 0;
     if ( tor > 0x3ff ) tor = 0x3ff;
-
-
-
 
     uint8_t pos_0 =  pos       & 0xff;
     uint8_t pos_1 = (pos >> 8) & 0xff;
