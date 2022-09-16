@@ -21,9 +21,9 @@ dynamixel::GroupBulkRead groupBulkReadFt(portHandler, packetHandler);
 /* init */
 DarwinLofaro::DarwinLofaro()
 {
-  portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
+  //portHandler   = dynamixel::PortHandler::getPortHandler(DEVICENAME);
 
-  packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
+//  packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
 
   memset(&this->darwin_data, 0, sizeof(this->darwin_data));
   for( int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++ )

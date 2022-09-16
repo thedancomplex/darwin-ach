@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(darwin_lofaro)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g)
 endif()
 
 set(CMAKE_C_FLAGS "-Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g")
@@ -19,18 +19,18 @@ find_package(geometry_msgs REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-add_executable(darwin_lofaro src/darwin_lofaro.cpp)
-ament_target_dependencies(darwin_lofaro rclcpp std_msgs geometry_msgs)
-target_include_directories(darwin_lofaro PUBLIC
+add_executable(${PROJECT_NAME} src/darwin_lofaro.cpp)
+ament_target_dependencies(${PROJECT_NAME} rclcpp std_msgs geometry_msgs)
+target_include_directories(${PROJECT_NAME} PUBLIC
   /etc/darwin-legacy/include/
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_compile_features(darwin_lofaro PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(${PROJECT_NAME} PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
 
 
 
-install(TARGETS darwin_lofaro
+install(TARGETS ${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)

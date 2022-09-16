@@ -8,6 +8,7 @@
 
 #include "dynamixel_sdk/dynamixel_sdk.h"
 
+
 class DarwinLofaro
 {
   public:
@@ -120,7 +121,6 @@ class DarwinLofaro
 
     /* double to uint16 for motor pos set */
     uint16_t double2uint16(double val);
-
 
     #ifdef DARWIN_LOFARO_DYN
     /* port handler for Darwin */

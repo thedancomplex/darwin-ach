@@ -44,6 +44,8 @@ int main()
   int    mot = 19;
   int pos_i = 0;
 
+  int ii = 0;
+
   while(1)
   {
     tock = dl.time();
@@ -74,6 +76,9 @@ int main()
     dl.putMotor();
 
     dl.sleep();
+    
+    ii++;
+    if (ii > 1000) break;
 
   }
 

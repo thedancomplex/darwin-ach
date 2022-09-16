@@ -13,7 +13,7 @@
 using std::placeholders::_1;
 
 
-
+using dynamixel;
 
 class DarwinLofaroLegacyRos2 : public rclcpp::Node
 {
