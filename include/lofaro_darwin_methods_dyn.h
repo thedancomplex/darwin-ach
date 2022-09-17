@@ -3,7 +3,6 @@
 #include "dynamixel_sdk/dynamixel_sdk.h"
 
 
-
 // Initialize PortHandler instance
 // Set the port path
 // Get methods and members of PortHandlerLinux or PortHandlerWindows
@@ -15,13 +14,13 @@ dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEV
 dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
 
 // Initialize GroupBulkRead instance
-dynamixel::GroupBulkRead groupBulkReadImu(portHandler, packetHandler);
-dynamixel::GroupBulkRead groupBulkReadFt(portHandler, packetHandler);
+dynamixel::GroupBulkRead groupBulkReadImu( portHandler, packetHandler);
+dynamixel::GroupBulkRead groupBulkReadFt(  portHandler, packetHandler);
 
 /* init */
 DarwinLofaro::DarwinLofaro()
 {
-  //portHandler   = dynamixel::PortHandler::getPortHandler(DEVICENAME);
+//  portHandler   = dynamixel::PortHandler::getPortHandler(DEVICENAME);
 
 //  packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
 
@@ -530,7 +529,7 @@ int DarwinLofaro::stageMotor(int mot)
 
 
 /*
-    dxl_comm_result = packetHandler->regWriteTx(portHandler, 
+    dxl_comm_result = this->*packetHandler->regWriteTx(this->*portHandler, 
                                 mot,
                                 address,
                                 length,
@@ -569,5 +568,4 @@ int DarwinLofaro::putMotor(int mot)
   /* Get Motor State */
   int getMotor(int id)
   { return RETURN_OK; }
-
 

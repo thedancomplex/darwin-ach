@@ -2,10 +2,11 @@ cmake_minimum_required(VERSION 3.8)
 project(darwin_lofaro)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g)
+  #add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -DLINUX -D_GNU_SOURCE -m32 -O2 -O3 -g)
 endif()
 
-set(CMAKE_C_FLAGS "-Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g")
+set(CMAKE_C_FLAGS   "-Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g")
 set(CMAKE_CXX_FLAGS "-Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g")
 
 
@@ -26,6 +27,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 target_compile_features(${PROJECT_NAME} PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+#target_compile_features(${PROJECT_NAME} PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
 
 

@@ -19,4 +19,3 @@
 #ifdef DARWIN_LOFARO_DYN
 #include "lofaro_darwin_methods_dyn.h"
 #endif
-

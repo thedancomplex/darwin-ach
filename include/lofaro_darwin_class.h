@@ -124,12 +124,18 @@ class DarwinLofaro
 
     #ifdef DARWIN_LOFARO_DYN
     /* port handler for Darwin */
+   // dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
+
+    // Initialize PacketHandler instance
+    // Set the protocol version
+    // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
+   // dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
+
 //    dynamixel::PortHandler *portHandler;
 
     /* Packet Handler for Darwin */
 //    dynamixel::PacketHandler *packetHandler;
     #endif
-
 
 };
 

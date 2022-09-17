@@ -1,5 +1,5 @@
 #define DARWIN_LOFARO_DYN 1
-#include "lofaro_darwin.h"
+#include <lofaro_darwin.h>
 
 #include <chrono>
 #include <functional>
@@ -11,9 +11,6 @@
 #include "geometry_msgs/msg/twist.hpp"
 
 using std::placeholders::_1;
-
-
-using dynamixel;
 
 class DarwinLofaroLegacyRos2 : public rclcpp::Node
 {
@@ -33,6 +30,6 @@ class DarwinLofaroLegacyRos2 : public rclcpp::Node
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_state_ft_left_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_state_ft_right_;
     size_t count_;
-    DarwinLofaro dl = DarwinLofaro();
+    DarwinLofaro* dl = new DarwinLofaro();
 };
 

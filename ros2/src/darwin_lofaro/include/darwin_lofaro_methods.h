@@ -38,32 +38,32 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
   auto buff_ft_right = geometry_msgs::msg::Twist();
  
 
-  this->dl.getImu();
-  this->dl.getFt();
+  this->dl->getImu();
+  this->dl->getFt();
 
-  buff_imu.linear.x  = dl.darwin_data.imu.acc_x;
-  buff_imu.linear.y  = dl.darwin_data.imu.acc_y;
-  buff_imu.linear.z  = dl.darwin_data.imu.acc_z;
-  buff_imu.angular.x = dl.darwin_data.imu.gyro_x;
-  buff_imu.angular.y = dl.darwin_data.imu.gyro_y;
-  buff_imu.angular.z = dl.darwin_data.imu.gyro_z;
+  buff_imu.linear.x  = this->dl->darwin_data.imu.acc_x;
+  buff_imu.linear.y  = this->dl->darwin_data.imu.acc_y;
+  buff_imu.linear.z  = this->dl->darwin_data.imu.acc_z;
+  buff_imu.angular.x = this->dl->darwin_data.imu.gyro_x;
+  buff_imu.angular.y = this->dl->darwin_data.imu.gyro_y;
+  buff_imu.angular.z = this->dl->darwin_data.imu.gyro_z;
 
   int id = ENUM_FT_LEFT;
-  buff_ft_left.linear.x = dl.darwin_data.ft[id].x;
-  buff_ft_left.linear.y = dl.darwin_data.ft[id].y;
-  buff_ft_left.linear.z = ( (dl.darwin_data.ft[id].raised_x) | 
-                             (dl.darwin_data.ft[id].raised_y) );
-  buff_ft_left.angular.x = dl.darwin_data.ft[id].raised_x ;
-  buff_ft_left.angular.y = dl.darwin_data.ft[id].raised_y;
+  buff_ft_left.linear.x = this->dl->darwin_data.ft[id].x;
+  buff_ft_left.linear.y = this->dl->darwin_data.ft[id].y;
+  buff_ft_left.linear.z = ( (this->dl->darwin_data.ft[id].raised_x) | 
+                             (this->dl->darwin_data.ft[id].raised_y) );
+  buff_ft_left.angular.x = this->dl->darwin_data.ft[id].raised_x ;
+  buff_ft_left.angular.y = this->dl->darwin_data.ft[id].raised_y;
 
 
   id = ENUM_FT_RIGHT;
-  buff_ft_right.linear.x = dl.darwin_data.ft[id].x;
-  buff_ft_right.linear.y = dl.darwin_data.ft[id].y;
-  buff_ft_right.linear.z = ( (dl.darwin_data.ft[id].raised_x) | 
-                             (dl.darwin_data.ft[id].raised_y) );
-  buff_ft_right.angular.x = dl.darwin_data.ft[id].raised_x ;
-  buff_ft_right.angular.y = dl.darwin_data.ft[id].raised_y;
+  buff_ft_right.linear.x = this->dl->darwin_data.ft[id].x;
+  buff_ft_right.linear.y = this->dl->darwin_data.ft[id].y;
+  buff_ft_right.linear.z = ( (this->dl->darwin_data.ft[id].raised_x) | 
+                             (this->dl->darwin_data.ft[id].raised_y) );
+  buff_ft_right.angular.x = this->dl->darwin_data.ft[id].raised_x ;
+  buff_ft_right.angular.y = this->dl->darwin_data.ft[id].raised_y;
 
   publisher_state_imu_->publish(buff_imu);
   publisher_state_ft_left_->publish(buff_ft_left);
