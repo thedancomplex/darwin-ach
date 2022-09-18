@@ -95,6 +95,10 @@ class DarwinLofaro
   /* Set the motor desired reference in rad */
   int setMotPos(int mot, double val);
 
+  /* Closes port */
+  int close();
+
+
 
 
 
@@ -105,9 +109,6 @@ class DarwinLofaro
 
     /* Open Port and change port number */
     int open(const char *port);
-
-    /* Closes port */
-    int close();
 
     /* Sets low-latency for serial port */
     int setLowLatency(const char* the_serial_port, bool low_latency);

@@ -7,9 +7,13 @@ using namespace std::chrono_literals;
 #define DARWIN_TOPIC_REF_POS         "/darwin/ref/position"
 #define DARWIN_TOPIC_REF_VEL         "/darwin/ref/speed"
 #define DARWIN_TOPIC_REF_TOR         "/darwin/ref/torque"
+#define DARWIN_TOPIC_CMD             "/darwin/cmd"
 #define DARWIN_TOPIC_STATE_IMU       "/darwin/state/imu"
 #define DARWIN_TOPIC_STATE_FT_LEFT   "/darwin/state/ft/left"
 #define DARWIN_TOPIC_STATE_FT_RIGHT  "/darwin/state/ft/right"
+
+#include "lofaro_utils_ros2.h"
+#include "darwin_lofaro_methods_cmd.h"
 
 DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_daemon")
 {
@@ -19,15 +23,15 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
 
   subscription_ref_tor_ = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_TOR, 10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_tor, this, _1));
 
-publisher_state_imu_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_IMU, 1);
+  subscription_cmd_ = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_CMD, 10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_cmd, this, _1));
 
-publisher_state_ft_left_  = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_LEFT, 1);
+  publisher_state_imu_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_IMU, 1);
 
-publisher_state_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_RIGHT, 1);
+  publisher_state_ft_left_  = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_LEFT, 1);
 
-timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+  publisher_state_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_RIGHT, 1);
 
-
+  timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
 }
 
 
@@ -87,3 +91,11 @@ void DarwinLofaroLegacyRos2::topic_callback_ref_tor(const std_msgs::msg::String 
 {
   RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
 }
+
+
+/*
+void DarwinLofaroLegacyRos2::topic_callback_cmd(const std_msgs::msg::String & msg)
+{
+  RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
+}
+*/
