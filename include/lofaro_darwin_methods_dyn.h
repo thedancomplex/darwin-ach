@@ -1,6 +1,7 @@
 #define DARWIN_METHODS_DYN 1
 
 #include "dynamixel_sdk/dynamixel_sdk.h"
+//#include "/usr/local/include/dynamixel_sdk/dynamixel_sdk.h"
 
 
 // Initialize PortHandler instance

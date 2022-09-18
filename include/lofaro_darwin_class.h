@@ -6,7 +6,8 @@
 #include "lofaro_utils.h"
 #endif
 
-#include "dynamixel_sdk/dynamixel_sdk.h"
+//#include "dynamixel_sdk/dynamixel_sdk.h"
+//#include "/usr/local/include/dynamixel_sdk/dynamixel_sdk.h"
 
 
 class DarwinLofaro

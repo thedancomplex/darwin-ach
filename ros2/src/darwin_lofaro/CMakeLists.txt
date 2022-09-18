@@ -3,11 +3,12 @@ project(darwin_lofaro)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   #add_compile_options(-Wall -Wextra -Wpedantic)
-  add_compile_options(-Wall -Wextra -Wpedantic -DLINUX -D_GNU_SOURCE -m32 -O2 -O3 -g)
+  add_compile_options(-Wall -Wextra -Wpedantic -DLINUX -D_GNU_SOURCE -m32 -O2 -O3 -g -ldxl_x86_cpp)
 endif()
+  add_compile_options(-DLINUX -D_GNU_SOURCE -m32 -O2 -O3 -g -ldxl_x86_cpp)
 
-set(CMAKE_C_FLAGS   "-Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g")
-set(CMAKE_CXX_FLAGS "-Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g")
+set(CMAKE_C_FLAGS   "-Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g -ldxl_x86_cpp")
+set(CMAKE_CXX_FLAGS "-Wall -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g -ldxl_x86_cpp")
 
 
 # find dependencies
@@ -15,6 +16,13 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+##find_package(dynamixel_sdk REQUIRED)
+
+#file(GLOB SOURCES "/etc/darwin-legacy/include/dynamixel/src/*.*"
+#                  "/etc/darwin-legacy/include/dynamixel/src/dynamixel_sdk/*.*"
+#                  "/etc/darwin-legacy/include/dynamixel/src/dynamixel_sdk/*.*"
+#                  "/etc/darwin-legacy/include/dynamixel/include/dynamixel_sdk/*.*"
+#)
 
 # uncomment the following section in order to fill in
 # further dependencies manually.
