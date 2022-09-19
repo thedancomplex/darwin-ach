@@ -480,17 +480,31 @@ int DarwinLofaro::stageMotor()
 {
   /* Stage all motor positions torques and speeds */
   int ret = 0;
-  for (int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
+  try 
   {
-    ret += this->stageMotor(i);
+    for (int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
+    {
+      printf("%d\n",i);
+      ret += this->stageMotor(i);
+    }
   }
-  if (ret > 0) return RETURN_FAIL;
+  catch(...)
+  { 
+    return RETURN_FAIL; 
+  }
+  printf("end\n");
+  if (ret > 0)
+  {
+    return RETURN_FAIL;
+  }
+  printf("end2\n");
   return RETURN_OK;
 }
 
 /* Stage Motor Position */
 int DarwinLofaro::stageMotor(int mot)
-{ 
+{
+
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
     uint8_t dxl_error = 0;                          // Dynamixel error
 
@@ -552,10 +566,23 @@ int DarwinLofaro::putMotor(int mot)
 {
   int dxl_comm_result = COMM_TX_FAIL;             // Communication result
 
-  dxl_comm_result = packetHandler->action(portHandler, mot);
+printf("a\n");
+  try
+  {
+printf("b\n");
+    dxl_comm_result = packetHandler->action(portHandler, mot);
+printf("c\n");
+  }
+  catch(...)
+  {
+printf("d\n");
+    return RETURN_FAIL;
+  }
 
+printf("e\n");
   if (dxl_comm_result != COMM_SUCCESS) return RETURN_FAIL;
 
+printf("f\n");
   return RETURN_OK; 
 }
 

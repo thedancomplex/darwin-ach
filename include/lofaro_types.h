@@ -40,7 +40,7 @@ typedef struct motor_ref_def {
         double pos;
         double speed;
         double torque;
-        double voltage;
+//        double voltage;
 }__attribute__((packed)) motor_ref_def_t;
 
 typedef struct darwin_data_def {

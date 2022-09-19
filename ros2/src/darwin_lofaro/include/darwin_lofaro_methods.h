@@ -14,20 +14,38 @@ using namespace std::chrono_literals;
 
 #include "lofaro_utils_ros2.h"
 #include "darwin_lofaro_methods_cmd.h"
+#include "darwin_lofaro_methods_ref_pos.h"
+#include "darwin_lofaro_methods_ref_vel.h"
+#include "darwin_lofaro_methods_ref_tor.h"
+
+#define DARWIN_MOT_MIN 1
+#define DARWIN_MOT_MAX 20
+
+#define DARWIN_REF_POS_0 0.0
+#define DARWIN_REF_VEL_0 0.75
+#define DARWIN_REF_TOR_0 0.5
 
 DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_daemon")
 {
-  subscription_ref_pos_ = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_POS, 10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_pos, this, _1));
 
-  subscription_ref_vel_ = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_VEL, 10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_vel, this, _1));
+  for( int i = DARWIN_MOT_MIN; i <= DARWIN_MOT_MAX; i++)
+  {
+    this->dl->setMotPos(i,    DARWIN_REF_POS_0);
+    this->dl->setMotSpeed(i,  DARWIN_REF_VEL_0);
+    this->dl->setMotTorque(i, DARWIN_REF_TOR_0);
+  }
 
-  subscription_ref_tor_ = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_TOR, 10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_tor, this, _1));
+  subscription_ref_pos_     = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_POS,         10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_pos, this, _1));
 
-  subscription_cmd_ = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_CMD, 10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_cmd, this, _1));
+  subscription_ref_vel_     = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_VEL,         10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_vel, this, _1));
 
-  publisher_state_imu_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_IMU, 1);
+  subscription_ref_tor_     = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_TOR,         10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_tor, this, _1));
 
-  publisher_state_ft_left_  = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_LEFT, 1);
+  subscription_cmd_         = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_CMD,             10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_cmd, this, _1));
+
+  publisher_state_imu_      = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_IMU,      1);
+
+  publisher_state_ft_left_  = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_LEFT,  1);
 
   publisher_state_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_RIGHT, 1);
 
@@ -40,8 +58,13 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
   auto buff_imu      = geometry_msgs::msg::Twist();
   auto buff_ft_left  = geometry_msgs::msg::Twist();
   auto buff_ft_right = geometry_msgs::msg::Twist();
- 
 
+  /* Set Ref */
+  this->dl->stageMotor();
+  printf("end3\n");
+  this->dl->putMotor();
+  printf("end4\n");
+  /* Get State */
   this->dl->getImu();
   this->dl->getFt();
 
@@ -76,22 +99,26 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
 
 
 
-
+/*
 void DarwinLofaroLegacyRos2::topic_callback_ref_pos(const std_msgs::msg::String & msg)
 {
   RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
 }
+*/
 
+/*
 void DarwinLofaroLegacyRos2::topic_callback_ref_vel(const std_msgs::msg::String & msg)
 {
   RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
 }
+*/
 
+/*
 void DarwinLofaroLegacyRos2::topic_callback_ref_tor(const std_msgs::msg::String & msg)
 {
   RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
 }
-
+*/
 
 /*
 void DarwinLofaroLegacyRos2::topic_callback_cmd(const std_msgs::msg::String & msg)
