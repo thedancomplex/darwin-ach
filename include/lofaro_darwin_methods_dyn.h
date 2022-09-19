@@ -535,9 +535,17 @@ int DarwinLofaro::stageMotor(int mot)
     data[4] = tor_0;
     data[5] = tor_1;
 */
-    uint8_t data[] = {pos_0, pos_1, vel_0, vel_1, tor_0, tor_1};
-
+    uint8_t *data_buff = (uint8_t *)malloc(6);
+    data_buff[0] = pos_0;
+    data_buff[1] = pos_1;
+    data_buff[2] = vel_0;
+    data_buff[3] = vel_1;
+    data_buff[4] = tor_0;
+    data_buff[5] = tor_1;
+    //uint8_t data[] = {pos_0, pos_1, vel_0, vel_1, tor_0, tor_1};
+    
 /*
+
     dxl_comm_result = packetHandler->regWriteTxOnly(portHandler, 
                                                     id,
                                                     address,
@@ -551,9 +559,9 @@ int DarwinLofaro::stageMotor(int mot)
                                 mot,
                                 address,
                                 length,
-                                data,
+                                data_buff,
                                 &dxl_error);
-
+  free(data_buff);
   if (dxl_comm_result != COMM_SUCCESS) return RETURN_FAIL;
   else if (dxl_error != 0)             return RETURN_FAIL;
   return RETURN_OK; 

@@ -43,6 +43,7 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
   subscription_ref_tor_     = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_TOR,         10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_tor, this, _1));
 
   subscription_cmd_         = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_CMD,             10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_cmd, this, _1));
+
   subscription_clock_       = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_CLOCK,           10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_clock, this, _1));
 
   publisher_state_imu_      = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_IMU,      1);
@@ -51,7 +52,7 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
 
   publisher_state_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_RIGHT, 1);
 
-  // timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+  timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
 }
 
 
@@ -63,42 +64,43 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
   auto buff_ft_left  = geometry_msgs::msg::Twist();
   auto buff_ft_right = geometry_msgs::msg::Twist();
 
+  int ret = 0;
+
   /* Set Ref */
-  this->dl->stageMotor();
-  this->dl->putMotor();
+  ret += this->dl->stageMotor();
+//  ret += this->dl->putMotor();
 
   /* Get State */
-  this->dl->getImu();
-  this->dl->getFt();
+  ret += this->dl->getImu();
+  ret += this->dl->getFt();
 
-  buff_imu.linear.x  = this->dl->darwin_data.imu.acc_x;
-  buff_imu.linear.y  = this->dl->darwin_data.imu.acc_y;
-  buff_imu.linear.z  = this->dl->darwin_data.imu.acc_z;
-  buff_imu.angular.x = this->dl->darwin_data.imu.gyro_x;
-  buff_imu.angular.y = this->dl->darwin_data.imu.gyro_y;
-  buff_imu.angular.z = this->dl->darwin_data.imu.gyro_z;
+  buff_imu.linear.x  =         this->dl->darwin_data.imu.acc_x;
+  buff_imu.linear.y  =         this->dl->darwin_data.imu.acc_y;
+  buff_imu.linear.z  =         this->dl->darwin_data.imu.acc_z;
+  buff_imu.angular.x =         this->dl->darwin_data.imu.gyro_x;
+  buff_imu.angular.y =         this->dl->darwin_data.imu.gyro_y;
+  buff_imu.angular.z =         this->dl->darwin_data.imu.gyro_z;
 
   int id = ENUM_FT_LEFT;
-  buff_ft_left.linear.x = this->dl->darwin_data.ft[id].x;
-  buff_ft_left.linear.y = this->dl->darwin_data.ft[id].y;
-  buff_ft_left.linear.z = ( (this->dl->darwin_data.ft[id].raised_x) | 
-                             (this->dl->darwin_data.ft[id].raised_y) );
-  buff_ft_left.angular.x = this->dl->darwin_data.ft[id].raised_x ;
-  buff_ft_left.angular.y = this->dl->darwin_data.ft[id].raised_y;
+  buff_ft_left.linear.x  =     this->dl->darwin_data.ft[id].x;
+  buff_ft_left.linear.y  =     this->dl->darwin_data.ft[id].y;
+  buff_ft_left.linear.z  = (  (this->dl->darwin_data.ft[id].raised_x) | (this->dl->darwin_data.ft[id].raised_y)  );
+  buff_ft_left.angular.x =     this->dl->darwin_data.ft[id].raised_x ;
+  buff_ft_left.angular.y =     this->dl->darwin_data.ft[id].raised_y;
 
 
   id = ENUM_FT_RIGHT;
-  buff_ft_right.linear.x = this->dl->darwin_data.ft[id].x;
-  buff_ft_right.linear.y = this->dl->darwin_data.ft[id].y;
-  buff_ft_right.linear.z = ( (this->dl->darwin_data.ft[id].raised_x) | 
-                             (this->dl->darwin_data.ft[id].raised_y) );
-  buff_ft_right.angular.x = this->dl->darwin_data.ft[id].raised_x ;
-  buff_ft_right.angular.y = this->dl->darwin_data.ft[id].raised_y;
+  buff_ft_right.linear.x  =    this->dl->darwin_data.ft[id].x;
+  buff_ft_right.linear.y  =    this->dl->darwin_data.ft[id].y;
+  buff_ft_right.linear.z  = ( (this->dl->darwin_data.ft[id].raised_x) | (this->dl->darwin_data.ft[id].raised_y) );
+  buff_ft_right.angular.x =    this->dl->darwin_data.ft[id].raised_x ;
+  buff_ft_right.angular.y =    this->dl->darwin_data.ft[id].raised_y;
 
   publisher_state_imu_->publish(buff_imu);
   publisher_state_ft_left_->publish(buff_ft_left);
   publisher_state_ft_right_->publish(buff_ft_right);
  }
+ return;
 }
 
 
