@@ -54,7 +54,7 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
 
   publisher_state_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_RIGHT, 1);
 
-  timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+  timer_ = this->create_wall_timer(20ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
 }
 
 
