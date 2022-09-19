@@ -8,6 +8,7 @@ using namespace std::chrono_literals;
 #define DARWIN_TOPIC_REF_VEL         "/darwin/ref/speed"
 #define DARWIN_TOPIC_REF_TOR         "/darwin/ref/torque"
 #define DARWIN_TOPIC_CMD             "/darwin/cmd"
+#define DARWIN_TOPIC_CLOCK           "/darwin/clock"
 #define DARWIN_TOPIC_STATE_IMU       "/darwin/state/imu"
 #define DARWIN_TOPIC_STATE_FT_LEFT   "/darwin/state/ft/left"
 #define DARWIN_TOPIC_STATE_FT_RIGHT  "/darwin/state/ft/right"
@@ -42,6 +43,7 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
   subscription_ref_tor_     = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_TOR,         10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_tor, this, _1));
 
   subscription_cmd_         = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_CMD,             10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_cmd, this, _1));
+  subscription_clock_       = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_CLOCK,           10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_clock, this, _1));
 
   publisher_state_imu_      = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_IMU,      1);
 
@@ -49,21 +51,22 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
 
   publisher_state_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_RIGHT, 1);
 
-  timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+  // timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
 }
 
 
 void DarwinLofaroLegacyRos2::timer_callback_main_loop()
 {
+ if(this->started)
+ {
   auto buff_imu      = geometry_msgs::msg::Twist();
   auto buff_ft_left  = geometry_msgs::msg::Twist();
   auto buff_ft_right = geometry_msgs::msg::Twist();
 
   /* Set Ref */
   this->dl->stageMotor();
-  printf("end3\n");
   this->dl->putMotor();
-  printf("end4\n");
+
   /* Get State */
   this->dl->getImu();
   this->dl->getFt();
@@ -95,9 +98,15 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
   publisher_state_imu_->publish(buff_imu);
   publisher_state_ft_left_->publish(buff_ft_left);
   publisher_state_ft_right_->publish(buff_ft_right);
+ }
 }
 
 
+void DarwinLofaroLegacyRos2::topic_callback_clock(const std_msgs::msg::String & msg)
+{
+  timer_callback_main_loop();
+ // RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
+}
 
 /*
 void DarwinLofaroLegacyRos2::topic_callback_ref_pos(const std_msgs::msg::String & msg)

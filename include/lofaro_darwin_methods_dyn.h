@@ -484,7 +484,6 @@ int DarwinLofaro::stageMotor()
   {
     for (int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
     {
-      printf("%d\n",i);
       ret += this->stageMotor(i);
     }
   }
@@ -492,12 +491,10 @@ int DarwinLofaro::stageMotor()
   { 
     return RETURN_FAIL; 
   }
-  printf("end\n");
   if (ret > 0)
   {
     return RETURN_FAIL;
   }
-  printf("end2\n");
   return RETURN_OK;
 }
 
@@ -528,30 +525,37 @@ int DarwinLofaro::stageMotor(int mot)
     uint8_t vel_1 = (vel >> 8) & 0xff;
     uint8_t tor_0 =  tor       & 0xff;
     uint8_t tor_1 = (tor >> 8) & 0xff;
-
+   
+/* 
+    uint8_t * data = malloc(sizeof(uint8_t) * 6);
+    data[0] = pos_0;
+    data[1] = pos_1;
+    data[2] = vel_0;
+    data[3] = vel_1;
+    data[4] = tor_0;
+    data[5] = tor_1;
+*/
     uint8_t data[] = {pos_0, pos_1, vel_0, vel_1, tor_0, tor_1};
 
+/*
     dxl_comm_result = packetHandler->regWriteTxOnly(portHandler, 
                                                     id,
                                                     address,
                                                     length,
                                                     data);
     
-
-    if (dxl_comm_result != COMM_SUCCESS) return RETURN_FAIL;
-    else if (dxl_error != 0)             return RETURN_FAIL;
-    else                                 return RETURN_OK;
+*/
 
 
-/*
-    dxl_comm_result = this->*packetHandler->regWriteTx(this->*portHandler, 
+    dxl_comm_result = packetHandler->regWriteTxRx(portHandler, 
                                 mot,
                                 address,
                                 length,
                                 data,
                                 &dxl_error);
-*/
 
+  if (dxl_comm_result != COMM_SUCCESS) return RETURN_FAIL;
+  else if (dxl_error != 0)             return RETURN_FAIL;
   return RETURN_OK; 
 }
 
@@ -566,23 +570,17 @@ int DarwinLofaro::putMotor(int mot)
 {
   int dxl_comm_result = COMM_TX_FAIL;             // Communication result
 
-printf("a\n");
   try
   {
-printf("b\n");
     dxl_comm_result = packetHandler->action(portHandler, mot);
-printf("c\n");
   }
   catch(...)
   {
-printf("d\n");
     return RETURN_FAIL;
   }
 
-printf("e\n");
   if (dxl_comm_result != COMM_SUCCESS) return RETURN_FAIL;
 
-printf("f\n");
   return RETURN_OK; 
 }
 

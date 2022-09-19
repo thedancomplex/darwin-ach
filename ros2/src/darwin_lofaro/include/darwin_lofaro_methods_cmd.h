@@ -19,11 +19,13 @@ void DarwinLofaroLegacyRos2::topic_callback_cmd(const std_msgs::msg::String & ms
          RCLCPP_INFO(this->get_logger(), "Darwin-Lofaro Legacy: Startup");
          //this->dl->setup("/dev/ttyUSB0", false);
          this->dl->setup("/dev/ttyUSB0", true);
+         this->started = true;
          return;
       }
       else if( s0.compare("close") == 0 )
       {
          RCLCPP_INFO(this->get_logger(), "Darwin-Lofaro Legacy: Close");
+         this->started = false;
          this->dl->close();
          return;
       }
@@ -45,6 +47,7 @@ void DarwinLofaroLegacyRos2::topic_callback_cmd(const std_msgs::msg::String & ms
              this->dl->on();
              this->dl->sleep(2.0);
              printf("Actuators On\n");
+             this->started = true;
            }
            else
            {
@@ -70,6 +73,7 @@ void DarwinLofaroLegacyRos2::topic_callback_cmd(const std_msgs::msg::String & ms
            if( s1.compare("all") == 0 )
            {
              RCLCPP_INFO(this->get_logger(), "Turing off Darwin-Lofaro Legacy");
+             this->started = false;
              this->dl->off();
              this->dl->stop();
            }
