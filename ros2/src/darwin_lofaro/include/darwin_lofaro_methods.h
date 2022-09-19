@@ -3,7 +3,6 @@ using namespace std::chrono_literals;
 #define ENUM_FT_LEFT                       0
 #define ENUM_FT_RIGHT                      1
 
-
 #define DARWIN_TOPIC_REF_POS         "/darwin/ref/position"
 #define DARWIN_TOPIC_REF_VEL         "/darwin/ref/speed"
 #define DARWIN_TOPIC_REF_TOR         "/darwin/ref/torque"
