@@ -71,6 +71,16 @@
 #define MX_ADDRESS_STATE_START             36
 #define MX_ADDRESS_STATE_LENGTH            8
 
+#define MX_PACKET_PING                     0X01
+#define MX_PACKET_READ                     0X02
+#define MX_PACKET_WRITE                    0x03
+#define MX_PACKET_REG_WRITE                0X04
+#define MX_PACKET_ACTION                   0x05
+#define MX_PACKET_FACTORY_RESET            0x06
+#define MX_PACKET_REBOOT                   0x08
+#define MX_PACKET_SYNC_WRITE               0x83
+#define MX_PACKET_BULK_READ                0x92
+
 #define MX_ADDRESS_POS_GOAL                30
 #define MX_ADDRESS_VEL_GOAL                32
 #define MX_ADDRESS_TORQUE_MAX              34

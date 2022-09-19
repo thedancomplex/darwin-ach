@@ -124,6 +124,9 @@ class DarwinLofaro
     /* double to uint16 for motor pos set */
     uint16_t double2uint16(double val);
 
+    /* Direct write packet to try to get around the seg fault */
+    int write(uint8_t *txpacket);
+
     #ifdef DARWIN_LOFARO_DYN
     /* port handler for Darwin */
    // dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);

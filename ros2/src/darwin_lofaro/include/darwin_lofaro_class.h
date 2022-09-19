@@ -34,7 +34,7 @@ class DarwinLofaroLegacyRos2 : public rclcpp::Node
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_state_ft_left_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_state_ft_right_;
     size_t count_;
-    DarwinLofaro* dl = new DarwinLofaro();
     bool started = false;
+    DarwinLofaro* dl = new DarwinLofaro();
 };
 

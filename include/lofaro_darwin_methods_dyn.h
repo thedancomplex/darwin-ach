@@ -247,6 +247,14 @@ int DarwinLofaro::sleep(double val)
   return this->lut->sleep(val);
 }
 
+int DarwinLofaro::write(uint8_t *txpacket)
+{
+
+  int ret = packetHandler->txPacket(portHandler, txpacket);
+  portHandler->is_using_ =  false;
+  return ret;
+}
+
 /* Turn off all */
 int DarwinLofaro::off()
 {
@@ -535,14 +543,30 @@ int DarwinLofaro::stageMotor(int mot)
     data[4] = tor_0;
     data[5] = tor_1;
 */
-    uint8_t *data_buff = (uint8_t *)malloc(6);
+/*
+    uint8_t *data_buff = (uint8_t *)malloc(12);
     data_buff[0] = pos_0;
     data_buff[1] = pos_1;
     data_buff[2] = vel_0;
     data_buff[3] = vel_1;
     data_buff[4] = tor_0;
     data_buff[5] = tor_1;
-    //uint8_t data[] = {pos_0, pos_1, vel_0, vel_1, tor_0, tor_1};
+*/
+
+    uint8_t length_d = 9;
+    uint8_t data[] = {0xff, 0xff, id, 
+                      length_d, 
+                      MX_PACKET_REG_WRITE,
+                      MX_ADDRESS_POS_GOAL,
+                      pos_0, 
+                      pos_1, 
+                      vel_0, 
+                      vel_1, 
+                      tor_0, 
+                      tor_1,
+                      0x00};
+
+    dxl_comm_result = this->write(data);
     
 /*
 
@@ -554,14 +578,15 @@ int DarwinLofaro::stageMotor(int mot)
     
 */
 
-
+/*
     dxl_comm_result = packetHandler->regWriteTxRx(portHandler, 
                                 mot,
                                 address,
                                 length,
-                                data_buff,
+                                data,
                                 &dxl_error);
-  free(data_buff);
+*/
+//  free(data_buff);
   if (dxl_comm_result != COMM_SUCCESS) return RETURN_FAIL;
   else if (dxl_error != 0)             return RETURN_FAIL;
   return RETURN_OK; 

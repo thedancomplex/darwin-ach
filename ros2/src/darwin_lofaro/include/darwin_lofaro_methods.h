@@ -29,6 +29,9 @@ using namespace std::chrono_literals;
 DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_daemon")
 {
 
+//  this->dl = (DarwinLofaro*)malloc(sizeof(DarwinLofaro));
+//  this->dl = new DarwinLofaro();
+
   for( int i = DARWIN_MOT_MIN; i <= DARWIN_MOT_MAX; i++)
   {
     this->dl->setMotPos(i,    DARWIN_REF_POS_0);
@@ -68,7 +71,7 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
 
   /* Set Ref */
   ret += this->dl->stageMotor();
-//  ret += this->dl->putMotor();
+  ret += this->dl->putMotor();
 
   /* Get State */
   ret += this->dl->getImu();

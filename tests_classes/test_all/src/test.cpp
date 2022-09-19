@@ -40,7 +40,7 @@ int main()
   double tick = dl.time();
   double tock = dl.time();
 
-  double pos = 0.3;
+  double pos = 0.1;
   int    mot = 19;
   int pos_i = 0;
 
@@ -63,17 +63,18 @@ int main()
       pos = -pos;
     }
 
-    dl.getImu();
-    dl.getFt();
 
     for( int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++ )
     {
-      dl.setMotPos(i, 0.0);
+      dl.setMotPos(i, pos);
       dl.setMotSpeed(i,  0.75);
       dl.setMotTorque(i, 0.5);
     }
     dl.stageMotor();
     dl.putMotor();
+
+    dl.getImu();
+    dl.getFt();
 
     dl.sleep();
     
