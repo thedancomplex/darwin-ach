@@ -21,32 +21,32 @@ CXXFLAGS += -O2 -DLINUX -Wall -std=c++11 -shared $(INCLUDE_DIRS)
 LFLAGS += -lpthread -ldl
 
 OBJS =  ../Framework/src/MX28.o     	\
-        ../Framework/src/CM730.o     	\
-        ../Framework/src/math/Matrix.o   \
-        ../Framework/src/math/Plane.o    \
-        ../Framework/src/math/Point.o    \
-        ../Framework/src/math/Vector.o   \
-        ../Framework/src/motion/JointData.o  	\
-        ../Framework/src/motion/Kinematics.o 	\
-        ../Framework/src/motion/MotionManager.o  \
-        ../Framework/src/motion/MotionStatus.o   \
-        ../Framework/src/motion/modules/Action.o \
-        ../Framework/src/motion/modules/Head.o   \
-        ../Framework/src/motion/modules/Walking.o\
-        ../Framework/src/minIni/minIni.o	\
-        LinuxActionScript.o   \
-        LinuxCM730.o    \
-        LinuxMotionTimer.o    \
-        LinuxNetwork.o
+	../Framework/src/CM730.o     	\
+	../Framework/src/math/Matrix.o   \
+	../Framework/src/math/Plane.o    \
+	../Framework/src/math/Point.o    \
+	../Framework/src/math/Vector.o   \
+	../Framework/src/motion/JointData.o  	\
+	../Framework/src/motion/Kinematics.o 	\
+	../Framework/src/motion/MotionManager.o  \
+	../Framework/src/motion/MotionStatus.o   \
+	../Framework/src/motion/modules/Action.o \
+	../Framework/src/motion/modules/Head.o   \
+	../Framework/src/motion/modules/Walking.o\
+	../Framework/src/minIni/minIni.o	\
+	LinuxActionScript.o   \
+	LinuxCM730.o    \
+	LinuxMotionTimer.o    \
+	LinuxNetwork.o \
+	streamer/mjpg_streamer.o   \
+	streamer/httpd.o           \
 #        ../Framework/src/vision/BallFollower.o   \
 #        ../Framework/src/vision/BallTracker.o    \
 #        ../Framework/src/vision/ColorFinder.o    \
 #        ../Framework/src/vision/Image.o  		\
 #        ../Framework/src/vision/ImgProcess.o 	\
 #        ../Framework/src/vision/Camera.o	\
-#        streamer/httpd.o           \
 #        streamer/jpeg_utils.o      \
-#        streamer/mjpg_streamer.o   \
 #        LinuxCamera.o   \
 
 $(TARGET): $(OBJS)

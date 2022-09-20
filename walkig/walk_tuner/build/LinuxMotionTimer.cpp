@@ -42,30 +42,49 @@ void *LinuxMotionTimer::TimerProc(void *param)
 
 void LinuxMotionTimer::Start(void)
 {
+
+  printf("lmt1\n");
     int error;
     struct sched_param param;
+  printf("lmt2\n");
     pthread_attr_t attr;
 
+  printf("lmt3\n");
     pthread_attr_init(&attr);
 
+  printf("lmt4\n");
     error = pthread_attr_setschedpolicy(&attr, SCHED_RR);
+  printf("lmt5\n");
     if(error != 0)
         printf("error = %d\n",error);
     error = pthread_attr_setinheritsched(&attr,PTHREAD_EXPLICIT_SCHED);
     if(error != 0)
         printf("error = %d\n",error);
 
+  printf("lmt6\n");
     memset(&param, 0, sizeof(param));
+  printf("lmt7\n");
     param.sched_priority = 31;// RT
+  printf("lmt8\n");
     error = pthread_attr_setschedparam(&attr, &param);
+  printf("lmt9\n");
     if(error != 0)
         printf("error = %d\n",error);
 
+  printf("lmt10\n");
     // create and start the thread
     if((error = pthread_create(&this->m_Thread, &attr, this->TimerProc, this))!= 0)
+    {
+  printf("pthread error = %d\n",error);
+    if(error == EAGAIN) printf("EAGAN\n");
+    if(error == EINVAL) printf("EINVAL\n");
+    if(error == EPERM) printf("EPERM\n");
         exit(-1);
+    }
 
+  printf("lmt11\n");
     this->m_TimerRunning=true;
+  printf("lmt12\n");
 
 }
 

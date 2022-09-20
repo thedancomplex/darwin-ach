@@ -23,6 +23,8 @@
 #ifndef HTTPD_H_
 #define HTTPD_H_
 
+#include "minIni.h"
+
 #define IO_BUFFER 256
 #define BUFFER_SIZE 1024
 

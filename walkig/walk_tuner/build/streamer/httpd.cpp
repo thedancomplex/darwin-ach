@@ -33,18 +33,21 @@
 #include <fcntl.h>
 #include <syslog.h>
 
-#include "LinuxCamera.h"
+//#include "LinuxCamera.h"
 #include "Walking.h"
 #include "httpd.h"
 
 context* httpd::server;
 globals* httpd::pglobal;
 
+/*
 ColorFinder* httpd::finder;
 ColorFinder* httpd::ball_finder;
 ColorFinder* httpd::red_finder;
 ColorFinder* httpd::yellow_finder;
 ColorFinder* httpd::blue_finder;
+*/
+
 minIni*      httpd::ini;
 bool httpd::ClientRequest(false);
 
@@ -539,11 +542,12 @@ void httpd::command(int fd, char *parameter) {
         LOG("could not allocate memory\n");
         return;
       }
-
+/*
       if(strcmp(section, "ball") == 0) finder = ball_finder;
       else if(strcmp(section, "red") == 0) finder = red_finder;
       else if(strcmp(section, "yellow") == 0) finder = yellow_finder;
       else if(strcmp(section, "blue") == 0) finder = blue_finder;
+*/
   }
 
   /*
@@ -593,10 +597,10 @@ void httpd::input_cmd(in_cmd_type cmd, float value, char* res_str)
     int res = -1;
 
     //pthread_mutex_lock(&controls_mutex);
-
     if(ini == NULL) ini = new minIni("config.ini");
 
     switch(cmd) {
+/*
     case IN_CMD_RELOAD:
         Robot::LinuxCamera::GetInstance()->LoadINISettings(ini);
         if(finder == NULL) return;
@@ -711,7 +715,7 @@ void httpd::input_cmd(in_cmd_type cmd, float value, char* res_str)
         if(finder->m_min_value < 0) finder->m_min_value = 0;
         sprintf(res_str, "%d", finder->m_min_value);
         break;
-
+*/
     case IN_CMD_WALK_MODE:
         if(value == 1)
         {

@@ -36,15 +36,19 @@ void sighandler(int sig)
 
 int main(int argc, char *argv[])
 {
+  printf("1\n");
     signal(SIGABRT, &sighandler);
     signal(SIGTERM, &sighandler);
     signal(SIGQUIT, &sighandler);
     signal(SIGINT, &sighandler);
 
+  printf("2\n");
     change_current_dir();
 
+  printf("3\n");
     minIni* ini = new minIni(INI_FILE_PATH);
 
+  printf("4\n");
 //    mjpg_streamer* streamer = new mjpg_streamer(0, 0);
 //    httpd::ini = ini;
 
@@ -54,16 +58,24 @@ int main(int argc, char *argv[])
         printf("Fail to initialize Motion Manager!\n");
         return 0;
     }
+  printf("5\n");
     MotionManager::GetInstance()->LoadINISettings(ini);
+  printf("6\n");
     Walking::GetInstance()->LoadINISettings(ini);
 
+  printf("7\n");
     MotionManager::GetInstance()->AddModule((MotionModule*)Walking::GetInstance());
+  printf("8\n");
     LinuxMotionTimer *motion_timer = new LinuxMotionTimer(MotionManager::GetInstance());
+  printf("9\n");
     motion_timer->Start();
+  printf("10\n");
     /////////////////////////////////////////////////////////////////////
 
     DrawIntro(&cm730);
+  printf("11\n");
     MotionManager::GetInstance()->SetEnable(true);
+  printf("12\n");
 
     while(1)
     {
