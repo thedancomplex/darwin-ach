@@ -39,6 +39,10 @@ class DarwinLofaroLegacyRos2 : public rclcpp::Node
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_tor_;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_vol_;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_tmp_;
+
+    int update_50hz();
+    int update_125hz();
+
     size_t count_;
     bool started = false;
     DarwinLofaro* dl = new DarwinLofaro();

@@ -22,6 +22,7 @@ using namespace std::chrono_literals;
 #include "darwin_lofaro_methods_ref_pos.h"
 #include "darwin_lofaro_methods_ref_vel.h"
 #include "darwin_lofaro_methods_ref_tor.h"
+#include "darwin_lofaro_methods_rates.h"
 
 #define DARWIN_MOT_MIN 1
 #define DARWIN_MOT_MAX 20
@@ -65,7 +66,8 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
   publisher_state_motor_vol_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_VOL, 1);
   publisher_state_motor_tmp_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_TMP, 1);
 
-  timer_ = this->create_wall_timer(20ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+  timer_ = this->create_wall_timer(8ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+  //timer_ = this->create_wall_timer(20ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
 }
 
 
@@ -102,17 +104,25 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
 
 */
 
+/*
   int ret = 0;
 
-  /* Set Ref */
+  // Set Ref 
   ret += this->dl->stageMotor();
   ret += this->dl->putMotor();
 
-  /* Get State */
+  // Get State 
   ret += this->dl->getImu();
   ret += this->dl->getFt();
 
   ret += this->dl->getMotorSlow(1);
+
+*/
+
+    //int ret = this->update_50hz();
+    int ret = this->update_125hz();
+
+
 /*
     buff_motor_pos.layout.dim = DARWIN_MOTOR_MAX + 1;
     buff_motor_vel.layout.dim = DARWIN_MOTOR_MAX + 1;

@@ -379,8 +379,10 @@ int DarwinLofaro::getFt(int id)
 //  dynamixel::GroupBulkRead groupBulkReadFt(portHandler, packetHandler);
 
   int the_index = -1;
-  if      (id == ID_FT_LEFT)  the_index = ENUM_FT_LEFT;
-  else if (id == ID_FT_RIGHT) the_index = ENUM_FT_RIGHT;
+  if      (id == ID_FT_LEFT)    the_index = ENUM_FT_LEFT;
+  else if (id == ID_FT_RIGHT)   the_index = ENUM_FT_RIGHT;
+  else if (id == ENUM_FT_LEFT)  the_index = ENUM_FT_LEFT;
+  else if (id == ENUM_FT_RIGHT) the_index = ENUM_FT_RIGHT;
   else return RETURN_FAIL;
 
 
