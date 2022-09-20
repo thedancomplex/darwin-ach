@@ -57,26 +57,34 @@ int DarwinLofaroLegacyRos2::update_100hz()
   int ret = 0;
 
   /* Set one upper Ref per cycle */
+/*
   upper_i++;
   if(upper_i >= UPPER_LENGTH) upper_i = 0;
   ret += this->dl->stageMotor(upper_array[upper_i]);
-
+*/
   /* Always stage lower body */
+/*
   for(int i = LOWER_START; i <= LOWER_END; i++)
   {
     ret += this->dl->stageMotor(i);
   }
+*/
+  /* Stage all Motors */
+  ret += this->dl->stageMotor();
 
   /* Send to all motors */
   ret += this->dl->putMotor();
 
-  /* Get State */
+  /* Get IMU State */
   ret += this->dl->getImu();
 
-  /* Get Ft every other cycle */
+  /* Get Ft State every other cycle */
   if(ft_i == 0) ft_i = 1;
   else ft_i = 0;
   ret += this->dl->getFt(ft_i);
+
+  /* Get motor state (one per cycle) */
+  ret += this->dl->getMotorSlow(1);
 
 //  ret += this->dl->getMotorSlow(1);
 
