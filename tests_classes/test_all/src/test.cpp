@@ -53,7 +53,7 @@ int main()
     double f = 1.0/dt;
     tick = tock;
     
-    printf("%f, %f\n", dt, f);
+    printf("%f, %f, %f\n", dt, f, dl.darwin_data.motor_state[5].voltage);
 
     pos_i++;
 
@@ -74,6 +74,7 @@ int main()
     dl.putMotor();
 
     dl.getMotor();
+    //dl.getMotorSlow(3);
 
     dl.getImu();
     dl.getFt();

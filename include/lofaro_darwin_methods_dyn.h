@@ -609,6 +609,25 @@ int DarwinLofaro::putMotor(int mot)
   return RETURN_OK; 
 }
 
+
+int gms_i   = DARWIN_MOTOR_MIN;
+int gms_val = 0;
+int DarwinLofaro::getMotorSlow(int val)
+{
+  /* Stage all motor positions torques and speeds */
+  if(gms_val >= val) gms_val = 0;
+
+  if (gms_val == 0)
+  {
+    gms_i++;
+    if( gms_i > DARWIN_MOTOR_MAX ) gms_i = DARWIN_MOTOR_MIN;
+    gms_val++;
+    return this->getMotor(gms_i);
+  }
+
+  return RETURN_FAIL;
+}
+
 int DarwinLofaro::getMotor()
 {
   /* Stage all motor positions torques and speeds */
