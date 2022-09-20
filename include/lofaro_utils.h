@@ -68,9 +68,9 @@ class LofaroUtils
     double dynEncoderSpeed2radPerSec(uint16_t enc)
     {
       uint16_t mag_16 = 0x3ff & enc;
-      uint8_t  dir_8  = 0x400 & enc;
+      uint16_t dir_16 = 0x400 & enc;
       double dir = 1.0;
-      if(dir_8 > 0) dir = -1.0;
+      if(dir_16 > 0) dir = -1.0;
       double mag = (double)mag_16 * dir * MOTOR_SPEED_SCALE;
       return mag;
     }
@@ -78,9 +78,9 @@ class LofaroUtils
     double dynSensorLoad2Percent(uint16_t enc)
     {
       uint16_t mag_16 = 0x3ff & enc;
-      uint8_t  dir_8  = 0x400 & enc;
+      uint16_t dir_16 = 0x400 & enc;
       double dir = 1.0;
-      if(dir_8 > 0) dir = -1.0;
+      if(dir_16 > 0) dir = -1.0;
       double mag = (double)mag_16 * dir / (double)0x3ff;
       return mag;
     }
