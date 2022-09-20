@@ -27,6 +27,9 @@
 #define MOTOR_SPEED_SCALE                  0.11 / 60.0  * 2.0 * M_PI
 #define MOTOR_LOAD_SCALE                   1.0
 #define MOTOR_TEMP_SCALE                   1.0
+#define MOTOR_ENC_REZ                      4096
+#define MOTOR_SPEED_REZ                    2048
+#define MOTOR_LOAD_REZ                     2048
 #define ENUM_FT_LEFT                       0
 #define ENUM_FT_RIGHT                      1
 #define MOTOR_REF_SPEED_SCALE              0x3ff / (116.62 / 60.0 * 2.0 * M_PI)
@@ -87,7 +90,6 @@
 #define MX_ADDRESS_REF_LENGTH              6
 #define MX_ADDRESS_REF_START               MX_ADDRESS_POS_GOAL
 
-#define MX_ADDRESS_STATE_LENGTH            8
 #define MX_ADDRESS_POS                     36
 #define MX_ADDRESS_SPEED                   38
 #define MX_ADDRESS_LOAD                    40
@@ -96,6 +98,11 @@
 #define MX_ADDRESS_DELAY                   5
 #define MX_ADDRESS_STATUS_RETURN_LEVEL     16
 #define MX_ADDRESS_GOAL_POS                30
+#define MX_ADDRESS_STATE_LENGTH            8
+#define MX_ADDRESS_STATE_START             MX_ADDRESS_POS
+
+
+
 
 #define FT_ADDRESS_STATUS_RETURN_LEVEL     16
 #define FT_ADDRESS_READ_DATA_OFFSET        5

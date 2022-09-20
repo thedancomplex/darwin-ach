@@ -6,6 +6,8 @@
 
 class LofaroUtils
 {
+  #define MOTOR_SPEED_SCALE     0.11 / 60.0  * 2.0 * M_PI
+  #define M_PI                  3.14159265358979323846
   public:
     LofaroUtils() 
     {
@@ -51,6 +53,36 @@ class LofaroUtils
       this->hz = hz_des;
       this->T  = 1.0/hz_des;
       return 0;
+    }
+
+    double dynEncoder2rad(uint16_t enc, uint16_t rez)
+    {
+      return ( (double)enc - ((double)rez/2.0) ) * 2.0 * M_PI / (double)rez;
+    }
+    
+    double dynEncoder2rad(uint16_t enc)
+    {
+      return this->dynEncoder2rad(enc, 4096);
+    }
+
+    double dynEncoderSpeed2radPerSec(uint16_t enc)
+    {
+      uint16_t mag_16 = 0x3ff & enc;
+      uint8_t  dir_8  = 0x400 & enc;
+      double dir = 1.0;
+      if(dir_8 > 0) dir = -1.0;
+      double mag = (double)mag_16 * dir * MOTOR_SPEED_SCALE;
+      return mag;
+    }
+
+    double dynSensorLoad2Percent(uint16_t enc)
+    {
+      uint16_t mag_16 = 0x3ff & enc;
+      uint8_t  dir_8  = 0x400 & enc;
+      double dir = 1.0;
+      if(dir_8 > 0) dir = -1.0;
+      double mag = (double)mag_16 * dir / (double)0x3ff;
+      return mag;
     }
 
   private:

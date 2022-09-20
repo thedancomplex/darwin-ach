@@ -666,10 +666,9 @@ int DarwinLofaro::getMotor(int id)
 
   // Check if data is avaliable
   dxl_getdata_result = groupBulkReadMotor.isAvailable(id, 
-                                                          CM730_ADDRESS_IMU_START, 
-                                                          CM730_ADDRESS_IMU_LENGTH);
+                                                          MX_ADDRESS_STATE_START, 
+                                                          MX_ADDRESS_STATE_LENGTH);
   if (dxl_getdata_result != true) return RETURN_FAIL;
-
   // Assign the data
   uint16_t buff_pos       = groupBulkReadMotor.getData(id, MX_ADDRESS_POS    , 2);
   uint16_t buff_speed     = groupBulkReadMotor.getData(id, MX_ADDRESS_SPEED  , 2);
@@ -677,14 +676,20 @@ int DarwinLofaro::getMotor(int id)
   uint8_t  buff_voltage   = groupBulkReadMotor.getData(id, MX_ADDRESS_VOLTAGE, 1);
   uint8_t  buff_temp      = groupBulkReadMotor.getData(id, MX_ADDRESS_TEMP   , 1);
 
-  this->darwin_data.motor_state[id].pos      = this->int2double(buff_pos)    * MOTOR_POS_SCALE;
-  this->darwin_data.motor_state[id].speed    = this->int2double(buff_speed)  * MOTOR_SPEED_SCALE;
-  this->darwin_data.motor_state[id].load     = this->int2double(buff_load)   * MOTOR_LOAD_SCALE;
-  this->darwin_data.motor_state[id].voltage  = (double)buff_voltage          / MOTOR_VOLTAGE_SCALE;
-  this->darwin_data.motor_state[id].temp     = (double)buff_temp             / MOTOR_TEMP_SCALE;
+//  this->darwin_data.motor_state[id].pos      = this->int2double(buff_pos)    * MOTOR_POS_SCALE;
+//  this->darwin_data.motor_state[id].speed    = this->int2double(buff_speed)  * MOTOR_SPEED_SCALE;
+//  this->darwin_data.motor_state[id].load     = this->int2double(buff_load)   * MOTOR_LOAD_SCALE;
+
+  this->darwin_data.motor_state[id].pos      = lut->dynEncoder2rad(buff_pos, MOTOR_ENC_REZ);
+  this->darwin_data.motor_state[id].speed    = lut->dynEncoderSpeed2radPerSec(buff_speed);
+  this->darwin_data.motor_state[id].load     = lut->dynSensorLoad2Percent(buff_load);
+  this->darwin_data.motor_state[id].voltage  = (double)buff_voltage  / MOTOR_VOLTAGE_SCALE;
+  this->darwin_data.motor_state[id].temp     = (double)buff_temp     / MOTOR_TEMP_SCALE;
 
   return RETURN_OK; 
 }
+
+
 
 
 
