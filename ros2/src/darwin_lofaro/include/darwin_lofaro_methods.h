@@ -121,7 +121,7 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
 */
 
     //int ret = this->update_50hz();
-    int ret = this->update_100hz(1);
+    int ret = this->update_100hz(HZ_MODE_MOTORS);
     //int ret = this->update_125hz();
 
 
