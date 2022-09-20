@@ -24,15 +24,15 @@ clean:
 	rm -f *.a *.o $(TARGET) core *~ *.so *.lo
 
 libclean:
-	make -C ../../build clean
+	make -C build clean
 
 distclean: clean libclean
 
 darwin.a:
-	make -C ../../build
+	make -C build
 
 $(TARGET): $(OBJS) ../../lib/darwin.a
-	$(CXX) -o $(TARGET) $(OBJS) ../../lib/darwin.a $(LIBS)
+	$(CXX) -o $(TARGET) $(OBJS) lib/darwin.a $(LIBS)
 
 # useful to make a backup "make tgz"
 tgz: clean
