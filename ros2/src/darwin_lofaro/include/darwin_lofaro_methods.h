@@ -11,6 +11,11 @@ using namespace std::chrono_literals;
 #define DARWIN_TOPIC_STATE_IMU       "/darwin/state/imu"
 #define DARWIN_TOPIC_STATE_FT_LEFT   "/darwin/state/ft/left"
 #define DARWIN_TOPIC_STATE_FT_RIGHT  "/darwin/state/ft/right"
+#define DARWIN_TOPIC_STATE_MOTOR_POS "/darwin/state/motor/position"
+#define DARWIN_TOPIC_STATE_MOTOR_VEL "/darwin/state/motor/speed"
+#define DARWIN_TOPIC_STATE_MOTOR_TOR "/darwin/state/motor/load"
+#define DARWIN_TOPIC_STATE_MOTOR_VOL "/darwin/state/motor/voltage"
+#define DARWIN_TOPIC_STATE_MOTOR_TMP "/darwin/state/motor/temperature"
 
 #include "lofaro_utils_ros2.h"
 #include "darwin_lofaro_methods_cmd.h"
@@ -54,6 +59,12 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
 
   publisher_state_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_RIGHT, 1);
 
+  publisher_state_motor_pos_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_POS, 1);
+  publisher_state_motor_vel_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_VEL, 1);
+  publisher_state_motor_tor_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_TOR, 1);
+  publisher_state_motor_vol_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_VOL, 1);
+  publisher_state_motor_tmp_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_TMP, 1);
+
   timer_ = this->create_wall_timer(20ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
 }
 
@@ -62,9 +73,34 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
 {
  if(this->started)
  {
-  auto buff_imu      = geometry_msgs::msg::Twist();
-  auto buff_ft_left  = geometry_msgs::msg::Twist();
-  auto buff_ft_right = geometry_msgs::msg::Twist();
+  auto buff_imu       = geometry_msgs::msg::Twist();
+  auto buff_ft_left   = geometry_msgs::msg::Twist();
+  auto buff_ft_right  = geometry_msgs::msg::Twist();
+  auto buff_motor_pos = std_msgs::msg::Float64MultiArray();
+  auto buff_motor_vel = std_msgs::msg::Float64MultiArray();
+  auto buff_motor_tor = std_msgs::msg::Float64MultiArray();
+  auto buff_motor_vol = std_msgs::msg::Float64MultiArray();
+  auto buff_motor_tmp = std_msgs::msg::Float64MultiArray();
+
+/*
+  buff_motor_pos.data = (float*)malloc(sizeof(float) * (DARWIN_MOTOR_MAX + 1));
+  buff_motor_vel.data = (float*)malloc(sizeof(float) * (DARWIN_MOTOR_MAX + 1));
+  buff_motor_tor.data = (float*)malloc(sizeof(float) * (DARWIN_MOTOR_MAX + 1));
+  buff_motor_vol.data = (float*)malloc(sizeof(float) * (DARWIN_MOTOR_MAX + 1));
+  buff_motor_tmp.data = (float*)malloc(sizeof(float) * (DARWIN_MOTOR_MAX + 1));
+  free(buff_motor_pos.data);
+  free(buff_motor_vel.data);
+  free(buff_motor_tor.data);
+  free(buff_motor_vol.data);
+  free(buff_motor_tmp.data);
+
+  float buff_motor_pos_[DARWIN_MOTOR_MAX +1];
+  float buff_motor_vel_[DARWIN_MOTOR_MAX +1];
+  float buff_motor_tor_[DARWIN_MOTOR_MAX +1];
+  float buff_motor_vol_[DARWIN_MOTOR_MAX +1];
+  float buff_motor_tmp_[DARWIN_MOTOR_MAX +1];
+
+*/
 
   int ret = 0;
 
@@ -75,6 +111,40 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
   /* Get State */
   ret += this->dl->getImu();
   ret += this->dl->getFt();
+
+  ret += this->dl->getMotorSlow(1);
+/*
+    buff_motor_pos.layout.dim = DARWIN_MOTOR_MAX + 1;
+    buff_motor_vel.layout.dim = DARWIN_MOTOR_MAX + 1;
+    buff_motor_tor.layout.dim = DARWIN_MOTOR_MAX + 1;
+    buff_motor_vol.layout.dim = DARWIN_MOTOR_MAX + 1;
+    buff_motor_tmp.layout.dim = DARWIN_MOTOR_MAX + 1;
+*/
+
+//  for( int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++ )
+  for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+  {
+    buff_motor_pos.data.push_back(this->dl->darwin_data.motor_state[i].pos);
+    buff_motor_vel.data.push_back(this->dl->darwin_data.motor_state[i].speed);
+    buff_motor_tor.data.push_back(this->dl->darwin_data.motor_state[i].load);
+    buff_motor_vol.data.push_back(this->dl->darwin_data.motor_state[i].voltage);
+    buff_motor_tmp.data.push_back(this->dl->darwin_data.motor_state[i].temp);
+/*
+    buff_motor_pos.data[i] = this->dl->darwin_data.motor_state[i].pos;
+    buff_motor_vel.data[i] = this->dl->darwin_data.motor_state[i].speed;
+    buff_motor_tor.data[i] = this->dl->darwin_data.motor_state[i].load;
+    buff_motor_vol.data[i] = this->dl->darwin_data.motor_state[i].voltage;
+    buff_motor_tmp.data[i] = this->dl->darwin_data.motor_state[i].temp;
+*/
+  }
+
+/*
+  buff_motor_pos.data = buff_motor_pos_;
+  buff_motor_vel.data = buff_motor_vel_;
+  buff_motor_tor.data = buff_motor_tor_;
+  buff_motor_vol.data = buff_motor_vol_;
+  buff_motor_tmp.data = buff_motor_tmp_;
+*/
 
   buff_imu.linear.x  =         this->dl->darwin_data.imu.acc_x;
   buff_imu.linear.y  =         this->dl->darwin_data.imu.acc_y;
@@ -101,6 +171,12 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
   publisher_state_imu_->publish(buff_imu);
   publisher_state_ft_left_->publish(buff_ft_left);
   publisher_state_ft_right_->publish(buff_ft_right);
+  publisher_state_motor_pos_->publish(buff_motor_pos);
+  publisher_state_motor_vel_->publish(buff_motor_vel);
+  publisher_state_motor_tor_->publish(buff_motor_tor);
+  publisher_state_motor_vol_->publish(buff_motor_vol);
+  publisher_state_motor_tmp_->publish(buff_motor_tmp);
+
  }
  return;
 }

@@ -9,6 +9,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "geometry_msgs/msg/twist.hpp"
+#include "std_msgs/msg/float64_multi_array.hpp"
 
 using std::placeholders::_1;
 
@@ -33,6 +34,11 @@ class DarwinLofaroLegacyRos2 : public rclcpp::Node
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_state_imu_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_state_ft_left_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_state_ft_right_;
+    rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_pos_;
+    rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_vel_;
+    rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_tor_;
+    rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_vol_;
+    rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_tmp_;
     size_t count_;
     bool started = false;
     DarwinLofaro* dl = new DarwinLofaro();
