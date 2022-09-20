@@ -98,8 +98,6 @@ int DarwinLofaroLegacyRos2::update_100hz(int mode)
     ret += this->dl->getMotorSlow(1);
   }
 
-//  ret += this->dl->getMotorSlow(1);
-
   if ( ret > 0 ) ret = 1;
   return ret;
 }
