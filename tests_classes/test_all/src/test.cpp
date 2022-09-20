@@ -73,13 +73,15 @@ int main()
     dl.stageMotor();
     dl.putMotor();
 
+    dl.getMotor();
+
     dl.getImu();
     dl.getFt();
 
     dl.sleep();
     
     ii++;
-    if (ii > 10000) break;
+    if (ii > 1000) break;
 
   }
 

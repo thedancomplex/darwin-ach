@@ -15,8 +15,9 @@ dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEV
 dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
 
 // Initialize GroupBulkRead instance
-dynamixel::GroupBulkRead groupBulkReadImu( portHandler, packetHandler);
-dynamixel::GroupBulkRead groupBulkReadFt(  portHandler, packetHandler);
+dynamixel::GroupBulkRead groupBulkReadImu(    portHandler, packetHandler);
+dynamixel::GroupBulkRead groupBulkReadFt(     portHandler, packetHandler);
+dynamixel::GroupBulkRead groupBulkReadMotor(  portHandler, packetHandler);
 
 /* init */
 DarwinLofaro::DarwinLofaro()
@@ -488,21 +489,12 @@ int DarwinLofaro::stageMotor()
 {
   /* Stage all motor positions torques and speeds */
   int ret = 0;
-  try 
+  for (int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
   {
-    for (int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
-    {
-      ret += this->stageMotor(i);
-    }
+    ret += this->stageMotor(i);
   }
-  catch(...)
-  { 
-    return RETURN_FAIL; 
-  }
-  if (ret > 0)
-  {
-    return RETURN_FAIL;
-  }
+  return RETURN_FAIL; 
+  if (ret > 0) return RETURN_FAIL;
   return RETURN_OK;
 }
 
@@ -617,14 +609,67 @@ int DarwinLofaro::putMotor(int mot)
   return RETURN_OK; 
 }
 
+int DarwinLofaro::getMotor()
+{
+  /* Stage all motor positions torques and speeds */
+  int ret = 0;
+  for (int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
+  {
+    ret += this->getMotor(i);
+  }
+  return RETURN_FAIL; 
+  if (ret > 0) return RETURN_FAIL;
+  return RETURN_OK;
+}
+
+/* Get Motor State */
+int DarwinLofaro::getMotor(int id)
+{
+//  dynamixel::GroupBulkRead groupBulkReadImu(portHandler, packetHandler);
+  bool dxl_addparam_result = false;               // addParam result
+  groupBulkReadMotor.clearParam();
+
+  // Add parameter storage for Dynamixel#1 present position value
+  // +1 is added to read the voltage
+  dxl_addparam_result = groupBulkReadMotor.addParam(id, 
+                                                        MX_ADDRESS_STATE_START, 
+                                                        MX_ADDRESS_STATE_LENGTH);
+
+  if (dxl_addparam_result != true) return RETURN_FAIL;
+  bool dxl_getdata_result = false;                // GetParam result
+  uint8_t dxl_error = 0;                          // Dynamixel error
+
+  int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+
+  dxl_comm_result = groupBulkReadMotor.txRxPacket();
+  packetHandler->getTxRxResult(dxl_comm_result);
+  if (groupBulkReadMotor.getError(id, &dxl_error)) return RETURN_FAIL;
+
+  // Check if data is avaliable
+  dxl_getdata_result = groupBulkReadMotor.isAvailable(id, 
+                                                          CM730_ADDRESS_IMU_START, 
+                                                          CM730_ADDRESS_IMU_LENGTH);
+  if (dxl_getdata_result != true) return RETURN_FAIL;
+
+  // Assign the data
+  uint16_t buff_pos       = groupBulkReadMotor.getData(id, MX_ADDRESS_POS    , 2);
+  uint16_t buff_speed     = groupBulkReadMotor.getData(id, MX_ADDRESS_SPEED  , 2);
+  uint16_t buff_load      = groupBulkReadMotor.getData(id, MX_ADDRESS_LOAD   , 2);
+  uint8_t  buff_voltage   = groupBulkReadMotor.getData(id, MX_ADDRESS_VOLTAGE, 1);
+  uint8_t  buff_temp      = groupBulkReadMotor.getData(id, MX_ADDRESS_TEMP   , 1);
+
+  this->darwin_data.motor_state[id].pos      = this->int2double(buff_pos)    * MOTOR_POS_SCALE;
+  this->darwin_data.motor_state[id].speed    = this->int2double(buff_speed)  * MOTOR_SPEED_SCALE;
+  this->darwin_data.motor_state[id].load     = this->int2double(buff_load)   * MOTOR_LOAD_SCALE;
+  this->darwin_data.motor_state[id].voltage  = (double)buff_voltage          / MOTOR_VOLTAGE_SCALE;
+  this->darwin_data.motor_state[id].temp     = (double)buff_temp             / MOTOR_TEMP_SCALE;
+
+  return RETURN_OK; 
+}
 
 
 
   /* Set Motor Position */
   int setMotor(int mot, double val)
-  { return RETURN_OK; }
-
-  /* Get Motor State */
-  int getMotor(int id)
   { return RETURN_OK; }
 

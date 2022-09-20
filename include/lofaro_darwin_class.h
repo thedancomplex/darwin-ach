@@ -32,6 +32,9 @@ class DarwinLofaro
   /* Set Motor Position */
   int setMotor(int mot, double val);
 
+  /* Get All Motor States */
+  int getMotor();
+
   /* Get Motor State */
   int getMotor(int id);
 

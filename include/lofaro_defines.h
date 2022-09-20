@@ -87,6 +87,7 @@
 #define MX_ADDRESS_REF_LENGTH              6
 #define MX_ADDRESS_REF_START               MX_ADDRESS_POS_GOAL
 
+#define MX_ADDRESS_STATE_LENGTH            8
 #define MX_ADDRESS_POS                     36
 #define MX_ADDRESS_SPEED                   38
 #define MX_ADDRESS_LOAD                    40
