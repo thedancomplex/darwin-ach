@@ -42,6 +42,7 @@ class DarwinLofaroLegacyRos2 : public rclcpp::Node
 
     int update_50hz();
     int update_100hz();
+    int update_100hz(int mode);
     int update_125hz();
 
     size_t count_;
