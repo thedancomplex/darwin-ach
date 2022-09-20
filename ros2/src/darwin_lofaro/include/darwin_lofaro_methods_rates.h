@@ -19,9 +19,31 @@ int DarwinLofaroLegacyRos2::update_50hz()
 }
 
 
+int DarwinLofaroLegacyRos2::update_125hz()
+{
+  /* Designed to update at 125hz (8ms) update rate */
+  /* Lower body, IMU, and FT get priority */
+  
+  int ret = 0;
+
+  /* Stage all Motors */
+  ret += this->dl->stageMotor();
+
+  /* Send to all motors */
+  ret += this->dl->putMotor();
+
+  /* Get State */
+  ret += this->dl->getImu();
+
+  if ( ret > 0 ) ret = 1;
+  return ret;
+}
+
+
+
 int upper_i = 0;
 int ft_i = 0;
-int DarwinLofaroLegacyRos2::update_125hz()
+int DarwinLofaroLegacyRos2::update_100hz()
 {
   /* Designed to update at 125hz (8ms) update rate */
   /* Lower body, IMU, and FT get priority */
@@ -35,23 +57,15 @@ int DarwinLofaroLegacyRos2::update_125hz()
   int ret = 0;
 
   /* Set one upper Ref per cycle */
-/*
   upper_i++;
   if(upper_i >= UPPER_LENGTH) upper_i = 0;
   ret += this->dl->stageMotor(upper_array[upper_i]);
-*/
 
   /* Always stage lower body */
-/*
   for(int i = LOWER_START; i <= LOWER_END; i++)
   {
     ret += this->dl->stageMotor(i);
   }
-*/
-
-
-  /* Stage all Motors */
-  ret += this->dl->stageMotor();
 
   /* Send to all motors */
   ret += this->dl->putMotor();
@@ -60,12 +74,9 @@ int DarwinLofaroLegacyRos2::update_125hz()
   ret += this->dl->getImu();
 
   /* Get Ft every other cycle */
-/*
   if(ft_i == 0) ft_i = 1;
   else ft_i = 0;
- 
   ret += this->dl->getFt(ft_i);
-*/
 
 //  ret += this->dl->getMotorSlow(1);
 

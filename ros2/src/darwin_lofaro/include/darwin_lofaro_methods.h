@@ -66,7 +66,8 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
   publisher_state_motor_vol_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_VOL, 1);
   publisher_state_motor_tmp_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_TMP, 1);
 
-  timer_ = this->create_wall_timer(8ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+  timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+//  timer_ = this->create_wall_timer(8ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
   //timer_ = this->create_wall_timer(20ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
 }
 
@@ -120,7 +121,8 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
 */
 
     //int ret = this->update_50hz();
-    int ret = this->update_125hz();
+    int ret = this->update_100hz();
+    //int ret = this->update_125hz();
 
 
 /*
