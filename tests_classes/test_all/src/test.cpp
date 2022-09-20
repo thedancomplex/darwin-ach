@@ -53,9 +53,11 @@ int main()
     double f = 1.0/dt;
     tick = tock;
     
-    printf("%f, %f, %f, %f\n", dt, f, 
+    printf("%f, %f, %f, %f, %f, %f\n", dt, f, 
                 dl.darwin_data.motor_state[5].pos,
-                dl.darwin_data.motor_state[5].load);
+                dl.darwin_data.motor_state[5].load,
+                dl.darwin_data.motor_state[5].voltage,
+                dl.darwin_data.motor_state[5].temp);
 
     pos_i++;
 

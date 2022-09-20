@@ -683,8 +683,8 @@ int DarwinLofaro::getMotor(int id)
   this->darwin_data.motor_state[id].pos      = lut->dynEncoder2rad(buff_pos, MOTOR_ENC_REZ);
   this->darwin_data.motor_state[id].speed    = lut->dynEncoderSpeed2radPerSec(buff_speed);
   this->darwin_data.motor_state[id].load     = lut->dynSensorLoad2Percent(buff_load);
-  this->darwin_data.motor_state[id].voltage  = (double)buff_voltage  / MOTOR_VOLTAGE_SCALE;
-  this->darwin_data.motor_state[id].temp     = (double)buff_temp     / MOTOR_TEMP_SCALE;
+  this->darwin_data.motor_state[id].voltage  = (double)buff_voltage  * MOTOR_VOLTAGE_SCALE;
+  this->darwin_data.motor_state[id].temp     = (double)buff_temp     * MOTOR_TEMP_SCALE;
 
   return RETURN_OK; 
 }
