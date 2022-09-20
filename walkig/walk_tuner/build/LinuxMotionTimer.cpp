@@ -64,7 +64,7 @@ void LinuxMotionTimer::Start(void)
   printf("lmt6\n");
     memset(&param, 0, sizeof(param));
   printf("lmt7\n");
-    param.sched_priority = 31;// RT
+    param.sched_priority = 31;// RT (Dan this is where the real-time stuff is)
   printf("lmt8\n");
     error = pthread_attr_setschedparam(&attr, &param);
   printf("lmt9\n");
