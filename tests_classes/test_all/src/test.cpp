@@ -73,8 +73,8 @@ int main()
     dl.stageMotor();
     dl.putMotor();
 
-    dl.getMotor();
-    //dl.getMotorSlow(3);
+    //dl.getMotor();
+    dl.getMotorSlow(3);
 
     dl.getImu();
     dl.getFt();
