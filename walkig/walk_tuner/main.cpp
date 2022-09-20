@@ -8,9 +8,9 @@
 #include <signal.h>
 #include <libgen.h>
 #include "cmd_process.h"
-//#include "mjpg_streamer.h"
+#include "mjpg_streamer.h"
 
-#define INI_FILE_PATH       "../../../Data/config.ini"
+#define INI_FILE_PATH       "Data/config.ini"
 
 using namespace Robot;
 
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     minIni* ini = new minIni(INI_FILE_PATH);
 
-    mjpg_streamer* streamer = new mjpg_streamer(0, 0);
+//    mjpg_streamer* streamer = new mjpg_streamer(0, 0);
     httpd::ini = ini;
 
     //////////////////// Framework Initialize ////////////////////////////

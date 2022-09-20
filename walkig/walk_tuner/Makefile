@@ -31,7 +31,7 @@ distclean: clean libclean
 darwin.a:
 	make -C build
 
-$(TARGET): $(OBJS) ../../lib/darwin.a
+$(TARGET): $(OBJS) lib/darwin.a
 	$(CXX) -o $(TARGET) $(OBJS) lib/darwin.a $(LIBS)
 
 # useful to make a backup "make tgz"
