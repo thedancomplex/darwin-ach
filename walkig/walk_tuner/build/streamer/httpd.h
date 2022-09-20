@@ -285,7 +285,8 @@ typedef struct {
   int fd;
 } cfd;
 
-#include "ColorFinder.h"
+// Dan Remove
+//#include "ColorFinder.h"
 
 using namespace Robot;
 
@@ -310,12 +311,12 @@ private:
     static void *client_thread( void *arg );
 
 public:
-    static ColorFinder* finder;
+//    static ColorFinder* finder;
     static char*        ini_section;
-    static ColorFinder* ball_finder;
-    static ColorFinder* red_finder;
-    static ColorFinder* yellow_finder;
-    static ColorFinder* blue_finder;
+//    static ColorFinder* ball_finder;
+//    static ColorFinder* red_finder;
+//    static ColorFinder* yellow_finder;
+//    static ColorFinder* blue_finder;
     static minIni*      ini;
 	static bool ClientRequest;
 
