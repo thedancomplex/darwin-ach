@@ -26,6 +26,7 @@ typedef struct ft_state_def {
         double voltage;
         int16_t raised_x;
         int16_t raised_y;
+        int16_t raised;
 }__attribute__((packed)) ft_state_def_t;
 
 typedef struct motor_state_def {
