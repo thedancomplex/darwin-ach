@@ -28,7 +28,7 @@ using namespace Robot;
 #define INST_SYNC_WRITE		(131)   // 0x83
 #define INST_BULK_READ      (146)   // 0x92
 
-
+// done - no change
 BulkReadData::BulkReadData() :
         start_address(0),
         length(0),
@@ -38,19 +38,19 @@ BulkReadData::BulkReadData() :
         table[i] = 0;
 }
 
+// done - no change
 int BulkReadData::ReadByte(int address)
 {
     if(address >= start_address && address < (start_address + length))
         return (int)table[address];
-
     return 0;
 }
 
+// done - no change
 int BulkReadData::ReadWord(int address)
 {
     if(address >= start_address && address < (start_address + length))
         return CM730::MakeWord(table[address], table[address+1]);
-
     return 0;
 }
 
