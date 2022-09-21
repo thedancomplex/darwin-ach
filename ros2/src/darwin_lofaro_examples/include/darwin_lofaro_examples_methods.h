@@ -31,11 +31,8 @@ using namespace std::chrono_literals;
 #define DARWIN_REF_VEL_0 0.75
 #define DARWIN_REF_TOR_0 0.5
 
-DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_daemon")
+DarwinLofaroLegacyRos2Example::DarwinLofaroLegacyRos2Example() : Node("darwin_lofaro_interface")
 {
-
-//  this->dl = (DarwinLofaro*)malloc(sizeof(DarwinLofaro));
-//  this->dl = new DarwinLofaro();
 
   for( int i = DARWIN_MOT_MIN; i <= DARWIN_MOT_MAX; i++)
   {
@@ -44,31 +41,22 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
     this->dl->setMotTorque(i, DARWIN_REF_TOR_0);
   }
 
-  subscription_ref_pos_     = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_POS,         10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_pos, this, _1));
+  subscription_state_imu_       = this->create_subscription<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_IMU,     1, std::bind(&DarwinLofaroLegacyRos2Example::topic_callback_state_imu_,      this, _1));
+  subscription_state_ft_left_   = this->create_subscription<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_LEFT, 1, std::bind(&DarwinLofaroLegacyRos2Example::topic_callback_state_ft_left_,  this, _1));
+  subscription_state_ft_right_  = this->create_subscription<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_RIGHT,1, std::bind(&DarwinLofaroLegacyRos2Example::topic_callback_state_ft_right_, this, _1));
+  subscription_state_motor_pos_ = this->create_subscription<std_msgs::msg:;Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_POS,1, std::bind(&DarwinLofaroLegacyRos2Example::topic_callback_state_motor_pos_, this, _1));
+  subscription_state_motor_vel_ = this->create_subscription<std_msgs::msg:;Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_VEL,1, std::bind(&DarwinLofaroLegacyRos2Example::topic_callback_state_motor_vel_, this, _1));
+  subscription_state_motor_tor_ = this->create_subscription<std_msgs::msg:;Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_TOR,1, std::bind(&DarwinLofaroLegacyRos2Example::topic_callback_state_motor_tor_, this, _1));
+  subscription_state_motor_vol_ = this->create_subscription<std_msgs::msg:;Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_VOL,1, std::bind(&DarwinLofaroLegacyRos2Example::topic_callback_state_motor_vol_, this, _1));
+  subscription_state_motor_tmp_ = this->create_subscription<std_msgs::msg:;Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_TMP,1, std::bind(&DarwinLofaroLegacyRos2Example::topic_callback_state_motor_tmp_, this, _1));
 
-  subscription_ref_vel_     = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_VEL,         10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_vel, this, _1));
 
-  subscription_ref_tor_     = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_TOR,         10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_ref_tor, this, _1));
+  publisher_ref_pos_ = this->create_publisher<std_msgs::msg::String>(DARWIN_TOPIC_REF_POS, 1);
+  publisher_ref_vel_ = this->create_publisher<std_msgs::msg::String>(DARWIN_TOPIC_REF_VEL, 1);
+  publisher_ref_tor_ = this->create_publisher<std_msgs::msg::String>(DARWIN_TOPIC_REF_TOR, 1);
+  publisher_cmd_     = this->create_publisher<std_msgs::msg::String>(DARWIN_TOPIC_CMD,     1);
+  publisher_clock_   = this->create_publisher<std_msgs::msg::String>(DARWIN_TOPIC_CLOCK,   1);
 
-  subscription_cmd_         = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_CMD,             10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_cmd, this, _1));
-
-  subscription_clock_       = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_CLOCK,           10, std::bind(&DarwinLofaroLegacyRos2::topic_callback_clock, this, _1));
-
-  publisher_state_imu_      = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_IMU,      1);
-
-  publisher_state_ft_left_  = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_LEFT,  1);
-
-  publisher_state_ft_right_ = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_FT_RIGHT, 1);
-
-  publisher_state_motor_pos_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_POS, 1);
-  publisher_state_motor_vel_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_VEL, 1);
-  publisher_state_motor_tor_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_TOR, 1);
-  publisher_state_motor_vol_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_VOL, 1);
-  publisher_state_motor_tmp_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_TMP, 1);
-
-//  timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
-//  timer_ = this->create_wall_timer(8ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
-  //timer_ = this->create_wall_timer(20ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
 }
 
 

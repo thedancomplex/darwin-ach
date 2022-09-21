@@ -1,5 +1,6 @@
 using namespace std::chrono_literals;
 
+/*
 #define ENUM_FT_LEFT                       0
 #define ENUM_FT_RIGHT                      1
 
@@ -30,6 +31,8 @@ using namespace std::chrono_literals;
 #define DARWIN_REF_POS_0 0.0
 #define DARWIN_REF_VEL_0 0.75
 #define DARWIN_REF_TOR_0 0.5
+*/
+
 
 DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_daemon")
 {

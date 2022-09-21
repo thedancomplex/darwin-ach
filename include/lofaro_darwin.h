@@ -10,6 +10,10 @@
 #include "lofaro_utils.h"
 #endif
 
+#ifndef LOFARO_DEFINES_ROS2
+#include "lofaro_defines_ros2.h"
+#endif
+
 #ifdef DARWIN_LOFARO_DAN
 #include "lofaro_darwin_dan.h"
 #endif
