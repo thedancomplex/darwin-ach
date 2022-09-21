@@ -17,6 +17,10 @@ class DarwinLofaroLegacyRos2Example : public rclcpp::Node
 {
   public:
     DarwinLofaroLegacyRos2Example();
+    DarwinLofaro::darwin_data_def_t darwin_data;
+    void set_motor_pos(int mot, double val);
+    void set_motor_vel(int mot, double val);
+    void set_motor_tor(int mot, double val);
 
   private:
     void topic_callback_state_imu_(const geometry_msgs::msg::Twist & msg);
@@ -41,5 +45,7 @@ class DarwinLofaroLegacyRos2Example : public rclcpp::Node
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_ref_tor_;
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_cmd_;
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_clock_;
+//    DarwinLofaro* dl = new DarwinLofaro();
+    /* State and Reference Data */
 };
 
