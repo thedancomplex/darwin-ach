@@ -48,6 +48,50 @@ void DarwinLofaroLegacyRos2::topic_callback_cmd(const std_msgs::msg::String & ms
              this->dl->sleep(2.0);
              printf("Actuators On\n");
              this->started = true;
+
+
+             if(length < 3)
+             {
+                /* Default timer will be 100hz */
+                this->mode = RATE_100HZ;
+                this->timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+               return;
+             }
+             else
+             {
+               std::string s2 = dout[2];
+               if( s2.compare("100") == 0 )
+               { 
+                 this->mode = RATE_100HZ;
+                 this->timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+                 return;
+               }
+               else if( s2.compare("125") == 0 )
+               { 
+                 this->mode = RATE_125HZ;
+                 this->timer_ = this->create_wall_timer(8ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+                 return;
+               }
+               else if( s2.compare("50") == 0 )
+               { 
+                 this->mode = RATE_50HZ;
+                 this->timer_ = this->create_wall_timer(20ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+                 return;
+               }
+               else if( s2.compare("100-motor-state") == 0 )
+               { 
+                 this->mode = RATE_100HZ_MOTOR_STATE;
+                 this->timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+                 return;
+               }
+                
+             }
+
+             this->mode = RATE_100HZ;
+             this->timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+             return;
+
+
            }
            else
            {

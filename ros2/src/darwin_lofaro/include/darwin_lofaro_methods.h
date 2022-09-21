@@ -66,7 +66,7 @@ DarwinLofaroLegacyRos2::DarwinLofaroLegacyRos2() : Node("darwin_lofaro_legacy_da
   publisher_state_motor_vol_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_VOL, 1);
   publisher_state_motor_tmp_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_TMP, 1);
 
-  timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+//  timer_ = this->create_wall_timer(10ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
 //  timer_ = this->create_wall_timer(8ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
   //timer_ = this->create_wall_timer(20ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
 }
@@ -119,10 +119,12 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
   ret += this->dl->getMotorSlow(1);
 
 */
-
-    //int ret = this->update_50hz();
-    int ret = this->update_100hz(HZ_MODE_MOTORS);
-    //int ret = this->update_125hz();
+    int ret = 0;
+    if     ( mode == RATE_50HZ )              ret += this->update_50hz();
+    else if( mode == RATE_100HZ )             ret += this->update_100hz(HZ_MODE_MOTORS);
+    else if( mode == RATE_100HZ_MOTOR_STATE ) ret += this->update_100hz(HZ_MODE_MOTORS_AND_STATE);
+    else if( mode == RATE_125HZ )             ret += this->update_125hz();
+    else                                      ret += this->update_100hz(HZ_MODE_MOTORS);
 
 
 /*

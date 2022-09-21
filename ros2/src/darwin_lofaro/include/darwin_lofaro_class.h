@@ -11,6 +11,11 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
 
+#define RATE_100HZ             0
+#define RATE_125HZ             1
+#define RATE_50HZ              2
+#define RATE_100HZ_MOTOR_STATE 3
+
 using std::placeholders::_1;
 
 class DarwinLofaroLegacyRos2 : public rclcpp::Node
@@ -44,6 +49,7 @@ class DarwinLofaroLegacyRos2 : public rclcpp::Node
     int update_100hz();
     int update_100hz(int mode);
     int update_125hz();
+    int mode = RATE_100HZ;
 
     size_t count_;
     bool started = false;
