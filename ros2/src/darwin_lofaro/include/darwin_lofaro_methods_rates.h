@@ -39,8 +39,6 @@ int DarwinLofaroLegacyRos2::update_125hz()
   return ret;
 }
 
-#define HZ_MODE_MOTORS 0
-#define HZ_MODE_MOTORS_AND_STATE 1
 
 int upper_i = 0;
 int ft_i = 0;

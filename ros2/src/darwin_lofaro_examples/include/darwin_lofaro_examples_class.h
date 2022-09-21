@@ -1,5 +1,7 @@
-#define DARWIN_LOFARO_DYN 1
-#include <lofaro_darwin.h>
+#include <lofaro_defines_ros2.h>
+#include <lofaro_types.h>
+#include <pthread.h>
+#include <unistd.h>
 
 #include <chrono>
 #include <functional>
@@ -13,11 +15,11 @@
 
 using std::placeholders::_1;
 
-class DarwinLofaroLegacyRos2Example : public rclcpp::Node
+class DarwinLofaroLegacyRos2Examples : public rclcpp::Node
 {
   public:
-    DarwinLofaroLegacyRos2Example();
-    DarwinLofaro::darwin_data_def_t darwin_data;
+    DarwinLofaroLegacyRos2Examples();
+    darwin_data_def_t darwin_data;
     void set_motor_pos(int mot, double val);
     void set_motor_vel(int mot, double val);
     void set_motor_tor(int mot, double val);

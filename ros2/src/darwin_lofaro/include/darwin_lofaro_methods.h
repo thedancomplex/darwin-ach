@@ -1,5 +1,12 @@
 using namespace std::chrono_literals;
 
+#include "lofaro_utils_ros2.h"
+#include "darwin_lofaro_methods_ref_pos.h"
+#include "darwin_lofaro_methods_ref_vel.h"
+#include "darwin_lofaro_methods_ref_tor.h"
+#include "darwin_lofaro_methods_rates.h"
+#include "darwin_lofaro_methods_cmd.h"
+
 /*
 #define ENUM_FT_LEFT                       0
 #define ENUM_FT_RIGHT                      1
