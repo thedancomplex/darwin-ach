@@ -115,7 +115,7 @@ InstallRos2SourceIni()
 }
 
 
-InstallRos2Source()
+CreateSwap()
 {
 
 ## create 4gb swap
@@ -132,8 +132,10 @@ InstallRos2Source()
   sudo swapon /var/cache/swap/swap0
   # Check if SWAP information is correct
   sudo swapon -s
+}
 
-
+InstallRos2Source()
+{
 
   cd $HUMBLE_INSTALL_DIR
   colcon build --symlink-install --packages-skip-build-finished --parallel-workers 1
@@ -218,9 +220,10 @@ ShowUsage()
 	echo 'ros2          : installs ros2 Dep and ros2 from  '
         echo '                soruce (~24hr on Darwin OPs CPU) '
 	echo 'ros2-dep      : installs ros2 dep                '
-	echo 'ros2-src-ini  : initialize soruce               '
+	echo 'ros2-src-ini  : initialize soruce                '
 	echo 'ros2-src      : installs ros2 from source        '
         echo '                 (~24hr on Darwin OPs CPU)       '
+	echo 'swap          : Create 4gb swap                  '
 	echo 'cm730         : installs cm730 (ros2) drivers    '
 	echo 'low-latency   : sets serial to low latency mode  '
         echo 'darwin-legacy : install the darwin-legacy system '
@@ -239,6 +242,10 @@ case "$1" in
 	;;
 	'ros2-src' )
 		InstallRos2SourceIni $@
+	;;
+
+	'swap' )
+		CreateSwap $@
 	;;
 
 	'ros2-dep' )
