@@ -72,6 +72,8 @@ InstallRos2Dep()
   sudo apt install python-is-python3
   sudo pip3 install netifaces
   sudo apt install setserial
+  sudo apt install python3-colcon-common-extensions
+
 
   # Remove  root access for serial port
   sudo apt remove modemmanager
@@ -104,7 +106,7 @@ InstallRos2Source()
   #wget https://raw.githubusercontent.com/ros2/ros2/humble/ros2.repos
   vcs import src < ros2.repos.32bit
 
-  sudo apt upgrade
+#  sudo apt upgrade
 
   sudo rosdep init
   rosdep update
