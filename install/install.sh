@@ -12,6 +12,7 @@ BIN_NAME=darwin-lofaro
 InstallRos2()
 {
   InstallRos2Dep
+  InstallRos2SoruceIni
   InstallRos2Soruce
 }
 
@@ -97,7 +98,7 @@ InstallRos2Dep()
 
 }
 
-InstallRos2Source()
+InstallRos2SourceIni()
 {
   mkdir -p $HUMBLE_INSTALL_DIR/src
   cp ros2.repos.32bit $HUMBLE_INSTALL_DIR/
@@ -111,7 +112,11 @@ InstallRos2Source()
   sudo rosdep init
   rosdep update
   rosdep install --from-paths src --ignore-src -y --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers"
+}
 
+
+InstallRos2SourceIni()
+{
   colcon build --symlink-install --packages-skip-build-finished
   echo ". ~/ros2_humble/install/local_setup.bash > /dev/null" >> ~/.bashrc
   echo "setserial /dev/ttyUSB0 low_latency > /dev/null" >> ~/.bashrc
@@ -194,7 +199,8 @@ ShowUsage()
 	echo 'ros2          : installs ros2 Dep and ros2 from  '
         echo '                soruce (~24hr on Darwin OPs CPU) '
 	echo 'ros2-dep      : installs ros2 dep                '
-	echo 'ros2-soruce   : installs ros2 from source        '
+	echo 'ros2-src-ini  : initialize soruce               '
+	echo 'ros2-src      : installs ros2 from source        '
         echo '                 (~24hr on Darwin OPs CPU)       '
 	echo 'cm730         : installs cm730 (ros2) drivers    '
 	echo 'low-latency   : sets serial to low latency mode  '
@@ -209,8 +215,11 @@ case "$1" in
 		InstallRos2 $@
 	;;
 
-	'ros2-source' )
+	'ros2-src' )
 		InstallRos2Source $@
+	;;
+	'ros2-src' )
+		InstallRos2SourceIni $@
 	;;
 
 	'ros2-dep' )
