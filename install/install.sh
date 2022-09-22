@@ -113,8 +113,8 @@ InstallRos2Source()
   rosdep install --from-paths src --ignore-src -y --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers"
 
   colcon build --symlink-install --packages-skip-build-finished
-  echo ". ~/ros2_humble/install/local_setup.bash" >> ~/.bashrc
-  echo "setserial /dev/ttyUSB0 low_latency" >> ~/.bashrc
+  echo ". ~/ros2_humble/install/local_setup.bash > /dev/null" >> ~/.bashrc
+  echo "setserial /dev/ttyUSB0 low_latency > /dev/null" >> ~/.bashrc
 }
 
 InstallCm730()
