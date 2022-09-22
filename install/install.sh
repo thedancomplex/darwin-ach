@@ -13,6 +13,7 @@ InstallRos2()
 {
   InstallRos2Dep
   InstallRos2SoruceIni
+  CreateSwap
   InstallRos2Soruce
 }
 
@@ -117,7 +118,9 @@ InstallRos2SourceIni()
 
 CreateSwap()
 {
-
+  echo '-----------------------------------'
+  echo '-------- Creating 4gb SWAP --------'
+  echo '-----------------------------------'
 ## create 4gb swap
   # Create the partition path
   sudo mkdir -p /var/cache/swap/
@@ -132,6 +135,9 @@ CreateSwap()
   sudo swapon /var/cache/swap/swap0
   # Check if SWAP information is correct
   sudo swapon -s
+  echo '-----------------------------------'
+  echo '-------- 4gb SWAP Created ---------'
+  echo '-----------------------------------'
 }
 
 InstallRos2Source()
