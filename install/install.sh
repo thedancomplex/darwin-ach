@@ -117,6 +117,7 @@ InstallRos2SourceIni()
 
 InstallRos2Source()
 {
+  mkdir -p $HUMBLE_INSTALL_DIR/src
   colcon build --symlink-install --packages-skip-build-finished
   echo ". ~/ros2_humble/install/local_setup.bash > /dev/null" >> ~/.bashrc
   echo "setserial /dev/ttyUSB0 low_latency > /dev/null" >> ~/.bashrc
