@@ -8,7 +8,14 @@ ROS_RUN_FILE=run_darwin_lofaro.sh
 ROS_CLOCK_RUN_FILE=run_darwin_clock_lofaro.sh
 BIN_NAME=darwin-lofaro
 
+
 InstallRos2()
+{
+  InstallRos2Dep
+  InstallRos2Soruce
+}
+
+InstallRos2Dep()
 {
   locale  # check for UTF-8
 
@@ -82,8 +89,14 @@ InstallRos2()
 #
 #  cd $THE_DIR
 
+  echo ' '
+  echo '--------- Please Restart ---------'
+  echo ' '
 
+}
 
+InstallRos2Source()
+{
   mkdir -p $HUMBLE_INSTALL_DIR/src
   cp ros2.repos.32bit $HUMBLE_INSTALL_DIR/
 
@@ -176,7 +189,10 @@ ShowUsage()
 	echo '================================================='
 	echo '================================================='
 	echo ''
-	echo 'ros2          : installs ros 2 from source       '
+	echo 'ros2          : installs ros2 Dep and ros2 from  '
+        echo '                soruce (~24hr on Darwin OPs CPU) '
+	echo 'ros2-dep      : installs ros2 dep                '
+	echo 'ros2-soruce   : installs ros2 from source        '
         echo '                 (~24hr on Darwin OPs CPU)       '
 	echo 'cm730         : installs cm730 (ros2) drivers    '
 	echo 'low-latency   : sets serial to low latency mode  '
@@ -189,6 +205,14 @@ ShowUsage()
 case "$1" in
 	'ros2' )
 		InstallRos2 $@
+	;;
+
+	'ros2-source' )
+		InstallRos2Source $@
+	;;
+
+	'ros2-dep' )
+		InstallRos2Dep $@
 	;;
 	
 	'cm730' )
