@@ -1,19 +1,35 @@
 int DarwinLofaroLegacyRos2::update_50hz()
 {
+  return this->update_50hz(HZ_NULL);
+}
+
+int DarwinLofaroLegacyRos2::update_50hz(int mode)
+{
   /* Designed to update at 50hz */
  
   int ret = 0;
 
-  /* Set Ref */
-  ret += this->dl->stageMotor();
-  ret += this->dl->putMotor();
+  if( mode == HZ_IMU )
+  {
+    /* Set Ref */
+    ret += this->dl->stageMotor();
+    ret += this->dl->putMotor();
 
-  /* Get State */
-  ret += this->dl->getImu();
-  ret += this->dl->getFt();
+    /* Get State */
+    ret += this->dl->getImu();    
+  }
+  else
+  {
+    /* Set Ref */
+    ret += this->dl->stageMotor();
+    ret += this->dl->putMotor();
 
-  ret += this->dl->getMotorSlow(1);
+    /* Get State */
+    ret += this->dl->getImu();
+    ret += this->dl->getFt();
 
+    ret += this->dl->getMotorSlow(1);
+  }
   if ( ret > 0 ) ret = 1;
   return ret;
 }

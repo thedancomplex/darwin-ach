@@ -78,6 +78,12 @@ void DarwinLofaroLegacyRos2::topic_callback_cmd(const std_msgs::msg::String & ms
                  this->timer_ = this->create_wall_timer(20ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
                  return;
                }
+               else if( s2.compare("50-imu") == 0 )
+               { 
+                 this->mode = RATE_50HZ_IMU;
+                 this->timer_ = this->create_wall_timer(20ms, std::bind(&DarwinLofaroLegacyRos2::timer_callback_main_loop, this));
+                 return;
+               }
                else if( s2.compare("100-motor-state") == 0 )
                { 
                  this->mode = RATE_100HZ_MOTOR_STATE;

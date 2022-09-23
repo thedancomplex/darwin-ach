@@ -26,7 +26,10 @@
 #define RATE_125HZ                    1
 #define RATE_50HZ                     2
 #define RATE_100HZ_MOTOR_STATE        3
+#define RATE_50HZ_IMU                 4
 
 #define HZ_MODE_MOTORS                0
 #define HZ_MODE_MOTORS_AND_STATE      1
+#define HZ_IMU                        2
+#define HZ_NULL                       3
 

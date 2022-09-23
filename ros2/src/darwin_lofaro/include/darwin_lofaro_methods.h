@@ -134,6 +134,7 @@ void DarwinLofaroLegacyRos2::timer_callback_main_loop()
     else if( mode == RATE_100HZ )             ret += this->update_100hz(HZ_MODE_MOTORS);
     else if( mode == RATE_100HZ_MOTOR_STATE ) ret += this->update_100hz(HZ_MODE_MOTORS_AND_STATE);
     else if( mode == RATE_125HZ )             ret += this->update_125hz();
+    else if( mode == RATE_50HZ_IMU )          ret += this->update_50hz(HZ_IMU);
     else                                      ret += this->update_100hz(HZ_MODE_MOTORS);
 
 
