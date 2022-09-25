@@ -44,6 +44,12 @@ typedef struct motor_ref_def {
 //        double voltage;
 }__attribute__((packed)) motor_ref_def_t;
 
+typedef struct darwin_cmd_def {
+        int16_t cmd;
+        int16_t data[4];
+        double  data_float[4];
+}__attribute__((packed)) darwin_cmd_def_t;
+
 typedef struct darwin_data_def {
   motor_ref_def_t     motor_ref[DARWIN_MOTOR_NUM+1];
   motor_state_def_t   motor_state[DARWIN_MOTOR_NUM+1];

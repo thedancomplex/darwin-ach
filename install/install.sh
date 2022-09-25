@@ -183,7 +183,10 @@ sudo apt install dkms
 git clone https://github.com/golems/ach
 
 autoreconf -i
-./configure 
+./configure --with-python --enable-dkms=no
+
+make
+sudo make install
 }
 
 DarwinLegacyRos2()

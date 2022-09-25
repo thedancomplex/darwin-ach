@@ -65,7 +65,7 @@ int DarwinLofaroLegacyRos2::update_100hz()
 
 int DarwinLofaroLegacyRos2::update_100hz(int mode)
 {
-  /* Designed to update at 125hz (8ms) update rate */
+  /* Designed to update at 100hz (10ms) update rate */
   /* Lower body, IMU, and FT get priority */
 
   int ret = 0;
