@@ -10,3 +10,7 @@ typedef enum {
 	HZ_REF_SLOW_TOP,
         DARWIN_HZ_MODE_COUNT
 }__attribute__((packed)) darwin_hz_mode_index_t;
+
+#define HZ_REF_DEFAULT HZ_NULL
+#define HZ_STATE_DEFAULT HZ_STATE_100_IMU_FT_SLOW
+#define HZ_RATE_DEFAULT 100.0

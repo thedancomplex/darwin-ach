@@ -20,6 +20,10 @@ class DarwinAch
     int main_loop();
     int main_loop(int mode_state);
     int main_loop(int mode_state, int mode_ref);
+    int loop();
+    int loop(double hz);
+    int loop(double hz, int mode_state);
+    int loop(double hz, int mode_state, int mode_ref);
     int do_ref(int mode);
     int do_state(int mode);
     DarwinLofaro* dl = new DarwinLofaro();
@@ -39,6 +43,37 @@ class DarwinAch
     darwin_cmd_def_t  darwin_cmd;
 
 };
+int DarwinAch::loop()
+{
+  return this->loop(HZ_RATE_DEFAULT);
+}
+
+int DarwinAch::loop(double hz)
+{
+  return this->loop(hz, HZ_STATE_DEFAULT);
+}
+
+int DarwinAch::loop(double hz, int mode_state)
+{
+  return this->loop(hz, mode_state, HZ_REF_DEFAULT);
+}
+
+int DarwinAch::loop(double hz, int mode_state, int mode_ref)
+{
+  int ref = 0;
+
+  this->rate(hz);
+  
+  bool do_loop = true;
+  while(do_loop)
+  {
+    this->main_loop(mode_state, mode_ref);
+    this->sleep();
+  }
+
+  if( ref > 0 ) ref = 1;
+  return ref;
+}
 
 void DarwinAch::DarwinAch()
 {
@@ -52,16 +87,13 @@ int ft_i = 0;
 int upper_i = 0;
 int DarwinAch::main_loop()
 {
-  return this->main_loop(
-                   this->HZ_STATE_100_IMU_FT_SLOW, 
-                   this->HZ_NULL
-                        );
+  return this->main_loop(HZ_STATE_DEFAULT);
 }
 
 int DarwinAch::main_loop(int mode_state)
 {
   if (mode_state >= this->DARWIN_HZ_MODE_COUNT) return 1;
-  return this->main_loop(mode_state, this->HZ_NULL);
+  return this->main_loop(mode_state, HZ_REF_DEFAULT);
 }
 
 int DarwinAch::main_loop(int mode_state, int mode_ref)
