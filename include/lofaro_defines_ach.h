@@ -1,7 +1,8 @@
 #define LOFARO_DEFINE_ACH 1
 
 typedef enum {
-        HZ_NULL,
+        HZ_STATE_NULL,
+        HZ_REF_NULL,
 	HZ_STATE_50_IMU_MOTOR_FT,
 	HZ_STATE_50_IMU,
 	HZ_STATE_125_IMU,
@@ -11,6 +12,6 @@ typedef enum {
         DARWIN_HZ_MODE_COUNT
 }__attribute__((packed)) darwin_hz_mode_index_t;
 
-#define HZ_REF_DEFAULT HZ_NULL
+#define HZ_REF_DEFAULT HZ_REF_NULL
 #define HZ_STATE_DEFAULT HZ_STATE_100_IMU_FT_SLOW
 #define HZ_RATE_DEFAULT 100.0
