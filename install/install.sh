@@ -171,6 +171,19 @@ LowLatency()
 	echo '---- Low Latency Set ----'
 }
 
+AchInstall()
+{
+sudo apt install autotools-dev
+sudo apt-get install autoconf
+sudo apt-get install autoconf automake libtool autoconf-archive
+sudo apt-get install linux-headers-generic dkms openbsd-inetd help2man man2html docbook-utils avahi-utils
+sudo apt-get install doxygen
+git clone https://github.com/golems/ach
+
+autoreconf -i
+./configure 
+}
+
 DarwinLegacyRos2()
 {
 	DarwinLegacy
