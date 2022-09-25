@@ -178,6 +178,8 @@ sudo apt-get install autoconf
 sudo apt-get install autoconf automake libtool autoconf-archive
 sudo apt-get install linux-headers-generic dkms openbsd-inetd help2man man2html docbook-utils avahi-utils
 sudo apt-get install doxygen
+sudo apt install dkms
+
 git clone https://github.com/golems/ach
 
 autoreconf -i

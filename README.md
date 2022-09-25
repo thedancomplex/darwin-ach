@@ -13,3 +13,5 @@ Designed to talk directly with the CM730.  Updates the state and reference
 # Todo:
 * Impliment walking via ROS utilizing the ROBOTIS walking gate but comunicating via ROS
 * Impliment alternative serial library to cut down on the latency and overhead caused by the dyn lib
+* Make a version that just publishes the IMU data and takes upper body commands and a twist message for walking
+
