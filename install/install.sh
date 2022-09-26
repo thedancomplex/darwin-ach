@@ -9,6 +9,7 @@ ROS_CLOCK_RUN_FILE=run_darwin_clock_lofaro.sh
 BIN_NAME=darwin-lofaro
 
 
+
 InstallRos2()
 {
   InstallRos2Dep
@@ -186,7 +187,7 @@ apt-get install openbsd-inetd
 
 git clone https://github.com/thedancomplex/ach
 cd ach
-git checkout os/32bit
+git checkout no/benchmarks
 
 autoreconf -i
 ./configure --with-python --enable-dkms=no
