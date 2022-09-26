@@ -74,10 +74,12 @@ DarwinAch::DarwinAch()
 
   ach_status_t r = ACH_OK;
   /* Create Channels if they need to be created */
+/*
   r = ach_create(DARWIN_ACH_CHAN_REF,        10, 2000, NULL );
   r = ach_create(DARWIN_ACH_CHAN_STATE,      10, 2000, NULL );
   r = ach_create(DARWIN_ACH_CHAN_CMD,        10, 2000, NULL );
   r = ach_create(DARWIN_ACH_CHAN_CMD_RETURN, 10, 2000, NULL );
+*/
 
   /* Open Channels */
   r = ach_open(&this->chan_darwin_ref,        DARWIN_ACH_CHAN_REF,        NULL);
