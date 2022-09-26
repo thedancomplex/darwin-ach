@@ -173,20 +173,32 @@ LowLatency()
 
 AchInstall()
 {
+THE_DIR=$(pwd)
+cd /tmp
+
 sudo apt install autotools-dev
 sudo apt-get install autoconf
 sudo apt-get install autoconf automake libtool autoconf-archive
 sudo apt-get install linux-headers-generic dkms openbsd-inetd help2man man2html docbook-utils avahi-utils
 sudo apt-get install doxygen
 sudo apt install dkms
+apt-get install openbsd-inetd
 
-git clone https://github.com/golems/ach
+git clone https://github.com/thedancomplex/ach
+cd ach
+git checkout os/32bit
 
 autoreconf -i
 ./configure --with-python --enable-dkms=no
 
 make
 sudo make install
+
+echo '8076  stream  tcp  nowait  nobody  /usr/local/bin/achd /usr/local/bin/achd serve' | sudo tee -a /etc/inetd.conf
+
+sudo service openbsd-inetd restart
+
+cd $THE_DIR
 }
 
 DarwinLegacyRos2()
