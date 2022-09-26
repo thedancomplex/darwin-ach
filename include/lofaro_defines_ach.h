@@ -15,3 +15,8 @@ typedef enum {
 #define HZ_REF_DEFAULT HZ_REF_NULL
 #define HZ_STATE_DEFAULT HZ_STATE_100_IMU_FT_SLOW
 #define HZ_RATE_DEFAULT 100.0
+
+#define DARWIN_ACH_CHAN_REF          "darwin-ach-chan-ref"
+#define DARWIN_ACH_CHAN_STATE        "darwin-ach-chan-state"
+#define DARWIN_ACH_CHAN_CMD          "darwin-ach-chan-cmd"
+#define DARWIN_ACH_CHAN_CMD_RETURN   "darwin-ach-chan-cmd-return"

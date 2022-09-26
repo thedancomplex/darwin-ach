@@ -37,19 +37,43 @@ class DarwinAch
     /* Command channel */
     ach_channel_t chan_darwin_cmd;
 
+    /* Command Channel Return */
+    ach_channel_t chan_darwin_cmd_return;
+
     /* Data types */
     darwin_data_def_t darwin_ref;
     darwin_data_def_t darwin_state;
     darwin_cmd_def_t  darwin_cmd;
+    darwin_cmd_def_t  darwin_cmd_return;
 
 };
 
 DarwinAch::DarwinAch()
 {
   /* Zero Data */
-  memset(&this->darwin_ref,   0, sizeof(this->darwin_ref));
-  memset(&this->darwin_state, 0, sizeof(this->darwin_state));
-  memset(&this->darwin_cmd,   0, sizeof(this->darwin_cmd));
+  memset(&this->darwin_ref,          0, sizeof(this->darwin_ref));
+  memset(&this->darwin_state,        0, sizeof(this->darwin_state));
+  memset(&this->darwin_cmd,          0, sizeof(this->darwin_cmd));
+  memset(&this->darwin_cmd_return,   0, sizeof(this->darwin_cmd_return));
+
+  /* Make Ach Channels */
+  printf("ACH_OK = %d\n", ACH_OK);
+  printf("ACH_EEXIST = %d\n", ACH_EEXIST);
+  printf("ACH_ENOENT = %d\n", ACH_ENOENT);
+  ach_status_t r = ach_open(&this->chan_darwin_ref,        DARWIN_ACH_CHAN_REF,        NULL);
+  printf("r = %d\n", r);
+               r = ach_open(&this->chan_darwin_state,      DARWIN_ACH_CHAN_STATE,      NULL);
+  printf("r = %d\n", r);
+               r = ach_open(&this->chan_darwin_cmd,        DARWIN_ACH_CHAN_CMD,        NULL);
+  printf("r = %d\n", r);
+               r = ach_open(&this->chan_darwin_cmd_return, DARWIN_ACH_CHAN_CMD_RETURN, NULL);
+  printf("r = %d\n", r);
+
+  /* Do initial put on the channel to make sure the exist */
+  ach_put(&this->chan_darwin_ref,        &this->darwin_ref,        sizeof(this->darwin_ref));
+  ach_put(&this->chan_darwin_state,      &this->darwin_state,      sizeof(this->darwin_state));
+  ach_put(&this->chan_darwin_cmd,        &this->darwin_cmd,        sizeof(this->darwin_cmd));
+  ach_put(&this->chan_darwin_cmd_return, &this->darwin_cmd_return, sizeof(this->darwin_cmd_return));
 }
 
 int DarwinAch::loop()
