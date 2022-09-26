@@ -26,7 +26,10 @@ class DarwinAch
     int loop(double hz, int mode_state, int mode_ref);
     int do_ref(int mode);
     int do_state(int mode);
+    int do_cmd(int mode);
     DarwinLofaro* dl = new DarwinLofaro();
+
+    bool run_loop = false;
 
     /* Reference Channel */
     ach_channel_t chan_darwin_ref;  
@@ -74,6 +77,48 @@ DarwinAch::DarwinAch()
   ach_put(&this->chan_darwin_state,      &this->darwin_state,      sizeof(this->darwin_state));
   ach_put(&this->chan_darwin_cmd,        &this->darwin_cmd,        sizeof(this->darwin_cmd));
   ach_put(&this->chan_darwin_cmd_return, &this->darwin_cmd_return, sizeof(this->darwin_cmd_return));
+}
+
+
+int DarwinAch::do_cmd(int mode)
+{
+  size_t fs;
+  /* Get the latest cmd channel */
+  ach_status_t r = ach_get( &this->chan_darwin_cmd, &this->darwin_cmd, sizeof(this->darwin_cmd), &fs, NULL, ACH_O_LAST );
+  if(ACH_OK != r) {fprintf(stderr, "Ref r = %s\n",ach_result_to_string(r));}
+
+
+  bool do_return = false;
+  if( ( r == ACH_OK ) | ( r == ACH_MISSED_FRAME ) )
+  {
+    switch (this->darwin_cmd.cmd)
+    {
+      case DARWIN_CMD_ON:
+        this->dl->setup("/dev/ttyUSB0", true);
+        this->dl->sleep(1.0);
+        this->dl->on();
+        this->dl->sleep(1.0);
+        run_loop = true;
+        do_return = true;
+      case DARWIN_CMD_OFF:
+        run_loop = false;
+        this->dl->off();
+        this->dl->stop();
+        do_return = true;
+      default:
+        break;
+    }
+  }
+  else return 1;
+
+  if(do_return)
+  {
+    memset(&this->darwin_cmd_return,   0, sizeof(this->darwin_cmd_return));
+    this->darwin_cmd_return.cmd = DARWIN_CMD_OK;
+    ach_put(&this->chan_darwin_cmd_return, &this->darwin_cmd_return, sizeof(this->darwin_cmd_return));
+  }
+
+  return 0;
 }
 
 int DarwinAch::loop()
@@ -124,22 +169,14 @@ int DarwinAch::main_loop(int mode_state)
 
 int DarwinAch::main_loop(int mode_state, int mode_ref)
 {
-
-  size_t fs;
- 
-  /* Get the latest reference channel */
-  ach_status_t r = ach_get( &this->chan_darwin_ref, &this->darwin_ref, sizeof(this->darwin_ref), &fs, NULL, ACH_O_LAST );
-  if(ACH_OK != r) {fprintf(stderr, "Ref r = %s\n",ach_result_to_string(r));}
-
-
-  /* Get the latest cmd channel */
-  r = ach_get( &this->chan_darwin_cmd, &this->darwin_cmd, sizeof(this->darwin_cmd), &fs, NULL, ACH_O_LAST );
-  if(ACH_OK != r) {fprintf(stderr, "Ref r = %s\n",ach_result_to_string(r));}
-
-
   int ret = 0;
-  ret += this->do_ref(mode_ref);
-  ret += this->do_state(mode_state);
+  ret += this->do_cmd(0);
+  if(run_loop)
+  {
+    ret += this->do_ref(mode_ref);
+    ret += this->do_state(mode_state);
+  }
+  else ret += 1;
 
   if( ret > 0 ) ret = 1;
   return ret;
@@ -148,6 +185,11 @@ int DarwinAch::main_loop(int mode_state, int mode_ref)
 
 int DarwinAch::do_ref(int mode)
 {
+  size_t fs;
+  /* Get the latest reference channel */
+  ach_status_t r = ach_get( &this->chan_darwin_ref, &this->darwin_ref, sizeof(this->darwin_ref), &fs, NULL, ACH_O_LAST );
+  if(ACH_OK != r) {fprintf(stderr, "Ref r = %s\n",ach_result_to_string(r));}
+
   int ret = 0;
   /* Set Reference Here */
   for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
@@ -193,6 +235,7 @@ int DarwinAch::do_ref(int mode)
 
 int DarwinAch::do_state(int mode)
 {
+  size_t fs;
   int ret = 0;
   /* Get State */
   switch (mode)

@@ -11,6 +11,19 @@ ROS_CLOCK_RUN_FILE=run_darwin_clock_lofaro.sh
 DARWIN_CLOCK_SCREEN_NAME=darwin-lofaro-clock
 DARWIN_SCREEN_NAME=darwin-lofaro
 
+DARWIN_ACH_CHAN_REF='darwin-ach-chan-ref'
+DARWIN_ACH_CHAN_STATE='darwin-ach-chan-state'
+DARWIN_ACH_CHAN_CMD='darwin-ach-chan-cmd'
+DARWIN_ACH_CHAN_CMD_RETURN='darwin-ach-chan-cmd-return'
+
+MakeAch()
+{
+  ach -1 -C $DARWIN_ACH_CHAN_REF -m 10 -n 3000
+  ach -1 -C $DARWIN_ACH_CHAN_STATE -m 10 -n 3000
+  ach -1 -C $DARWIN_ACH_CHAN_CMD -m 10 -n 3000
+  ach -1 -C $DARWIN_ACH_CHAN_CMD_RETURN -m 10 -n 3000
+}
+
 LowLatency()
 {
 	setserial /dev/ttyUSB0 low_latency
@@ -154,6 +167,8 @@ ShowUsage()
 	echo 'stop-clock    : Stops the Darwin Lofaro Legacy   '
 	echo '                clock                            '
 	echo ''
+	echo 'ach-make      : Make ach channels                '
+	echo ''
 	echo
 }
 
@@ -189,7 +204,9 @@ case "$1" in
 		DarwinLegacyClockRos2Stop $@
 	;;
 	
-	
+	'ach-make' )
+		MakeAch $@
+	;;
 	
 	* )
 		ShowUsage
