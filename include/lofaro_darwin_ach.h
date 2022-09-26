@@ -63,7 +63,20 @@ DarwinAch::DarwinAch()
   printf("ACH_OK = %d\n", ACH_OK);
   printf("ACH_EEXIST = %d\n", ACH_EEXIST);
   printf("ACH_ENOENT = %d\n", ACH_ENOENT);
-  ach_status_t r = ach_open(&this->chan_darwin_ref,        DARWIN_ACH_CHAN_REF,        NULL);
+
+  ach_status_t r = ACH_OK;
+  /* Create Channels if they need to be created */
+  r = ach_create(DARWIN_ACH_CHAN_REF,        10, 3000, NULL );
+  printf("r = %d\n", r);
+  r = ach_create(DARWIN_ACH_CHAN_STATE,      10, 3000, NULL );
+  printf("r = %d\n", r);
+  r = ach_create(DARWIN_ACH_CHAN_CMD,        10, 3000, NULL );
+  printf("r = %d\n", r);
+  r = ach_create(DARWIN_ACH_CHAN_CMD_RETURN, 10, 3000, NULL );
+  printf("r = %d\n", r);
+
+  /* Open Channels */
+  r = ach_open(&this->chan_darwin_ref,        DARWIN_ACH_CHAN_REF,        NULL);
   printf("r = %d\n", r);
                r = ach_open(&this->chan_darwin_state,      DARWIN_ACH_CHAN_STATE,      NULL);
   printf("r = %d\n", r);
