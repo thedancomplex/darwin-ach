@@ -20,22 +20,11 @@
 #include <unistd.h>
 int main()
 {
-  printf("make system object\n");
+  printf("Make System Object\n");
   DarwinAch da = DarwinAch();
   int r = 0;
-  printf("use cmd to turn on system\n");
-  r = da.cmd(DARWIN_CMD_ON, true);
-  if( r == DARWIN_CMD_OK ) printf("Darwin Started\n");
-  else printf("Darwin Fail to start\n");
+  printf("Start System Loop\n");
+  r = da.loop();
   
-  while(true)
-  {
-    da.getState();
-    printf("ax= %f, ay=%f, az=%f\n",
-            da.darwin_state.imu.acc_x,
-            da.darwin_state.imu.acc_y,
-            da.darwin_state.imu.acc_z);
-    da.sleep(0.01);
-  }
   return 0;
 }

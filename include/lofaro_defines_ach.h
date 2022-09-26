@@ -19,11 +19,12 @@ typedef enum {
 #define DARWIN_ACH_CHAN_REF          "darwin-ach-chan-ref"
 #define DARWIN_ACH_CHAN_STATE        "darwin-ach-chan-state"
 #define DARWIN_ACH_CHAN_CMD          "darwin-ach-chan-cmd"
-#define DARWIN_ACH_CHAN_CMD_RETURN   "darwin-ach-chan-cmd-return"
+#define DARWIN_ACH_CHAN_CMD_RETURN   "darwin-ach-chan-ret"
 
 typedef enum {
 	DARWIN_CMD_OK,
 	DARWIN_CMD_ON,
 	DARWIN_CMD_OFF,
+	DARWIN_CMD_START
         
 }__attribute__((packed)) darwin_cmd_mode_index_t;
