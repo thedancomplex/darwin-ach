@@ -16,7 +16,8 @@ DARWIN_ACH_CHAN_STATE='darwin-ach-chan-state'
 DARWIN_ACH_CHAN_CMD='darwin-ach-chan-cmd'
 DARWIN_ACH_CHAN_CMD_RETURN='darwin-ach-chan-ret'
 
-DARWIN_IP='10.111.111.11'
+DARWIN_IP='10.5.0.249'
+#DARWIN_IP='10.111.111.11'
 
 MakeAch()
 {
@@ -223,7 +224,7 @@ case "$1" in
 	;;
 
 	'ach-remote' )
-		AchRemote DARWIN_IP
+		AchRemote $DARWIN_IP
 	;;
 	
 	* )

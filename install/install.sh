@@ -210,13 +210,13 @@ DarwinLegacyRos2()
 	cp ../scripts/$ROS_BUILD_FILE $INSTALL_DIR/ros2
 	cp ../scripts/$ROS_RUN_FILE $INSTALL_DIR/ros2
 	cp ../scripts/$ROS_CLOCK_RUN_FILE $INSTALL_DIR/ros2
-	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
+#	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
 	cd $INSTALL_DIR
-	sudo chmod +x $BIN_NAME
+#	sudo chmod +x $BIN_NAME
 	cd $INSTALL_DIR/ros2
 	chmod +x $ROS_BUILD_FILE
-	sudo rm /usr/bin/$BIN_NAME
-	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
+#	sudo rm /usr/bin/$BIN_NAME
+#	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
 	chmod +x $ROS_RUN_FILE
 	source $ROS_BUILD_FILE
 	sudo chmod -R 755 $INSTALL_DIR/ros2
@@ -238,6 +238,12 @@ DarwinLegacy()
 #	echo $INCLUDE_DIR
 #	sudo rm $INCLUDE_DIR
 #        sudo ln -s $INSTALL_DIR/include $INCLUDE_DIR
+	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
+	cd $INSTALL_DIR
+	sudo chmod +x $BIN_NAME
+	sudo rm /usr/bin/$BIN_NAME
+	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
+	cd $THE_DIR
 
 }
 
