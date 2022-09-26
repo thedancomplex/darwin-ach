@@ -7,7 +7,7 @@ ROS_BUILD_FILE=do_build.sh
 ROS_RUN_FILE=run_darwin_lofaro.sh
 ROS_CLOCK_RUN_FILE=run_darwin_clock_lofaro.sh
 BIN_NAME=darwin-lofaro
-
+SHM_NAME=setshm.sh
 
 
 InstallRos2()
@@ -239,10 +239,15 @@ DarwinLegacy()
 #	sudo rm $INCLUDE_DIR
 #        sudo ln -s $INSTALL_DIR/include $INCLUDE_DIR
 	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
+        sudo mkdir -p /etc/rc.local.d/
+        sudo cp ../scripts/$SHM_NAME $INSTALL_DIR
 	cd $INSTALL_DIR
 	sudo chmod +x $BIN_NAME
+	sudo chmod +x $SHM_NAME
 	sudo rm /usr/bin/$BIN_NAME
+	sudo rm /etc/rc.local.d/$SHM_NAME
 	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
+	sudo ln -s $INSTALL_DIR/$SHM_NAME /etc/rc.local.d/
 	cd $THE_DIR
 
 }
