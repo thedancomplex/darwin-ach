@@ -23,6 +23,7 @@ class DarwinAchClient
     /* Update Methods */
     int getState();
     int stageRefPos(int mot, double val);
+    int stageRefPosD(int mot, double val);
     int stageRefVel(int mot, double val);
     int stageRefTorque(int mot, double val);
     int postRef();
@@ -126,6 +127,11 @@ int DarwinAchClient::cmd(int cmd, bool block)
 }
 
 
+int DarwinAchClient::stageRefPosD(int mot, double val)
+{
+  val = val / 180.0 * M_PI;
+  return this->stageRefPos(mot, val);
+}
 
 int DarwinAchClient::stageRefPos(int mot, double val)
 {

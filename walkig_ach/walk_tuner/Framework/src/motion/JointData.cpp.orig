@@ -168,9 +168,6 @@ void JointData::SetValue(int id, int value)
 
     m_Value[id] = value;
     m_Angle[id] = MX28::Value2Angle(value);
-
-    //Dan
-    this->dac->stageRefPosD(id, m_Angle[id]);
 }
 
 int JointData::GetValue(int id)
@@ -187,9 +184,6 @@ void JointData::SetAngle(int id, double angle)
 
     m_Angle[id] = angle;
     m_Value[id] = MX28::Angle2Value(angle);
-
-    //Dan
-    this->dac->stageRefPosD(id, m_Angle[id]);
 }
 
 double JointData::GetAngle(int id)

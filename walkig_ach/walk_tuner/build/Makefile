@@ -13,7 +13,7 @@ ARFLAGS = cr
 
 TARGET = darwin.a
 
-INCLUDE_DIRS = -I../include -I../Framework/include
+INCLUDE_DIRS = -I../include -I../Framework/include -I../../../include
 
 CXXFLAGS += -O2 -DLINUX -Wall -std=c++11 -shared $(INCLUDE_DIRS)
 #CXXFLAGS += -O2 -DLINUX -Wall -shared $(INCLUDE_DIRS)

@@ -10,7 +10,7 @@
 TARGET = walk_tuner
 
 CXX = g++
-INCLUDE_DIRS = -I./include -I./Framework/include
+INCLUDE_DIRS = -I./include -I./Framework/include -I./../../include
 CXXFLAGS +=	-O2 -DLINUX -g -Wall -fmessage-length=0 $(INCLUDE_DIRS)
 LIBS += -lpthread -lncurses -lrt -ljpeg
 
