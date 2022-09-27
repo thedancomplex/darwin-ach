@@ -1,12 +1,12 @@
 default: all
 
-CFLAGS := -I./../../include -I/usr/local/include/dynamixel_sdk -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g 
+CFLAGS := -I./../../include  -Wall
 CC := g++
 
 BINARIES := test
 all : $(BINARIES)
 
-LIBS := -lrt -ldxl_x86_cpp -lstdc++ -lach
+LIBS := -lrt -lstdc++ -lach
 
 $(BINARIES): src/test.o
 	gcc -o $@ $< $(LIBS)

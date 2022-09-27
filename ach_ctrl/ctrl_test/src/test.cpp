@@ -16,26 +16,26 @@
 
 /* Author: Daniel M. Lofaro */
 
-#include "lofaro_darwin_ach.h"
+#include "lofaro_darwin_ach_client.h"
 #include <unistd.h>
 int main()
 {
   printf("make system object\n");
-  DarwinAch da = DarwinAch();
+  DarwinAchClient dac = DarwinAchClient();
   int r = 0;
   printf("use cmd to turn on system\n");
-  r = da.cmd(DARWIN_CMD_ON, true);
+  r = dac.cmd(DARWIN_CMD_ON, true);
   if( r == DARWIN_CMD_OK ) printf("Darwin Started\n");
   else printf("Darwin Fail to start\n");
   
   while(true)
   {
-    da.getState();
+    dac.getState();
     printf("ax= %f, ay=%f, az=%f\n",
-            da.darwin_state.imu.acc_x,
-            da.darwin_state.imu.acc_y,
-            da.darwin_state.imu.acc_z);
-    da.sleep(0.01);
+            dac.darwin_state.imu.acc_x,
+            dac.darwin_state.imu.acc_y,
+            dac.darwin_state.imu.acc_z);
+    dac.sleep(0.01);
   }
   return 0;
 }
