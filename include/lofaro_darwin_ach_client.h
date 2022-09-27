@@ -19,8 +19,14 @@ class DarwinAchClient
     int cmd(int cmd, bool block);
     int sleep(double val);
     double time();
+
     /* Update Methods */
     int getState();
+    int stageRefPos(int mot, double val);
+    int stageRefVel(int mot, double val);
+    int stageRefTorque(int mot, double val);
+    int postRef();
+
 
     /* Data types */
     darwin_data_def_t darwin_ref;
@@ -53,6 +59,14 @@ DarwinAchClient::DarwinAchClient()
   memset(&this->darwin_state,        0, sizeof(this->darwin_state));
   memset(&this->darwin_cmd,          0, sizeof(this->darwin_cmd));
   memset(&this->darwin_cmd_return,   0, sizeof(this->darwin_cmd_return));
+
+  for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+  {
+    this->darwin_ref.motor_ref[i].pos    = DARWIN_REF_POS_0;
+    this->darwin_ref.motor_ref[i].speed  = DARWIN_REF_VEL_0;
+    this->darwin_ref.motor_ref[i].torque = DARWIN_REF_TOR_0;
+  }
+
 
   /* Make Ach Channels */
   ach_status_t r = ACH_OK;
@@ -111,3 +125,32 @@ int DarwinAchClient::cmd(int cmd, bool block)
   return (int)r;
 }
 
+
+
+int DarwinAchClient::stageRefPos(int mot, double val)
+{
+  if(mot > DARWIN_MOTOR_MAX) return 1;
+  this->darwin_ref.motor_ref[mot].pos = val;
+  return 0;
+}
+
+int DarwinAchClient::stageRefVel(int mot, double val)
+{
+  if(mot > DARWIN_MOTOR_MAX) return 1;
+  this->darwin_ref.motor_ref[mot].speed = val;
+  return 0;
+}
+
+int DarwinAchClient::stageRefTorque(int mot, double val)
+{
+  if(mot > DARWIN_MOTOR_MAX) return 1;
+  this->darwin_ref.motor_ref[mot].torque = val;
+  return 0;
+}
+
+int DarwinAchClient::postRef()
+{
+  ach_status_t r = ACH_OK;
+  r = ach_put(&this->chan_darwin_ref, &this->darwin_ref, sizeof(this->darwin_ref));
+  return (int)r;
+}

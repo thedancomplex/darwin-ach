@@ -27,15 +27,39 @@ int main()
   r = dac.cmd(DARWIN_CMD_ON, true);
   if( r == DARWIN_CMD_OK ) printf("Darwin Started\n");
   else printf("Darwin Fail to start\n");
-  
+
+
+  double tick  = dac.time();  
+  double tick2 = dac.time();
+  double val = 0.3;
+  int mot = 19;
   while(true)
   {
     dac.getState();
+
+    dac.stageRefPos(mot, val);
+    dac.postRef();
+
     printf("ax= %f, ay=%f, az=%f\n",
             dac.darwin_state.imu.acc_x,
             dac.darwin_state.imu.acc_y,
             dac.darwin_state.imu.acc_z);
     dac.sleep(0.01);
+
+    double tock2 = dac.time();
+    if( (tock2 - tick2) > 3.0 )
+    {
+      val = -val;
+      tick2 = tock2;
+    }
+
+
+    double tock = dac.time();
+    if( (tock - tick) > 100.0 ) break;
   }
+
+  r = dac.cmd(DARWIN_CMD_OFF, true);
+  if( r == DARWIN_CMD_OK ) printf("Darwin Stopped\n");
+
   return 0;
 }
