@@ -21,6 +21,13 @@ typedef enum {
 #define DARWIN_ACH_CHAN_CMD          "darwin-ach-chan-cmd"
 #define DARWIN_ACH_CHAN_CMD_RETURN   "darwin-ach-chan-ret"
 
+//#include "lofaro_defines_ach.h"
+
+#define DARWIN_REF_POS_0 0.0
+#define DARWIN_REF_VEL_0 0.75
+#define DARWIN_REF_TOR_0 0.5
+
+
 typedef enum {
 	DARWIN_CMD_OK,
 	DARWIN_CMD_ON,

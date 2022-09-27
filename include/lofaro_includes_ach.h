@@ -12,9 +12,10 @@
 #include <inttypes.h>
 #include <ach.h>
 
+/*
 #include "lofaro_defines_ach.h"
 
 #define DARWIN_REF_POS_0 0.0
 #define DARWIN_REF_VEL_0 0.75
 #define DARWIN_REF_TOR_0 0.5
-
+*/

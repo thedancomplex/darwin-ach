@@ -1,6 +1,6 @@
 default: all
 
-CFLAGS := -I./../../include  -Wall
+CFLAGS := -I./../../include  -Wall -I./include -I./src/minIni
 CC := g++
 
 BINARIES := test

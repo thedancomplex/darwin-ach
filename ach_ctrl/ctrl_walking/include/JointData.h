@@ -8,10 +8,6 @@
 #ifndef _JOINT_DATA_H_
 #define _JOINT_DATA_H_
 
-//Dan
-#include "lofaro_darwin_ach_client.h"
-
-
 namespace Robot
 {	
 	class JointData  

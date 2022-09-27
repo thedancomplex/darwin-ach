@@ -17,9 +17,22 @@
 /* Author: Daniel M. Lofaro */
 
 #include "lofaro_darwin_ach_client.h"
+#include "Walking.h"
 #include <unistd.h>
+
+#define INI_FILE_PATH       "Data/config.ini"
+
+using namespace Robot;
+
 int main()
 {
+
+  printf("load ini\n");
+  minIni* ini = new minIni(INI_FILE_PATH);
+
+  printf("Walking Instance\n");
+  Walking::GetInstance()->LoadINISettings(ini);
+
   printf("make system object\n");
   DarwinAchClient dac = DarwinAchClient();
   int r = 0;
