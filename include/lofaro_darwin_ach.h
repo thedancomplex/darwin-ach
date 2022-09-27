@@ -64,6 +64,15 @@ DarwinAch::DarwinAch()
   memset(&this->darwin_cmd,          0, sizeof(this->darwin_cmd));
   memset(&this->darwin_cmd_return,   0, sizeof(this->darwin_cmd_return));
 
+  for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+  {
+    this->darwin_ref.motor_ref[i].pos    = DARWIN_REF_POS_0;
+    this->darwin_ref.motor_ref[i].speed  = DARWIN_REF_VEL_0;
+    this->darwin_ref.motor_ref[i].torque = DARWIN_REF_TOR_0;
+  }
+
+
+
   /* Make Ach Channels */
 /*
   printf("ACH_OK = %d\n", ACH_OK);
