@@ -84,148 +84,153 @@ Walking::~Walking()
 
 void Walking::LoadINISettings(minIni* ini)
 {
-    LoadINISettings(ini, WALKING_SECTION);
+  LoadINISettings(ini, WALKING_SECTION);
 }
 void Walking::LoadINISettings(minIni* ini, const std::string &section)
 {
-    double value = INVALID_VALUE;
+  double value = INVALID_VALUE;
 
-    if((value = ini->getd(section, "x_offset", INVALID_VALUE)) != INVALID_VALUE)                X_OFFSET = value;
-    if((value = ini->getd(section, "y_offset", INVALID_VALUE)) != INVALID_VALUE)                Y_OFFSET = value;
-    if((value = ini->getd(section, "z_offset", INVALID_VALUE)) != INVALID_VALUE)                Z_OFFSET = value;
-    if((value = ini->getd(section, "roll_offset", INVALID_VALUE)) != INVALID_VALUE)             R_OFFSET = value;
-    if((value = ini->getd(section, "pitch_offset", INVALID_VALUE)) != INVALID_VALUE)            P_OFFSET = value;
-    if((value = ini->getd(section, "yaw_offset", INVALID_VALUE)) != INVALID_VALUE)              A_OFFSET = value;
-    if((value = ini->getd(section, "hip_pitch_offset", INVALID_VALUE)) != INVALID_VALUE)        HIP_PITCH_OFFSET = value;
-    if((value = ini->getd(section, "period_time", INVALID_VALUE)) != INVALID_VALUE)             PERIOD_TIME = value;
-    if((value = ini->getd(section, "dsp_ratio", INVALID_VALUE)) != INVALID_VALUE)               DSP_RATIO = value;
-    if((value = ini->getd(section, "step_forward_back_ratio", INVALID_VALUE)) != INVALID_VALUE) STEP_FB_RATIO = value;
-    if((value = ini->getd(section, "foot_height", INVALID_VALUE)) != INVALID_VALUE)             Z_MOVE_AMPLITUDE = value;
-    if((value = ini->getd(section, "swing_right_left", INVALID_VALUE)) != INVALID_VALUE)        Y_SWAP_AMPLITUDE = value;
-    if((value = ini->getd(section, "swing_top_down", INVALID_VALUE)) != INVALID_VALUE)          Z_SWAP_AMPLITUDE = value;
-    if((value = ini->getd(section, "pelvis_offset", INVALID_VALUE)) != INVALID_VALUE)           PELVIS_OFFSET = value;
-    if((value = ini->getd(section, "arm_swing_gain", INVALID_VALUE)) != INVALID_VALUE)          ARM_SWING_GAIN = value;
-    if((value = ini->getd(section, "balance_knee_gain", INVALID_VALUE)) != INVALID_VALUE)       BALANCE_KNEE_GAIN = value;
-    if((value = ini->getd(section, "balance_ankle_pitch_gain", INVALID_VALUE)) != INVALID_VALUE)BALANCE_ANKLE_PITCH_GAIN = value;
-    if((value = ini->getd(section, "balance_hip_roll_gain", INVALID_VALUE)) != INVALID_VALUE)   BALANCE_HIP_ROLL_GAIN = value;
-    if((value = ini->getd(section, "balance_ankle_roll_gain", INVALID_VALUE)) != INVALID_VALUE) BALANCE_ANKLE_ROLL_GAIN = value;
+  if((value = ini->getd(section, "x_offset", INVALID_VALUE)) != INVALID_VALUE)                X_OFFSET = value;
+  if((value = ini->getd(section, "y_offset", INVALID_VALUE)) != INVALID_VALUE)                Y_OFFSET = value;
+  if((value = ini->getd(section, "z_offset", INVALID_VALUE)) != INVALID_VALUE)                Z_OFFSET = value;
+  if((value = ini->getd(section, "roll_offset", INVALID_VALUE)) != INVALID_VALUE)             R_OFFSET = value;
+  if((value = ini->getd(section, "pitch_offset", INVALID_VALUE)) != INVALID_VALUE)            P_OFFSET = value;
+  if((value = ini->getd(section, "yaw_offset", INVALID_VALUE)) != INVALID_VALUE)              A_OFFSET = value;
+  if((value = ini->getd(section, "hip_pitch_offset", INVALID_VALUE)) != INVALID_VALUE)        HIP_PITCH_OFFSET = value;
+  if((value = ini->getd(section, "period_time", INVALID_VALUE)) != INVALID_VALUE)             PERIOD_TIME = value;
+  if((value = ini->getd(section, "dsp_ratio", INVALID_VALUE)) != INVALID_VALUE)               DSP_RATIO = value;
+  if((value = ini->getd(section, "step_forward_back_ratio", INVALID_VALUE)) != INVALID_VALUE) STEP_FB_RATIO = value;
+  if((value = ini->getd(section, "foot_height", INVALID_VALUE)) != INVALID_VALUE)             Z_MOVE_AMPLITUDE = value;
+  if((value = ini->getd(section, "swing_right_left", INVALID_VALUE)) != INVALID_VALUE)        Y_SWAP_AMPLITUDE = value;
+  if((value = ini->getd(section, "swing_top_down", INVALID_VALUE)) != INVALID_VALUE)          Z_SWAP_AMPLITUDE = value;
+  if((value = ini->getd(section, "pelvis_offset", INVALID_VALUE)) != INVALID_VALUE)           PELVIS_OFFSET = value;
+  if((value = ini->getd(section, "arm_swing_gain", INVALID_VALUE)) != INVALID_VALUE)          ARM_SWING_GAIN = value;
+  if((value = ini->getd(section, "balance_knee_gain", INVALID_VALUE)) != INVALID_VALUE)       BALANCE_KNEE_GAIN = value;
+  if((value = ini->getd(section, "balance_ankle_pitch_gain", INVALID_VALUE)) != INVALID_VALUE)BALANCE_ANKLE_PITCH_GAIN = value;
+  if((value = ini->getd(section, "balance_hip_roll_gain", INVALID_VALUE)) != INVALID_VALUE)   BALANCE_HIP_ROLL_GAIN = value;
+  if((value = ini->getd(section, "balance_ankle_roll_gain", INVALID_VALUE)) != INVALID_VALUE) BALANCE_ANKLE_ROLL_GAIN = value;
 
-    int ivalue = INVALID_VALUE;
+  int ivalue = INVALID_VALUE;
 
-    if((ivalue = ini->geti(section, "p_gain", INVALID_VALUE)) != INVALID_VALUE)                 P_GAIN = ivalue;
-    if((ivalue = ini->geti(section, "i_gain", INVALID_VALUE)) != INVALID_VALUE)                 I_GAIN = ivalue;
-    if((ivalue = ini->geti(section, "d_gain", INVALID_VALUE)) != INVALID_VALUE)                 D_GAIN = ivalue;
+  if((ivalue = ini->geti(section, "p_gain", INVALID_VALUE)) != INVALID_VALUE)                 P_GAIN = ivalue;
+  if((ivalue = ini->geti(section, "i_gain", INVALID_VALUE)) != INVALID_VALUE)                 I_GAIN = ivalue;
+  if((ivalue = ini->geti(section, "d_gain", INVALID_VALUE)) != INVALID_VALUE)                 D_GAIN = ivalue;
 }
+
 void Walking::SaveINISettings(minIni* ini)
 {
-    SaveINISettings(ini, WALKING_SECTION);
+  SaveINISettings(ini, WALKING_SECTION);
 }
 void Walking::SaveINISettings(minIni* ini, const std::string &section)
 {
-    ini->put(section,   "x_offset",                 X_OFFSET);
-    ini->put(section,   "y_offset",                 Y_OFFSET);
-    ini->put(section,   "z_offset",                 Z_OFFSET);
-    ini->put(section,   "roll_offset",              R_OFFSET);
-    ini->put(section,   "pitch_offset",             P_OFFSET);
-    ini->put(section,   "yaw_offset",               A_OFFSET);
-    ini->put(section,   "hip_pitch_offset",         HIP_PITCH_OFFSET);
-    ini->put(section,   "period_time",              PERIOD_TIME);
-    ini->put(section,   "dsp_ratio",                DSP_RATIO);
-    ini->put(section,   "step_forward_back_ratio",  STEP_FB_RATIO);
-    ini->put(section,   "foot_height",              Z_MOVE_AMPLITUDE);
-    ini->put(section,   "swing_right_left",         Y_SWAP_AMPLITUDE);
-    ini->put(section,   "swing_top_down",           Z_SWAP_AMPLITUDE);
-    ini->put(section,   "pelvis_offset",            PELVIS_OFFSET);
-    ini->put(section,   "arm_swing_gain",           ARM_SWING_GAIN);
-    ini->put(section,   "balance_knee_gain",        BALANCE_KNEE_GAIN);
-    ini->put(section,   "balance_ankle_pitch_gain", BALANCE_ANKLE_PITCH_GAIN);
-    ini->put(section,   "balance_hip_roll_gain",    BALANCE_HIP_ROLL_GAIN);
-    ini->put(section,   "balance_ankle_roll_gain",  BALANCE_ANKLE_ROLL_GAIN);
+  ini->put(section,   "x_offset",                 X_OFFSET);
+  ini->put(section,   "y_offset",                 Y_OFFSET);
+  ini->put(section,   "z_offset",                 Z_OFFSET);
+  ini->put(section,   "roll_offset",              R_OFFSET);
+  ini->put(section,   "pitch_offset",             P_OFFSET);
+  ini->put(section,   "yaw_offset",               A_OFFSET);
+  ini->put(section,   "hip_pitch_offset",         HIP_PITCH_OFFSET);
+  ini->put(section,   "period_time",              PERIOD_TIME);
+  ini->put(section,   "dsp_ratio",                DSP_RATIO);
+  ini->put(section,   "step_forward_back_ratio",  STEP_FB_RATIO);
+  ini->put(section,   "foot_height",              Z_MOVE_AMPLITUDE);
+  ini->put(section,   "swing_right_left",         Y_SWAP_AMPLITUDE);
+  ini->put(section,   "swing_top_down",           Z_SWAP_AMPLITUDE);
+  ini->put(section,   "pelvis_offset",            PELVIS_OFFSET);
+  ini->put(section,   "arm_swing_gain",           ARM_SWING_GAIN);
+  ini->put(section,   "balance_knee_gain",        BALANCE_KNEE_GAIN);
+  ini->put(section,   "balance_ankle_pitch_gain", BALANCE_ANKLE_PITCH_GAIN);
+  ini->put(section,   "balance_hip_roll_gain",    BALANCE_HIP_ROLL_GAIN);
+  ini->put(section,   "balance_ankle_roll_gain",  BALANCE_ANKLE_ROLL_GAIN);
 
-    ini->put(section,   "p_gain",                   P_GAIN);
-    ini->put(section,   "i_gain",                   I_GAIN);
-    ini->put(section,   "d_gain",                   D_GAIN);
+  ini->put(section,   "p_gain",                   P_GAIN);
+  ini->put(section,   "i_gain",                   I_GAIN);
+  ini->put(section,   "d_gain",                   D_GAIN);
 }
 
 double Walking::wsin(double time, double period, double period_shift, double mag, double mag_shift)
 {
-	return mag * sin(2 * 3.141592 / period * time - period_shift) + mag_shift;
+  return mag * sin(2 * 3.141592 / period * time - period_shift) + mag_shift;
 }
 
 bool Walking::computeIK(double *out, double x, double y, double z, double a, double b, double c)
 {
-	Matrix3D Tad, Tda, Tcd, Tdc, Tac;
-	Vector3D vec;
-    double _Rac, _Acos, _Atan, _k, _l, _m, _n, _s, _c, _theta;
-	double LEG_LENGTH = Kinematics::LEG_LENGTH;
-	double THIGH_LENGTH = Kinematics::THIGH_LENGTH;
-	double CALF_LENGTH = Kinematics::CALF_LENGTH;
-	double ANKLE_LENGTH = Kinematics::ANKLE_LENGTH;
+  Matrix3D Tad, Tda, Tcd, Tdc, Tac;
+  Vector3D vec;
+  double _Rac, _Acos, _Atan, _k, _l, _m, _n, _s, _c, _theta;
+  double LEG_LENGTH = Kinematics::LEG_LENGTH;
+  double THIGH_LENGTH = Kinematics::THIGH_LENGTH;
+  double CALF_LENGTH = Kinematics::CALF_LENGTH;
+  double ANKLE_LENGTH = Kinematics::ANKLE_LENGTH;
 
-	Tad.SetTransform(Point3D(x, y, z - LEG_LENGTH), Vector3D(a * 180.0 / PI, b * 180.0 / PI, c * 180.0 / PI));
+  Tad.SetTransform(Point3D(x, y, z - LEG_LENGTH), Vector3D(a * 180.0 / PI, b * 180.0 / PI, c * 180.0 / PI));
 
-	vec.X = x + Tad.m[2] * ANKLE_LENGTH;
-    vec.Y = y + Tad.m[6] * ANKLE_LENGTH;
-    vec.Z = (z - LEG_LENGTH) + Tad.m[10] * ANKLE_LENGTH;
+  vec.X = x + Tad.m[2] * ANKLE_LENGTH;
+  vec.Y = y + Tad.m[6] * ANKLE_LENGTH;
+  vec.Z = (z - LEG_LENGTH) + Tad.m[10] * ANKLE_LENGTH;
 
     // Get Knee
-	_Rac = vec.Length();
-    _Acos = acos((_Rac * _Rac - THIGH_LENGTH * THIGH_LENGTH - CALF_LENGTH * CALF_LENGTH) / (2 * THIGH_LENGTH * CALF_LENGTH));
-    if(isnan(_Acos) == 1)
-		return false;
-    *(out + 3) = _Acos;
+  _Rac = vec.Length();
+  _Acos = acos((_Rac * _Rac - THIGH_LENGTH * THIGH_LENGTH - CALF_LENGTH * CALF_LENGTH) / (2 * THIGH_LENGTH * CALF_LENGTH));
+  if(isnan(_Acos) == 1) return false;
 
-    // Get Ankle Roll
-    Tda = Tad;
-	if(Tda.Inverse() == false)
-        return false;
-    _k = sqrt(Tda.m[7] * Tda.m[7] + Tda.m[11] * Tda.m[11]);
-    _l = sqrt(Tda.m[7] * Tda.m[7] + (Tda.m[11] - ANKLE_LENGTH) * (Tda.m[11] - ANKLE_LENGTH));
-    _m = (_k * _k - _l * _l - ANKLE_LENGTH * ANKLE_LENGTH) / (2 * _l * ANKLE_LENGTH);
-    if(_m > 1.0)
-        _m = 1.0;
-    else if(_m < -1.0)
-        _m = -1.0;
-    _Acos = acos(_m);
-    if(isnan(_Acos) == 1)
-        return false;
-    if(Tda.m[7] < 0.0)
-        *(out + 5) = -_Acos;
-    else
-        *(out + 5) = _Acos;
+  *(out + 3) = _Acos;
 
-    // Get Hip Yaw
-	Tcd.SetTransform(Point3D(0, 0, -ANKLE_LENGTH), Vector3D(*(out + 5) * 180.0 / PI, 0, 0));
-	Tdc = Tcd;
-	if(Tdc.Inverse() == false)
-        return false;
-	Tac = Tad * Tdc;
-    _Atan = atan2(-Tac.m[1] , Tac.m[5]);
-    if(isinf(_Atan) == 1)
-        return false;
-    *(out) = _Atan;
+  // Get Ankle Roll
+  Tda = Tad;
+  if(Tda.Inverse() == false) return false;
 
-    // Get Hip Roll
-    _Atan = atan2(Tac.m[9], -Tac.m[1] * sin(*(out)) + Tac.m[5] * cos(*(out)));
-    if(isinf(_Atan) == 1)
-        return false;
-    *(out + 1) = _Atan;
+  _k = sqrt(Tda.m[7] * Tda.m[7] + Tda.m[11] * Tda.m[11]);
+  _l = sqrt(Tda.m[7] * Tda.m[7] + (Tda.m[11] - ANKLE_LENGTH) * (Tda.m[11] - ANKLE_LENGTH));
+  _m = (_k * _k - _l * _l - ANKLE_LENGTH * ANKLE_LENGTH) / (2 * _l * ANKLE_LENGTH);
+  if(_m > 1.0) _m = 1.0;
+  else if(_m < -1.0) _m = -1.0;
 
-    // Get Hip Pitch and Ankle Pitch
-    _Atan = atan2(Tac.m[2] * cos(*(out)) + Tac.m[6] * sin(*(out)), Tac.m[0] * cos(*(out)) + Tac.m[4] * sin(*(out)));
-    if(isinf(_Atan) == 1)
-        return false;
-    _theta = _Atan;
-    _k = sin(*(out + 3)) * CALF_LENGTH;
-    _l = -THIGH_LENGTH - cos(*(out + 3)) * CALF_LENGTH;
-	_m = cos(*(out)) * vec.X + sin(*(out)) * vec.Y;
-	_n = cos(*(out + 1)) * vec.Z + sin(*(out)) * sin(*(out + 1)) * vec.X - cos(*(out)) * sin(*(out + 1)) * vec.Y;
-    _s = (_k * _n + _l * _m) / (_k * _k + _l * _l);
-    _c = (_n - _k * _s) / _l;
-    _Atan = atan2(_s, _c);
-    if(isinf(_Atan) == 1)
-        return false;
+  _Acos = acos(_m);
+
+  if(isnan(_Acos) == 1) return false;
+
+  if(Tda.m[7] < 0.0) *(out + 5) = -_Acos;
+  else *(out + 5) = _Acos;
+
+  // Get Hip Yaw
+  Tcd.SetTransform(Point3D(0, 0, -ANKLE_LENGTH), Vector3D(*(out + 5) * 180.0 / PI, 0, 0));
+  Tdc = Tcd;
+
+  if(Tdc.Inverse() == false) return false;
+
+  Tac = Tad * Tdc;
+   _Atan = atan2(-Tac.m[1] , Tac.m[5]);
+  
+  if(isinf(_Atan) == 1) return false;
+
+  *(out) = _Atan;
+
+  // Get Hip Roll
+  _Atan = atan2(Tac.m[9], -Tac.m[1] * sin(*(out)) + Tac.m[5] * cos(*(out)));
+
+  if(isinf(_Atan) == 1) return false;
+
+  *(out + 1) = _Atan;
+
+  // Get Hip Pitch and Ankle Pitch
+  _Atan = atan2(Tac.m[2] * cos(*(out)) + Tac.m[6] * sin(*(out)), Tac.m[0] * cos(*(out)) + Tac.m[4] * sin(*(out)));
+
+  if(isinf(_Atan) == 1) return false;
+
+  _theta = _Atan;
+  _k = sin(*(out + 3)) * CALF_LENGTH;
+  _l = -THIGH_LENGTH - cos(*(out + 3)) * CALF_LENGTH;
+  _m = cos(*(out)) * vec.X + sin(*(out)) * vec.Y;
+  _n = cos(*(out + 1)) * vec.Z + sin(*(out)) * sin(*(out + 1)) * vec.X - cos(*(out)) * sin(*(out + 1)) * vec.Y;
+  _s = (_k * _n + _l * _m) / (_k * _k + _l * _l);
+  _c = (_n - _k * _s) / _l;
+  _Atan = atan2(_s, _c);
+
+    if(isinf(_Atan) == 1) return false;
+
     *(out + 2) = _Atan;
+
     *(out + 4) = _theta - *(out + 3) - *(out + 2);
 
     return true;
