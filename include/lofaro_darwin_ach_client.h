@@ -18,7 +18,7 @@ class DarwinAchClient
     int cmd(int cmd);
     int cmd(int cmd, bool block);
     int sleep(double val);
-
+    double time();
     /* Update Methods */
     int getState();
 
@@ -69,6 +69,11 @@ DarwinAchClient::DarwinAchClient()
   ach_put(&this->chan_darwin_cmd,        &this->darwin_cmd,        sizeof(this->darwin_cmd));
   ach_put(&this->chan_darwin_cmd_return, &this->darwin_cmd_return, sizeof(this->darwin_cmd_return));
   return;
+}
+
+double DarwinAchClient::time()
+{
+  return this->lu->time();
 }
 
 int DarwinAchClient::sleep(double val)
