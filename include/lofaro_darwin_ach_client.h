@@ -73,7 +73,7 @@ DarwinAchClient::DarwinAchClient()
 
 double DarwinAchClient::time()
 {
-  return this->lu->time();
+  return this->lu->getTime();
 }
 
 int DarwinAchClient::sleep(double val)
