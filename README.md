@@ -15,3 +15,6 @@ Designed to talk directly with the CM730.  Updates the state and reference
 * Impliment alternative serial library to cut down on the latency and overhead caused by the dyn lib
 * Make a version that just publishes the IMU data and takes upper body commands and a twist message for walking
 
+
+# Joint Index for the Darwin-Op
+![Darwin OP Joint Index](img/op_id_map.jpg)
