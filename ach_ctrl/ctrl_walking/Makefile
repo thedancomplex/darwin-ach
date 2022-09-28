@@ -40,5 +40,5 @@ $(BINARIES): src/test.o
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean:
-	rm -f $(BINARIES) src/*.o
+	rm -f $(BINARIES) src/*.o *.a
 
