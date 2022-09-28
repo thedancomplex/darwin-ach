@@ -19,6 +19,9 @@
 #include "lofaro_darwin_ach_client.h"
 #include "Walking.h"
 #include <unistd.h>
+#include <string.h>
+
+
 
 #define INI_FILE_PATH       "Data/config.ini"
 

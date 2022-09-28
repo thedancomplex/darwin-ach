@@ -1,0 +1,32 @@
+default: all
+
+CXXFLAGS := -I./../../include  -Wall -I./include -I./src/minIni -shared 
+LFLAGS += -lpthread -ldl
+CC := g++
+AR = ar
+ARFLAGS = cr
+
+TARGET = darwin.a
+
+
+all : $(TARGET)
+
+LIBS := -lrt -lstdc++ -lach -lm
+
+OBJS =  src/MX28.o         \
+        src/math/Matrix.o   \
+        src/math/Plane.o    \
+        src/math/Point.o    \
+        src/math/Vector.o   \
+        src/JointData.o     \
+        src/Kinematics.o    \
+        src/MotionStatus.o   \
+        src/modules/Walking.o\
+        src/minIni/minIni.o        
+
+$(TARGET): $(OBJS)
+	$(CC) -o $(TARGET) $(OBJS) $(LFLAGS)
+#        $(AR) $(ARFLAGS) $(TARGET) $(OBJS)
+
+clean:
+	rm -f $(BINARIES) src/*.o

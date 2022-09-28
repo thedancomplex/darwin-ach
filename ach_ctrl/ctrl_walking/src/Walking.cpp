@@ -567,7 +567,7 @@ void Walking::Process()
     else if(i == 2 || i == 8) // R_HIP_PITCH or L_HIP_PITCH
       offset -= (double)dir[i] * HIP_PITCH_OFFSET * MX28::RATIO_ANGLE2VALUE;
 
-      outValue[i] = MX28::Angle2Value(initAngle[i]) + (int)offset;
+    outValue[i] = MX28::Angle2Value(initAngle[i]) + (int)offset;
   }
 
   // adjust balance offset
