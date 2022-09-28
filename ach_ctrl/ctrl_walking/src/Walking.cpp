@@ -620,9 +620,11 @@ void Walking::Process()
 
   for( int i = 0; i < 21; i++ )
   {
-    output_deg[i] = m_Joint.GetAngle(i)+0.1;
+    output_deg[i] = m_Joint.GetAngle(i);
   }
 
+//  for(int i = 0; i < 21; i++) printf("%f, ", output_deg[i] );
+//  printf("\n");
 
   for(int id = JointData::ID_R_HIP_YAW; id <= JointData::ID_L_ANKLE_ROLL; id++)
   {
@@ -630,4 +632,14 @@ void Walking::Process()
     m_Joint.SetIGain(id, I_GAIN);
     m_Joint.SetDGain(id, D_GAIN);
   }
+}
+
+double Walking::getRefDeg(int id)
+{
+  return m_Joint.GetAngle(id);
+}
+
+double Walking::getRefRad(int id)
+{
+  return m_Joint.GetAngle(id) * PI / 180.0;
 }

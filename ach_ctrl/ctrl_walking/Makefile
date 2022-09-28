@@ -24,8 +24,8 @@ OBJS =  src/MX28.o             \
         src/Kinematics.o       \
         src/MotionStatus.o     \
         src/Walking.o          \
-        src/minIni/minIni.o    \
-	src/LinuxMotionTimer.o
+        src/minIni/minIni.o    
+#	src/LinuxMotionTimer.o
 
 $(TARGET): $(OBJS)
 	$(AR) $(ARFLAGS) $(TARGET) $(OBJS)

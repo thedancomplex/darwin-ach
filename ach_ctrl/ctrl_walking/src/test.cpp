@@ -46,10 +46,11 @@ int main()
 
 
   /* Motion Timer */
+/*
   printf("Start Motion Timer\n");
   LinuxMotionTimer *motion_timer = new LinuxMotionTimer(MotionManager::GetInstance());
   motion_timer->Start();
-
+*/
 
   /* Start Walking */
   printf("Start Walking for 10 seconds\n");
@@ -62,6 +63,8 @@ int main()
   int mot = 19;
   while(true)
   {
+    Walking::GetInstance()->Process();
+
     dac.getState();
 
     dac.stageRefPos(mot, val);
@@ -75,9 +78,12 @@ int main()
 
   
    /* Test print of JointData */
-   for(int i = 0; i < 21; i++) printf("%f, ", output_deg[i] );
+/*
+   for(int i = 0; i < 21; i++) printf("%f, ", Walking::GetInstance()->getRefDeg(i) );
    printf("\n");
-
+   for(int i = 0; i < 21; i++) printf("%f, ", Walking::GetInstance()->getRefRad(i) );
+   printf("\n");
+*/
 
     double tock2 = dac.time();
     if( (tock2 - tick2) > 3.0 )
