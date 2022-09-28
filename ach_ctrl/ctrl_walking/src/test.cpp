@@ -56,6 +56,23 @@ int main()
   printf("Start Walking for 10 seconds\n");
   Walking::GetInstance()->Start();
 
+  /* Get into home positon */
+  for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
+  {
+    dac.stageRefPos(i, 0.0);
+  }
+  dac.postRef();
+  dac.sleep(2.0);
+
+  /* Set Lower Body to be high torque and fast */
+  for(int i = DARWIN_MOTOR_MIN_LOWER; i <= DARWIN_MOTOR_MAX_LOWER; i++)
+  {
+    dac.stageRefVel(i, 100.0);
+    dac.stageRefTorque(i, 100.0);
+  }
+  dac.postRef();
+  dac.sleep(2.0);
+  
 
   double tick  = dac.time();  
   double tick2 = dac.time();
@@ -63,11 +80,14 @@ int main()
   int mot = 19;
   while(true)
   {
-    Walking::GetInstance()->Process();
-
     dac.getState();
 
-    dac.stageRefPos(mot, val);
+    Walking::GetInstance()->Process();
+    for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
+    {
+      dac.stageRefPos(i, Walking::GetInstance()->getRefRad(i));
+    }
+
     dac.postRef();
 
     printf("ax= %f, ay=%f, az=%f\n",

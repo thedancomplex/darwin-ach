@@ -2,6 +2,7 @@
 
 #include "lofaro_includes_ach.h"
 #include "lofaro_defines_ach.h"
+#include "lofaro_defines.h"
 #include "lofaro_utils.h"
 #include "lofaro_types.h"
 #include <cstring>

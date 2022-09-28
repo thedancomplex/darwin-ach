@@ -126,6 +126,12 @@
 #define DARWIN_MOTOR_MIN                   1
 #define DARWIN_MOTOR_MAX                   20
 #define DARWIN_FT_NUM                      2
+#define DARWIN_MOTOR_MIN_LOWER             7
+#define DARWIN_MOTOR_MAX_LOWER             18
+#define DARWIN_MOTOR_MIN_HEAD              19
+#define DARWIN_MOTOR_MAX_HEAD              20
+#define DARWIN_MOTOR_MIN_UPPER             1
+#define DARWIN_MOTOR_MAX_UPPER             6
 
 
 #define ERROR                              1
