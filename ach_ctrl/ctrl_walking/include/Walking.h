@@ -161,8 +161,12 @@ namespace Robot
 		double getRefRad(int id);
 		double dan_gyro_x = 0.0;
 		double dan_gyro_y = 0.0;
-                void setGyroX(double val){ dan_gyro_x = val; };
-                void setGyroY(double val){ dan_gyro_y = val; };
+                void setGyroX(double val){ dan_gyro_x = val; }
+                void setGyroY(double val){ dan_gyro_y = val; }
+
+                int getPGain(int id) { return m_Joint.GetPGain(id); }
+                int getIGain(int id) { return m_Joint.GetIGain(id); }
+                int getDGain(int id) { return m_Joint.GetDGain(id); }
 
         void LoadINISettings(minIni* ini);
         void LoadINISettings(minIni* ini, const std::string &section);

@@ -28,6 +28,9 @@ class DarwinAchClient
     int stageRefPosD(int mot, double val);
     int stageRefVel(int mot, double val);
     int stageRefTorque(int mot, double val);
+    int stagePGain(int mot, double val);
+    int stageIGain(int mot, double val);
+    int stageDGain(int mot, double val);
     int postRef();
 
 
@@ -38,6 +41,8 @@ class DarwinAchClient
     darwin_cmd_def_t  darwin_cmd_return;
 
   private:
+    int stageGain(int mot, double val);
+
     LofaroUtils* lu = new LofaroUtils();
 
     bool run_loop = false;
@@ -128,6 +133,29 @@ int DarwinAchClient::cmd(int cmd, bool block)
   return (int)r;
 }
 
+int DarwinAchClient::stagePGain(int mot, double val)
+{
+  if( mot > DARWIN_MOTOR_MAX ) return 1;
+  if( mot < DARWIN_MOTOR_MIN ) return 1;
+  this->darwin_ref.motor_ref[mot].p_gain;
+  return 0;
+}
+
+int DarwinAchClient::stageIGain(int mot, double val)
+{
+  if( mot > DARWIN_MOTOR_MAX ) return 1;
+  if( mot < DARWIN_MOTOR_MIN ) return 1;
+  this->darwin_ref.motor_ref[mot].i_gain;
+  return 0;
+}
+
+int DarwinAchClient::stageDGain(int mot, double val)
+{
+  if( mot > DARWIN_MOTOR_MAX ) return 1;
+  if( mot < DARWIN_MOTOR_MIN ) return 1;
+  this->darwin_ref.motor_ref[mot].d_gain;
+  return 0;
+}
 
 int DarwinAchClient::stageRefPosD(int mot, double val)
 {

@@ -128,7 +128,10 @@ int main()
     Walking::GetInstance()->Process();
     for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
     {
-      dac.stageRefPos(i, Walking::GetInstance()->getRefRad(i));
+      dac.stageRefPos( i, Walking::GetInstance()->getRefRad(i)        );
+      dac.stagePGain(  i, (double)Walking::GetInstance()->getPGain(i) );
+      dac.stageIGain(  i, (double)Walking::GetInstance()->getIGain(i) );
+      dac.stageDGain(  i, (double)Walking::GetInstance()->getDGain(i) );
     }
 
     dac.postRef();

@@ -692,6 +692,63 @@ int DarwinLofaro::getMotor(int id)
 }
 
 
+/* Set Gain */
+int DarwinLofaro::setGain(int mot, double val, int mode)
+{
+    if(mot > DARWIN_MOTOR_MAX) return RETURN_FAIL;
+    if(mot < DARWIN_MOTOR_MIN) return RETURN_FAIL;
+
+    uint8_t addr = MX_ADDRESS_P_GAIN;
+    if     ( mode == DARWIN_ENUM_P_GAIN ) addr = MX_ADDRESS_P_GAIN;
+    else if( mode == DARWIN_ENUM_I_GAIN ) addr = MX_ADDRESS_I_GAIN;
+    else if( mode == DARWIN_ENUM_D_GAIN ) addr = MX_ADDRESS_D_GAIN;
+    else return RETURN_FAIL;
+
+
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+    uint8_t dxl_error = 0;                          // Dynamixel error
+
+    uint8_t v = (uint8_t)val;
+
+    dxl_comm_result = packetHandler->write1ByteTxRx(portHandler,
+                                                          mot,
+                                                          addr,
+                                                          v,
+                                                          &dxl_error);
+    if (dxl_comm_result != COMM_SUCCESS)
+    {
+      return RETURN_FAIL;
+    }
+    else if (dxl_error != 0)
+    {
+      return RETURN_FAIL;
+    }
+    else
+    {
+      return RETURN_OK;
+    }
+    return RETURN_OK;
+
+}
+
+/* Set P Gain */
+int DarwinLofaro::setPGain(int mot, double val)
+{
+  return this->setGain(mot, val, DARWIN_ENUM_P_GAIN);
+}
+
+/* Set I Gain */
+int DarwinLofaro::setIGain(int mot, double val)
+{
+  return this->setGain(mot, val, DARWIN_ENUM_I_GAIN);
+}
+
+/* Set D Gain */
+int DarwinLofaro::setDGain(int mot, double val)
+{
+  return this->setGain(mot, val, DARWIN_ENUM_D_GAIN);
+}
+
 
 
 

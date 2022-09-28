@@ -40,7 +40,11 @@ class DarwinAch
     int do_ref(int mode);
     int do_state(int mode);
     int do_cmd(int mode);
+    int do_gain();
     DarwinLofaro* dl = new DarwinLofaro();
+
+    /* Data types */
+    darwin_data_def_t darwin_ref_0;
 
     bool run_loop = false;
 
@@ -61,6 +65,7 @@ DarwinAch::DarwinAch()
 {
   /* Zero Data */
   memset(&this->darwin_ref,          0, sizeof(this->darwin_ref));
+  memset(&this->darwin_ref_0,          0, sizeof(this->darwin_ref_0));
   memset(&this->darwin_state,        0, sizeof(this->darwin_state));
   memset(&this->darwin_cmd,          0, sizeof(this->darwin_cmd));
   memset(&this->darwin_cmd_return,   0, sizeof(this->darwin_cmd_return));
@@ -223,6 +228,7 @@ int DarwinAch::loop(double hz, int mode_state, int mode_ref)
 
 int ft_i = 0;
 int upper_i = 0;
+
 int DarwinAch::main_loop()
 {
   return this->main_loop(HZ_STATE_DEFAULT);
@@ -240,13 +246,29 @@ int DarwinAch::main_loop(int mode_state, int mode_ref)
   ret += this->do_cmd(0);
   if(run_loop)
   {
+    printf("0\n");
+//    ret += this->do_gain();
+    printf("1\n");
     ret += this->do_ref(mode_ref);
+    printf("2\n");
     ret += this->do_state(mode_state);
   }
   else ret += 1;
 
   if( ret > 0 ) ret = 1;
   return ret;
+}
+
+int DarwinAch::do_gain()
+{
+  int ret = 0;
+  for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
+  {
+    if( this->darwin_ref.motor_ref[i].p_gain != this->darwin_ref_0.motor_ref[i].p_gain ) ret += this->dl->setPGain(i, this->darwin_ref.motor_ref[i].p_gain);
+    if( this->darwin_ref.motor_ref[i].i_gain != this->darwin_ref_0.motor_ref[i].i_gain ) ret += this->dl->setPGain(i, this->darwin_ref.motor_ref[i].i_gain);
+    if( this->darwin_ref.motor_ref[i].d_gain != this->darwin_ref_0.motor_ref[i].d_gain ) ret += this->dl->setPGain(i, this->darwin_ref.motor_ref[i].d_gain);
+  }
+  this->darwin_ref_0 = this->darwin_ref;
 }
 
 

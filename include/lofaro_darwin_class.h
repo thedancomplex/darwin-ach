@@ -101,6 +101,18 @@ class DarwinLofaro
     /* Set the motor desired reference in rad */
     int setMotPos(int mot, double val);
 
+    /* Set Gain */
+    int setGain(int mot, double val, int mode);
+
+    /* Set P Gain */
+    int setPGain(int mot, double val);
+
+    /* Set I Gain */
+    int setIGain(int mot, double val);
+
+    /* Set D Gain */
+    int setDGain(int mot, double val);
+
     /* Closes port */
     int close();
 

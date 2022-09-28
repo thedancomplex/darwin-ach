@@ -41,6 +41,9 @@ typedef struct motor_ref_def {
         double pos;
         double speed;
         double torque;
+        double p_gain;
+        double i_gain;
+        double d_gain;
 //        double voltage;
 }__attribute__((packed)) motor_ref_def_t;
 

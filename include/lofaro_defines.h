@@ -101,7 +101,9 @@
 #define MX_ADDRESS_STATE_LENGTH            8
 #define MX_ADDRESS_STATE_START             MX_ADDRESS_POS
 
-
+#define MX_ADDRESS_P_GAIN                  28
+#define MX_ADDRESS_I_GAIN                  27
+#define MX_ADDRESS_D_GAIN                  26
 
 
 #define FT_ADDRESS_STATUS_RETURN_LEVEL     16
@@ -149,3 +151,6 @@
 #define DARWIN_Y                           2
 #define DARWIN_Z                           3
 
+#define DARWIN_ENUM_P_GAIN                 1
+#define DARWIN_ENUM_I_GAIN                 2
+#define DARWIN_ENUM_D_GAIN                 3
