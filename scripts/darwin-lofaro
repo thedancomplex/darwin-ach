@@ -195,7 +195,7 @@ ShowUsage()
 	echo ''
 	echo 'ach-remote    : Start the remote ach daemon      '
 	echo ''
-	echo 'kill-ach      : stops remote connections and     '
+	echo 'ach-kill      : stops remote connections and     '
 	echo '                removes all ach channels         '
 	echo ''
 	echo
