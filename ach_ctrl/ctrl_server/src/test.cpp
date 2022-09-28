@@ -24,7 +24,7 @@ int main()
   DarwinAch da = DarwinAch();
   int r = 0;
   printf("Start System Loop\n");
-  r = da.loop();
+  r = da.loop(125.0, HZ_STATE_125_IMU);
   
   return 0;
 }

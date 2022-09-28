@@ -27,6 +27,31 @@
 
 using namespace Robot;
 
+double i2d(uint16_t val)
+{
+  double the_out = (double)((int32_t)val - 512) / 1023.0;
+  return the_out;
+}
+
+uint16_t d2i(double val)
+{
+  int32_t a = (int32_t)(val * 1023.0) + 512;
+  if( a < 0 )   a = 0;
+  if( a > 1023) a = 1023;
+  
+  return (uint16_t)a;
+}
+
+
+int imuGyro2Dyn(double val)
+{
+  int shift = 512;
+  int the_out = d2i(val / IMU_GYRO_SCALE ) - shift;
+  return the_out;
+}
+
+
+
 int main()
 {
 
@@ -64,6 +89,18 @@ int main()
   dac.postRef();
   dac.sleep(2.0);
 
+
+  /* Goto Walking Stance */
+  printf("Going into walking stance\n");
+  Walking::GetInstance()->Process();
+  for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
+  {
+    dac.stageRefPos(i, Walking::GetInstance()->getRefRad(i));
+  }
+  dac.postRef();
+  dac.sleep(5.0);
+  printf("Place on ground\n");
+
   /* Set Lower Body to be high torque and fast */
   for(int i = DARWIN_MOTOR_MIN_LOWER; i <= DARWIN_MOTOR_MAX_LOWER; i++)
   {
@@ -71,16 +108,22 @@ int main()
     dac.stageRefTorque(i, 100.0);
   }
   dac.postRef();
-  dac.sleep(2.0);
+  dac.sleep(30.0);
   
 
   double tick  = dac.time();  
   double tick2 = dac.time();
+  double tock  = dac.time();
+  double tock2 = dac.time();
+
   double val = 0.3;
   int mot = 19;
   while(true)
   {
     dac.getState();
+
+    Walking::GetInstance()->setGyroX( (double)imuGyro2Dyn(dac.darwin_state.imu.gyro_x) );
+    Walking::GetInstance()->setGyroY( (double)imuGyro2Dyn(dac.darwin_state.imu.gyro_y) );
 
     Walking::GetInstance()->Process();
     for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
@@ -94,7 +137,7 @@ int main()
             dac.darwin_state.imu.acc_x,
             dac.darwin_state.imu.acc_y,
             dac.darwin_state.imu.acc_z);
-    dac.sleep(0.01);
+    dac.sleep(0.008);
 
   
    /* Test print of JointData */
@@ -105,7 +148,7 @@ int main()
    printf("\n");
 */
 
-    double tock2 = dac.time();
+    tock2 = dac.time();
     if( (tock2 - tick2) > 3.0 )
     {
       val = -val;
@@ -113,14 +156,22 @@ int main()
     }
 
 
-    double tock = dac.time();
-    if( (tock - tick) > 10.0 ) break;
+    tock = dac.time();
+    if( (tock - tick) > 9.75 ) break;
   }
 
   /* Stop Walking */
   printf("Stop Walking\n");
   Walking::GetInstance()->Stop();
-  dac.sleep(2.0);
+
+  tick2 = dac.time();
+  tock2 = dac.time();
+  while( (tock2-tick2) < 30.0 )
+  {
+    tock2 = dac.time();
+    Walking::GetInstance()->Process();
+    dac.sleep(0.01);
+  }
 
   r = dac.cmd(DARWIN_CMD_OFF, true);
   if( r == DARWIN_CMD_OK ) printf("Darwin Stopped\n");

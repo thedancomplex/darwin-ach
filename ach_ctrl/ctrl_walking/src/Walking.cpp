@@ -573,8 +573,11 @@ void Walking::Process()
   // adjust balance offset
   if(BALANCE_ENABLE == true)
   {
-    double rlGyroErr = MotionStatus::RL_GYRO;
-    double fbGyroErr = MotionStatus::FB_GYRO;
+    //double rlGyroErr = MotionStatus::RL_GYRO;
+    //double fbGyroErr = MotionStatus::FB_GYRO;
+    double rlGyroErr = dan_gyro_x;
+    double fbGyroErr = dan_gyro_y;
+
 #ifdef MX28_1024
     outValue[1] += (int)(dir[1] * rlGyroErr * BALANCE_HIP_ROLL_GAIN); // R_HIP_ROLL
     outValue[7] += (int)(dir[7] * rlGyroErr * BALANCE_HIP_ROLL_GAIN); // L_HIP_ROLL

@@ -144,3 +144,8 @@
 #define SERIAL_PORT_LOW_LATENCY_DEFAULT    false
 
 #define PROTOCOL_VERSION                   1.0
+
+#define DARWIN_X                           1
+#define DARWIN_Y                           2
+#define DARWIN_Z                           3
+
