@@ -618,6 +618,12 @@ void Walking::Process()
   m_Joint.SetValue(JointData::ID_L_SHOULDER_PITCH,    outValue[13]);
   m_Joint.SetAngle(JointData::ID_HEAD_PAN, A_MOVE_AMPLITUDE);
 
+  for( int i = 0; i < 21; i++ )
+  {
+    output_deg[i] = m_Joint.GetAngle(i)+0.1;
+  }
+
+
   for(int id = JointData::ID_R_HIP_YAW; id <= JointData::ID_L_ANKLE_ROLL; id++)
   {
     m_Joint.SetPGain(id, P_GAIN);

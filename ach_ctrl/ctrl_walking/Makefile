@@ -15,16 +15,17 @@ obj : $(TARGET)
 
 LIBS := -lrt -lstdc++ -lach 
 
-OBJS =  src/MX28.o           \
-        src/math/Matrix.o    \
-        src/math/Plane.o     \
-        src/math/Point.o     \
-        src/math/Vector.o    \
-        src/JointData.o      \
-        src/Kinematics.o     \
-        src/MotionStatus.o   \
-        src/Walking.o        \
-        src/minIni/minIni.o 
+OBJS =  src/MX28.o             \
+        src/math/Matrix.o      \
+        src/math/Plane.o       \
+        src/math/Point.o       \
+        src/math/Vector.o      \
+        src/JointData.o        \
+        src/Kinematics.o       \
+        src/MotionStatus.o     \
+        src/Walking.o          \
+        src/minIni/minIni.o    \
+	src/LinuxMotionTimer.o
 
 $(TARGET): $(OBJS)
 	$(AR) $(ARFLAGS) $(TARGET) $(OBJS)

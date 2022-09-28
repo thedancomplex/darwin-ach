@@ -36,13 +36,24 @@ int main()
   printf("Walking Instance\n");
   Walking::GetInstance()->LoadINISettings(ini);
 
-  printf("make system object\n");
+  printf("Make system object\n");
   DarwinAchClient dac = DarwinAchClient();
   int r = 0;
-  printf("use cmd to turn on system\n");
+  printf("Use cmd to turn on system\n");
   r = dac.cmd(DARWIN_CMD_ON, true);
   if( r == DARWIN_CMD_OK ) printf("Darwin Started\n");
   else printf("Darwin Fail to start\n");
+
+
+  /* Motion Timer */
+  printf("Start Motion Timer\n");
+  LinuxMotionTimer *motion_timer = new LinuxMotionTimer(MotionManager::GetInstance());
+  motion_timer->Start();
+
+
+  /* Start Walking */
+  printf("Start Walking for 10 seconds\n");
+  Walking::GetInstance()->Start();
 
 
   double tick  = dac.time();  
@@ -62,6 +73,12 @@ int main()
             dac.darwin_state.imu.acc_z);
     dac.sleep(0.01);
 
+  
+   /* Test print of JointData */
+   for(int i = 0; i < 21; i++) printf("%f, ", output_deg[i] );
+   printf("\n");
+
+
     double tock2 = dac.time();
     if( (tock2 - tick2) > 3.0 )
     {
@@ -71,8 +88,13 @@ int main()
 
 
     double tock = dac.time();
-    if( (tock - tick) > 100.0 ) break;
+    if( (tock - tick) > 10.0 ) break;
   }
+
+  /* Stop Walking */
+  printf("Stop Walking\n");
+  Walking::GetInstance()->Stop();
+  dac.sleep(2.0);
 
   r = dac.cmd(DARWIN_CMD_OFF, true);
   if( r == DARWIN_CMD_OK ) printf("Darwin Stopped\n");

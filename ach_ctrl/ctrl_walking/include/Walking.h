@@ -18,6 +18,13 @@
 
 namespace Robot
 {
+	static double output_deg[21];
+	static double output_kp[21];
+	static double output_ki[21];
+	static double output_kd[21];
+	static double output_torque[21];
+	static double output_vel[21];
+
 	class Walking : public MotionModule
 	{
 	public:
@@ -102,6 +109,7 @@ namespace Robot
 		void update_param_balance();
 
 	public:
+
 		// Walking initial pose
 		double X_OFFSET;
 		double Y_OFFSET;
