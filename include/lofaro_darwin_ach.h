@@ -246,11 +246,8 @@ int DarwinAch::main_loop(int mode_state, int mode_ref)
   ret += this->do_cmd(0);
   if(run_loop)
   {
-    printf("0\n");
-//    ret += this->do_gain();
-    printf("1\n");
+    ret += this->do_gain();
     ret += this->do_ref(mode_ref);
-    printf("2\n");
     ret += this->do_state(mode_state);
   }
   else ret += 1;
@@ -264,11 +261,13 @@ int DarwinAch::do_gain()
   int ret = 0;
   for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
   {
-    if( this->darwin_ref.motor_ref[i].p_gain != this->darwin_ref_0.motor_ref[i].p_gain ) ret += this->dl->setPGain(i, this->darwin_ref.motor_ref[i].p_gain);
-    if( this->darwin_ref.motor_ref[i].i_gain != this->darwin_ref_0.motor_ref[i].i_gain ) ret += this->dl->setPGain(i, this->darwin_ref.motor_ref[i].i_gain);
-    if( this->darwin_ref.motor_ref[i].d_gain != this->darwin_ref_0.motor_ref[i].d_gain ) ret += this->dl->setPGain(i, this->darwin_ref.motor_ref[i].d_gain);
+    if( (uint8_t)this->darwin_ref.motor_ref[i].p_gain != (uint8_t)this->darwin_ref_0.motor_ref[i].p_gain ) ret += this->dl->setPGain(i, this->darwin_ref.motor_ref[i].p_gain);
+    if( (uint8_t)this->darwin_ref.motor_ref[i].i_gain != (uint8_t)this->darwin_ref_0.motor_ref[i].i_gain ) ret += this->dl->setPGain(i, this->darwin_ref.motor_ref[i].i_gain);
+    if( (uint8_t)this->darwin_ref.motor_ref[i].d_gain != (uint8_t)this->darwin_ref_0.motor_ref[i].d_gain ) ret += this->dl->setPGain(i, this->darwin_ref.motor_ref[i].d_gain);
   }
   this->darwin_ref_0 = this->darwin_ref;
+  if( ret > 0 ) ret = 1;
+  return ret;
 }
 
 
