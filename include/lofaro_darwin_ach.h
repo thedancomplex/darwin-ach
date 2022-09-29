@@ -174,17 +174,17 @@ int DarwinAch::do_cmd(int mode)
       case DARWIN_CMD_MODE:
       {
         int d0 = this->darwin_cmd.data[0];
-        if     ( d0 == DARWIN_CMD_MODE_REF                    )
+        if     ( d0 == MODE_REF                    )
         { 
           m_REF_MODE = MODE_REF;                    
           do_return = true; 
         }
-        else if( d0 == DARWIN_CMD_MODE_REF_WALKING            )
+        else if( d0 == MODE_WALKING            )
         { 
           m_REF_MODE = MODE_WALKING;            
           do_return = true; 
         }
-        else if( d0 == DARWIN_CMD_MODE_REF_WALKING_LOWER_ONLY )
+        else if( d0 == MODE_WALKING_LOWER_ONLY )
         { 
           m_REF_MODE = MODE_WALKING_LOWER_ONLY; 
           do_return = true; 

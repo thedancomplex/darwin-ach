@@ -268,9 +268,8 @@ int DarwinAchClient::stageRefTorque(int mot, double val)
 
 int DarwinAchClient::setRefMode(int mode)
 {
-  if( mode >= DARWIN_CMD_COUNT ) return 1;
+  if( mode >= MODE_COUNT ) return 1;
   if( mode < 0           ) return 1;
-  ref_mode = mode;
   this->cmd(DARWIN_CMD_MODE, (int16_t)mode);
   return 0;
 }
