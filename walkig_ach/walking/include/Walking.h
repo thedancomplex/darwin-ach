@@ -16,8 +16,22 @@
 #define WALKING_SECTION "Walking Config"
 #define INVALID_VALUE   -1024.0
 
+#define X_MOVE_MIN  -30
+#define X_MOVE_MAX   30
+#define Y_MOVE_MIN  -30
+#define Y_MOVE_MAX   30
+#define A_MOVE_MIN  -30
+#define A_MOVE_MAX   30
+
 namespace Robot
 {
+	static double output_deg[21];
+	static double output_kp[21];
+	static double output_ki[21];
+	static double output_kd[21];
+	static double output_torque[21];
+	static double output_vel[21];
+
 	class Walking : public MotionModule
 	{
 	public:
@@ -102,6 +116,7 @@ namespace Robot
 		void update_param_balance();
 
 	public:
+
 		// Walking initial pose
 		double X_OFFSET;
 		double Y_OFFSET;
@@ -118,6 +133,10 @@ namespace Robot
 		double Y_MOVE_AMPLITUDE;
 		double Z_MOVE_AMPLITUDE;
 		double A_MOVE_AMPLITUDE;
+		double m_X_MOVE_AMPLITUDE;
+		double m_Y_MOVE_AMPLITUDE;
+		double m_Z_MOVE_AMPLITUDE;
+		double m_A_MOVE_AMPLITUDE;
 		bool A_MOVE_AIM_ON;
 
 		// Balance control
@@ -149,6 +168,22 @@ namespace Robot
 		void Stop();
 		void Process();
 		bool IsRunning();
+		double getRefDeg(int id);
+		double getRefRad(int id);
+		double dan_gyro_x = 0.0;
+		double dan_gyro_y = 0.0;
+                void setGyroX(double val){ dan_gyro_x = val; }
+                void setGyroY(double val){ dan_gyro_y = val; }
+                int setStepXm(double val);
+                int setStepXmm(double val);
+                int setStepYm(double val);
+                int setStepYmm(double val);
+                int setStepADeg(double val);
+                int setStepARad(double val);
+
+                int getPGain(int id) { return m_Joint.GetPGain(id); }
+                int getIGain(int id) { return m_Joint.GetIGain(id); }
+                int getDGain(int id) { return m_Joint.GetDGain(id); }
 
         void LoadINISettings(minIni* ini);
         void LoadINISettings(minIni* ini, const std::string &section);

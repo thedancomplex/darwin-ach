@@ -8,10 +8,6 @@
 #ifndef _JOINT_DATA_H_
 #define _JOINT_DATA_H_
 
-//Dan
-#include "lofaro_darwin_ach_client.h"
-
-
 namespace Robot
 {	
 	class JointData  
@@ -58,7 +54,7 @@ namespace Robot
 		};
 
 	private:		
-                DarwinAchClient* dac = new DarwinAchClient();
+//                DarwinAchClient* dac = new DarwinAchClient();
 	protected:
 		bool m_Enable[NUMBER_OF_JOINTS];
 		int m_Value[NUMBER_OF_JOINTS];

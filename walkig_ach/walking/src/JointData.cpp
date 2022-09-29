@@ -7,7 +7,9 @@
 
 #include "MX28.h"
 #include "JointData.h"
-#include "MotionManager.h"
+
+// Dan
+//#include "MotionManager.h"
 
 using namespace Robot;
 
@@ -38,7 +40,8 @@ void JointData::SetEnable(int id, bool enable)
 void JointData::SetEnable(int id, bool enable, bool exclusive)
 {
 #ifndef WEBOTS // Because MotionManager is not included in the lite version of the Framework used in the simulation
-    if(enable && exclusive) MotionManager::GetInstance()->SetJointDisable(id);
+// Dan
+//    if(enable && exclusive) MotionManager::GetInstance()->SetJointDisable(id);
 #endif
     m_Enable[id] = enable;
 }
@@ -170,7 +173,7 @@ void JointData::SetValue(int id, int value)
     m_Angle[id] = MX28::Value2Angle(value);
 
     //Dan
-    this->dac->stageRefPosD(id, m_Angle[id]);
+//    this->dac->stageRefPosD(id, m_Angle[id]);
 }
 
 int JointData::GetValue(int id)
@@ -189,7 +192,7 @@ void JointData::SetAngle(int id, double angle)
     m_Value[id] = MX28::Angle2Value(angle);
 
     //Dan
-    this->dac->stageRefPosD(id, m_Angle[id]);
+//    this->dac->stageRefPosD(id, m_Angle[id]);
 }
 
 double JointData::GetAngle(int id)
