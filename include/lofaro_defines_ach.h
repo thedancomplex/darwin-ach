@@ -43,9 +43,6 @@ typedef enum {
 	DARWIN_CMD_OFF,
 	DARWIN_CMD_START,
 	DARWIN_CMD_MODE,
-	DARWIN_CMD_MODE_REF,
-	DARWIN_CMD_MODE_REF_WALKING,
-	DARWIN_CMD_MODE_REF_WALKING_LOWER_ONLY,
 	DARWIN_CMD_COUNT
         
 }__attribute__((packed)) darwin_cmd_mode_index_t;
