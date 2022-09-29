@@ -29,6 +29,7 @@ class DarwinAch
 
     /* Data types */
     darwin_data_def_t darwin_ref;
+    darwin_data_def_t darwin_ref_walking;
     darwin_data_def_t darwin_state;
     darwin_cmd_def_t  darwin_cmd;
     darwin_cmd_def_t  darwin_cmd_return;
@@ -51,6 +52,9 @@ class DarwinAch
     /* Reference Channel */
     ach_channel_t chan_darwin_ref;  
 
+    /* Reference Walking Channel */
+    ach_channel_t chan_darwin_ref_walking;  
+
     /* State Feedback Channel */
     ach_channel_t chan_darwin_state;
 
@@ -65,16 +69,20 @@ DarwinAch::DarwinAch()
 {
   /* Zero Data */
   memset(&this->darwin_ref,          0, sizeof(this->darwin_ref));
-  memset(&this->darwin_ref_0,          0, sizeof(this->darwin_ref_0));
+  memset(&this->darwin_ref_walking,  0, sizeof(this->darwin_ref_walking));
+  memset(&this->darwin_ref_0,        0, sizeof(this->darwin_ref_0));
   memset(&this->darwin_state,        0, sizeof(this->darwin_state));
   memset(&this->darwin_cmd,          0, sizeof(this->darwin_cmd));
   memset(&this->darwin_cmd_return,   0, sizeof(this->darwin_cmd_return));
 
   for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
   {
-    this->darwin_ref.motor_ref[i].pos    = DARWIN_REF_POS_0;
-    this->darwin_ref.motor_ref[i].speed  = DARWIN_REF_VEL_0;
-    this->darwin_ref.motor_ref[i].torque = DARWIN_REF_TOR_0;
+    this->darwin_ref.motor_ref[i].pos            = DARWIN_REF_POS_0;
+    this->darwin_ref.motor_ref[i].speed          = DARWIN_REF_VEL_0;
+    this->darwin_ref.motor_ref[i].torque         = DARWIN_REF_TOR_0;
+    this->darwin_ref_walking.motor_ref[i].pos    = DARWIN_REF_POS_0;
+    this->darwin_ref_walking.motor_ref[i].speed  = DARWIN_REF_VEL_0;
+    this->darwin_ref_walking.motor_ref[i].torque = DARWIN_REF_TOR_0;
   }
 
 
@@ -97,22 +105,25 @@ DarwinAch::DarwinAch()
 */
 
   /* Open Channels */
-  r = ach_open(&this->chan_darwin_ref,        DARWIN_ACH_CHAN_REF,        NULL);
-  r = ach_open(&this->chan_darwin_state,      DARWIN_ACH_CHAN_STATE,      NULL);
-  r = ach_open(&this->chan_darwin_cmd,        DARWIN_ACH_CHAN_CMD,        NULL);
-  r = ach_open(&this->chan_darwin_cmd_return, DARWIN_ACH_CHAN_CMD_RETURN, NULL);
+  r = ach_open(&this->chan_darwin_ref,         DARWIN_ACH_CHAN_REF,         NULL);
+  r = ach_open(&this->chan_darwin_ref_walking, DARWIN_ACH_CHAN_REF_WALKING, NULL);
+  r = ach_open(&this->chan_darwin_state,       DARWIN_ACH_CHAN_STATE,       NULL);
+  r = ach_open(&this->chan_darwin_cmd,         DARWIN_ACH_CHAN_CMD,         NULL);
+  r = ach_open(&this->chan_darwin_cmd_return,  DARWIN_ACH_CHAN_CMD_RETURN,  NULL);
 
   /* Flush all channels */
   ach_flush(&this->chan_darwin_ref);
+  ach_flush(&this->chan_darwin_ref_walking);
   ach_flush(&this->chan_darwin_state);
   ach_flush(&this->chan_darwin_cmd);
   ach_flush(&this->chan_darwin_cmd_return);
 
   /* Do initial put on the channel to make sure the exist */
-  ach_put(&this->chan_darwin_ref,        &this->darwin_ref,        sizeof(this->darwin_ref));
-  ach_put(&this->chan_darwin_state,      &this->darwin_state,      sizeof(this->darwin_state));
-  ach_put(&this->chan_darwin_cmd,        &this->darwin_cmd,        sizeof(this->darwin_cmd));
-  ach_put(&this->chan_darwin_cmd_return, &this->darwin_cmd_return, sizeof(this->darwin_cmd_return));
+  ach_put(&this->chan_darwin_ref,         &this->darwin_ref,         sizeof(this->darwin_ref));
+  ach_put(&this->chan_darwin_ref_walking, &this->darwin_ref_walking, sizeof(this->darwin_ref_walking));
+  ach_put(&this->chan_darwin_state,       &this->darwin_state,       sizeof(this->darwin_state));
+  ach_put(&this->chan_darwin_cmd,         &this->darwin_cmd,         sizeof(this->darwin_cmd));
+  ach_put(&this->chan_darwin_cmd_return,  &this->darwin_cmd_return,  sizeof(this->darwin_cmd_return));
   return;
 }
 
@@ -281,16 +292,58 @@ int DarwinAch::do_ref(int mode)
 {
   size_t fs;
   /* Get the latest reference channel */
-  ach_status_t r = ach_get( &this->chan_darwin_ref, &this->darwin_ref, sizeof(this->darwin_ref), &fs, NULL, ACH_O_LAST );
-//  if(ACH_OK != r) {fprintf(stderr, "Ref r = %s\n",ach_result_to_string(r));}
+  ach_status_t r = ACH_OK;
+  r = ach_get( &this->chan_darwin_ref, &this->darwin_ref, sizeof(this->darwin_ref), &fs, NULL, ACH_O_LAST );
+  r = ach_get( &this->chan_darwin_ref_walking, &this->darwin_ref_walking, sizeof(this->darwin_ref_walking), &fs, NULL, ACH_O_LAST );
 
   int ret = 0;
   /* Set Reference Here */
-  for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+  int move_mode = this->darwin_ref.mode;
+
+  if( move_mode == MODE_REF )
   {
-    this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref.motor_ref[i].pos;
-    this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref.motor_ref[i].speed;
-    this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref.motor_ref[i].torque;
+    for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+    {
+      this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref.motor_ref[i].pos;
+      this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref.motor_ref[i].speed;
+      this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref.motor_ref[i].torque;
+    }
+  }
+  else if( mode == MODE_WALKING )
+  {
+    for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+    {
+      this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref_walking.motor_ref[i].pos;
+      this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref_walking.motor_ref[i].speed;
+      this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref_walking.motor_ref[i].torque;
+    }
+  }
+  else if( mode == MODE_WALKING_LOWER_ONLY )
+  {
+    for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+    {
+      if( (i >= DARWIN_MOTOR_MIN_LOWER) & (i <= DARWIN_MOTOR_MAX_LOWER) )
+      {
+        this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref_walking.motor_ref[i].pos;
+        this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref_walking.motor_ref[i].speed;
+        this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref_walking.motor_ref[i].torque;
+      }
+      else
+      {
+        this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref.motor_ref[i].pos;
+        this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref.motor_ref[i].speed;
+        this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref.motor_ref[i].torque;
+      }
+    }
+  }
+  else
+  {
+    for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+    {
+      this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref.motor_ref[i].pos;
+      this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref.motor_ref[i].speed;
+      this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref.motor_ref[i].torque;
+    }
   }
 
   switch (mode)

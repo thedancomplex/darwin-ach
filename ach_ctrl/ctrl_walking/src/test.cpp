@@ -63,11 +63,14 @@ int main()
 
   printf("Make system object\n");
   DarwinAchClient dac = DarwinAchClient();
+  dac.setRefMode(MODE_REF);
+
   int r = 0;
   printf("Use cmd to turn on system\n");
   r = dac.cmd(DARWIN_CMD_ON, true);
   if( r == DARWIN_CMD_OK ) printf("Darwin Started\n");
   else printf("Darwin Fail to start\n");
+
 
   /* Start Walking */
   printf("Start Walking for 10 seconds\n");
@@ -81,6 +84,7 @@ int main()
   dac.postRef();
   dac.sleep(2.0);
 
+  dac.setRefMode(MODE_WALKING);
 
   /* Goto Walking Stance */
   printf("Going into walking stance\n");

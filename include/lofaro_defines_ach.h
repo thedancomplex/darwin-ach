@@ -12,11 +12,19 @@ typedef enum {
         DARWIN_HZ_MODE_COUNT
 }__attribute__((packed)) darwin_hz_mode_index_t;
 
+typedef enum {
+        MODE_REF = 0,
+        MODE_WALKING,
+	MODE_WALKING_LOWER_ONLY,
+        MODE_COUNT
+}__attribute__((packed)) darwin_ach_mode_index_t;
+
 #define HZ_REF_DEFAULT HZ_REF_NULL
 #define HZ_STATE_DEFAULT HZ_STATE_100_IMU_FT_SLOW
 #define HZ_RATE_DEFAULT 100.0
 
 #define DARWIN_ACH_CHAN_REF          "darwin-ach-chan-ref"
+#define DARWIN_ACH_CHAN_REF_WALKING  "darwin-ach-chan-ref-walking"
 #define DARWIN_ACH_CHAN_STATE        "darwin-ach-chan-state"
 #define DARWIN_ACH_CHAN_CMD          "darwin-ach-chan-cmd"
 #define DARWIN_ACH_CHAN_CMD_RETURN   "darwin-ach-chan-ret"

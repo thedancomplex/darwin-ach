@@ -33,6 +33,7 @@ class DarwinAchClient
     int stagePGain(int mot, double val);
     int stageIGain(int mot, double val);
     int stageDGain(int mot, double val);
+    int setRefMode(int mode);
     int postRef();
 
 
@@ -43,6 +44,7 @@ class DarwinAchClient
     darwin_cmd_def_t  darwin_cmd_return;
 
   private:
+    int ref_mode = MODE_REF;
     int stageGain(int mot, double val);
 
     LofaroUtils* lu = new LofaroUtils();
@@ -51,6 +53,9 @@ class DarwinAchClient
 
     /* Reference Channel */
     ach_channel_t chan_darwin_ref;  
+
+    /* Reference Walking Channel */
+    ach_channel_t chan_darwin_ref_walking;  
 
     /* State Feedback Channel */
     ach_channel_t chan_darwin_state;
@@ -82,16 +87,19 @@ DarwinAchClient::DarwinAchClient()
   ach_status_t r = ACH_OK;
 
   /* Open Channels */
-  r = ach_open(&this->chan_darwin_ref,        DARWIN_ACH_CHAN_REF,        NULL);
-  r = ach_open(&this->chan_darwin_state,      DARWIN_ACH_CHAN_STATE,      NULL);
-  r = ach_open(&this->chan_darwin_cmd,        DARWIN_ACH_CHAN_CMD,        NULL);
-  r = ach_open(&this->chan_darwin_cmd_return, DARWIN_ACH_CHAN_CMD_RETURN, NULL);
+  r = ach_open(&this->chan_darwin_ref,         DARWIN_ACH_CHAN_REF,         NULL);
+  r = ach_open(&this->chan_darwin_ref_walking, DARWIN_ACH_CHAN_REF_WALKING, NULL);
+  r = ach_open(&this->chan_darwin_state,       DARWIN_ACH_CHAN_STATE,       NULL);
+  r = ach_open(&this->chan_darwin_cmd,         DARWIN_ACH_CHAN_CMD,         NULL);
+  r = ach_open(&this->chan_darwin_cmd_return,  DARWIN_ACH_CHAN_CMD_RETURN,  NULL);
 
   /* Do initial put on the channel to make sure the exist */
+/*
   ach_put(&this->chan_darwin_ref,        &this->darwin_ref,        sizeof(this->darwin_ref));
   ach_put(&this->chan_darwin_state,      &this->darwin_state,      sizeof(this->darwin_state));
   ach_put(&this->chan_darwin_cmd,        &this->darwin_cmd,        sizeof(this->darwin_cmd));
   ach_put(&this->chan_darwin_cmd_return, &this->darwin_cmd_return, sizeof(this->darwin_cmd_return));
+*/
   return;
 }
 
@@ -196,9 +204,24 @@ int DarwinAchClient::stageRefTorque(int mot, double val)
   return 0;
 }
 
+int DarwinAchClient::setRefMode(int mode)
+{
+  if( mode >= MODE_COUNT ) return 1;
+  if( mode < 0           ) return 1;
+  ref_mode = mode;
+  return 0;
+}
+
 int DarwinAchClient::postRef()
 {
   ach_status_t r = ACH_OK;
-  r = ach_put(&this->chan_darwin_ref, &this->darwin_ref, sizeof(this->darwin_ref));
+  if( (ref_mode == MODE_WALKING) | (ref_mode == MODE_WALKING_LOWER_ONLY) )
+  {
+    r = ach_put(&this->chan_darwin_ref_walking, &this->darwin_ref, sizeof(this->darwin_ref));
+  }
+  else
+  {
+    r = ach_put(&this->chan_darwin_ref, &this->darwin_ref, sizeof(this->darwin_ref));
+  }
   return (int)r;
 }
