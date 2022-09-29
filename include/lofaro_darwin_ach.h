@@ -42,6 +42,8 @@ class DarwinAch
     int do_state(int mode);
     int do_cmd(int mode);
     int do_gain();
+    int m_REF_MODE = MODE_REF;
+
     DarwinLofaro* dl = new DarwinLofaro();
 
     /* Data types */
@@ -146,7 +148,6 @@ int DarwinAch::do_cmd(int mode)
   ach_status_t r = ach_get( &this->chan_darwin_cmd, &this->darwin_cmd, sizeof(this->darwin_cmd), &fs, NULL, ACH_O_LAST );
 //  if(ACH_OK != r) {fprintf(stderr, "Ref r = %s\n",ach_result_to_string(r));}
 
-
   bool do_return = false;
   if( ( r == ACH_OK ) | ( r == ACH_MISSED_FRAME ) )
   {
@@ -170,17 +171,48 @@ int DarwinAch::do_cmd(int mode)
         do_return = true;
         break;
       }
+      case DARWIN_CMD_MODE:
+      {
+        int d0 = this->darwin_cmd.data[0];
+        if     ( d0 == DARWIN_CMD_MODE_REF                    )
+        { 
+          m_REF_MODE = MODE_REF;                    
+          do_return = true; 
+        }
+        else if( d0 == DARWIN_CMD_MODE_REF_WALKING            )
+        { 
+          m_REF_MODE = MODE_WALKING;            
+          do_return = true; 
+        }
+        else if( d0 == DARWIN_CMD_MODE_REF_WALKING_LOWER_ONLY )
+        { 
+          m_REF_MODE = MODE_WALKING_LOWER_ONLY; 
+          do_return = true; 
+        }
+        else
+        {
+          do_return = true; 
+        }
+        break;
+      }
       default:
         break;
     }
   }
-  else return 1;
 
   if(do_return)
   {
     memset(&this->darwin_cmd_return,   0, sizeof(this->darwin_cmd_return));
     this->darwin_cmd_return.cmd = DARWIN_CMD_OK;
     ach_put(&this->chan_darwin_cmd_return, &this->darwin_cmd_return, sizeof(this->darwin_cmd_return));
+    return 0;
+  }
+  else
+  {
+    memset(&this->darwin_cmd_return,   0, sizeof(this->darwin_cmd_return));
+    this->darwin_cmd_return.cmd = DARWIN_CMD_FAIL;
+    ach_put(&this->chan_darwin_cmd_return, &this->darwin_cmd_return, sizeof(this->darwin_cmd_return));
+    return 1;
   }
 
   return 0;
@@ -293,12 +325,13 @@ int DarwinAch::do_ref(int mode)
   size_t fs;
   /* Get the latest reference channel */
   ach_status_t r = ACH_OK;
-  r = ach_get( &this->chan_darwin_ref, &this->darwin_ref, sizeof(this->darwin_ref), &fs, NULL, ACH_O_LAST );
+  r = ach_get( &this->chan_darwin_ref,         &this->darwin_ref, sizeof(this->darwin_ref),                 &fs, NULL, ACH_O_LAST );
   r = ach_get( &this->chan_darwin_ref_walking, &this->darwin_ref_walking, sizeof(this->darwin_ref_walking), &fs, NULL, ACH_O_LAST );
 
   int ret = 0;
   /* Set Reference Here */
-  int move_mode = this->darwin_ref.mode;
+  int move_mode = m_REF_MODE;
+  //int move_mode = this->darwin_ref.mode;
 
   if( move_mode == MODE_REF )
   {

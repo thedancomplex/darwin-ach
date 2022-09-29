@@ -84,7 +84,7 @@ int main()
   dac.postRef();
   dac.sleep(2.0);
 
-  dac.setRefMode(MODE_WALKING);
+  dac.setRefMode(DARWIN_CMD_MODE_REF_WALKING);
 
   /* Goto Walking Stance */
   printf("Going into walking stance\n");

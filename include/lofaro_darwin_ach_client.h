@@ -19,6 +19,17 @@ class DarwinAchClient
     DarwinAchClient();
     int cmd(int cmd);
     int cmd(int cmd, bool block);
+    int cmd(int cmd, int16_t d0);
+    int cmd(int cmd, int16_t d0, bool block);
+    int cmd(int cmd, int16_t d0, int16_t d1);
+    int cmd(int cmd, int16_t d0, int16_t d1, bool block);
+    int cmd(int cmd, int16_t d0, double f0);
+    int cmd(int cmd, int16_t d0, double f0, bool block);
+    int cmd(int cmd, int16_t data[4]);
+    int cmd(int cmd, int16_t data[4], bool block);
+    int cmd(int cmd, int16_t data[4], double data_float[4]);
+    int cmd(int cmd, int16_t data[4], double data_float[4], bool block);
+
     int rate(double hz);
     int sleep();
     int sleep(double val);
@@ -35,6 +46,7 @@ class DarwinAchClient
     int stageDGain(int mot, double val);
     int setRefMode(int mode);
     int postRef();
+    
 
 
     /* Data types */
@@ -131,11 +143,61 @@ int DarwinAchClient::getState()
 }
 
 
-int DarwinAchClient::cmd(int cmd)
-{
-    return this->cmd(cmd,false);
-}
+int DarwinAchClient::cmd(int cmd){ return this->cmd(cmd, false); }
 int DarwinAchClient::cmd(int cmd, bool block)
+{
+  int16_t data[4];
+  double  data_float[4];
+  memset(&data,       0, sizeof(data));
+  memset(&data_float, 0, sizeof(data_float));
+  return this->cmd(cmd, data, data_float, block);
+}
+
+int DarwinAchClient::cmd(int cmd, int16_t d0){ return this->cmd(cmd, d0, false); }
+int DarwinAchClient::cmd(int cmd, int16_t d0, bool block)
+{
+  int16_t data[4];
+  double  data_float[4];
+  memset(&data,       0, sizeof(data));
+  memset(&data_float, 0, sizeof(data_float));
+  data[0] = d0;
+  return this->cmd(cmd, data, data_float, block);
+}
+
+int DarwinAchClient::cmd(int cmd, int16_t d0, int16_t d1){ return this->cmd(cmd, d0, d1, false); }
+int DarwinAchClient::cmd(int cmd, int16_t d0, int16_t d1, bool block)
+{
+  int16_t data[4];
+  double  data_float[4];
+  memset(&data,       0, sizeof(data));
+  memset(&data_float, 0, sizeof(data_float));
+  data[0] = d0;
+  data[1] = d1;
+  return this->cmd(cmd, data, data_float, block);
+}
+
+int DarwinAchClient::cmd(int cmd, int16_t d0, double f0){ return this->cmd(cmd, d0, f0, false); }
+int DarwinAchClient::cmd(int cmd, int16_t d0, double f0, bool block)
+{
+  int16_t data[4];
+  double  data_float[4];
+  memset(&data,       0, sizeof(data));
+  memset(&data_float, 0, sizeof(data_float));
+  data[0] = d0;
+  data_float[0] = f0;
+  return this->cmd(cmd, data, data_float, block);
+}
+
+int DarwinAchClient::cmd(int cmd, int16_t data[4]){ return this->cmd(cmd, data, false); }
+int DarwinAchClient::cmd(int cmd, int16_t data[4], bool block)
+{
+  double  data_float[4];
+  memset(&data_float, 0, sizeof(data_float));
+  return this->cmd(cmd, data, data_float, block);
+}
+
+int DarwinAchClient::cmd(int cmd, int16_t data[4], double data_float[4]){ return this->cmd(cmd, data, data_float, false); }
+int DarwinAchClient::cmd(int cmd, int16_t data[4], double data_float[4], bool block)
 {
   size_t fs;
   ach_status_t r = ACH_OK;
@@ -206,9 +268,10 @@ int DarwinAchClient::stageRefTorque(int mot, double val)
 
 int DarwinAchClient::setRefMode(int mode)
 {
-  if( mode >= MODE_COUNT ) return 1;
+  if( mode >= DARWIN_CMD_COUNT ) return 1;
   if( mode < 0           ) return 1;
   ref_mode = mode;
+  this->cmd(DARWIN_CMD_MODE, (int16_t)mode);
   return 0;
 }
 
