@@ -66,17 +66,20 @@ int main()
   dac.setRefMode(MODE_REF);
 
   int r = 0;
+/*
   printf("Use cmd to turn on system\n");
   r = dac.cmd(DARWIN_CMD_ON, true);
   if( r == DARWIN_CMD_OK ) printf("Darwin Started\n");
   else printf("Darwin Fail to start\n");
-
+*/
 
   /* Start Walking */
   printf("Start Walking for 10 seconds\n");
   Walking::GetInstance()->Start();
 
+
   /* Get into home positon */
+/*
   for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
   {
     dac.stageRefPos(i, 0.0);
@@ -85,23 +88,24 @@ int main()
   dac.sleep(2.0);
 
   dac.setRefMode(MODE_WALKING_LOWER_ONLY);
+*/
 
   /* Goto Walking Stance */
-  printf("Going into walking stance\n");
+  printf("Going into walking stance low speed high torque\n");
   Walking::GetInstance()->Process();
   for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
   {
     dac.stageRefPos(i, Walking::GetInstance()->getRefRad(i));
+    dac.stageRefTorque(i, 100.0);
   }
   dac.postRef();
   dac.sleep(5.0);
   printf("Place on ground\n");
 
-  /* Set Lower Body to be high torque and fast */
+  /* Set Lower Body to be fast */
   for(int i = DARWIN_MOTOR_MIN_LOWER; i <= DARWIN_MOTOR_MAX_LOWER; i++)
   {
     dac.stageRefVel(i, 100.0);
-    dac.stageRefTorque(i, 100.0);
   }
   dac.postRef();
   dac.sleep(3.0);
@@ -156,9 +160,9 @@ int main()
     if( (tock - tick) >  9.5 ) Walking::GetInstance()->Stop();
     if( (tock - tick) > 13.0 ) break;
   }
-
+/*
   r = dac.cmd(DARWIN_CMD_OFF, true);
   if( r == DARWIN_CMD_OK ) printf("Darwin Stopped\n");
-
+*/
   return 0;
 }

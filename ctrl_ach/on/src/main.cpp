@@ -36,7 +36,8 @@ int main()
   /* Get into home positon */
   for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
   {
-    dac.stageRefPos(i, 0.0);
+    dac.stageRefVel(i, DARWIN_REF_VEL_0);
+    dac.stageRefPos(i, DARWIN_REF_POS_0);
   }
   dac.postRef();
   dac.sleep(2.0);
