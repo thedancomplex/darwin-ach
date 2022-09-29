@@ -69,14 +69,6 @@ int main()
   if( r == DARWIN_CMD_OK ) printf("Darwin Started\n");
   else printf("Darwin Fail to start\n");
 
-
-  /* Motion Timer */
-/*
-  printf("Start Motion Timer\n");
-  LinuxMotionTimer *motion_timer = new LinuxMotionTimer(MotionManager::GetInstance());
-  motion_timer->Start();
-*/
-
   /* Start Walking */
   printf("Start Walking for 10 seconds\n");
   Walking::GetInstance()->Start();
@@ -108,7 +100,7 @@ int main()
     dac.stageRefTorque(i, 100.0);
   }
   dac.postRef();
-  dac.sleep(30.0);
+  dac.sleep(3.0);
   
 
   double tick  = dac.time();  
@@ -116,10 +108,13 @@ int main()
   double tock  = dac.time();
   double tock2 = dac.time();
 
-  double val = 0.3;
-  int mot = 19;
   while(true)
   {
+
+//    Walking::GetInstance()->setStepADeg(-30.0);
+//    Walking::GetInstance()->setStepXmm(30.0);
+//    Walking::GetInstance()->setStepYmm(-30.0);
+
     dac.getState();
 
     Walking::GetInstance()->setGyroX( (double)imuGyro2Dyn(dac.darwin_state.imu.gyro_x) );
@@ -151,29 +146,10 @@ int main()
    printf("\n");
 */
 
-    tock2 = dac.time();
-    if( (tock2 - tick2) > 3.0 )
-    {
-      val = -val;
-      tick2 = tock2;
-    }
-
-
+    /* Stop Walking */
     tock = dac.time();
-    if( (tock - tick) > 9.75 ) break;
-  }
-
-  /* Stop Walking */
-  printf("Stop Walking\n");
-  Walking::GetInstance()->Stop();
-
-  tick2 = dac.time();
-  tock2 = dac.time();
-  while( (tock2-tick2) < 30.0 )
-  {
-    tock2 = dac.time();
-    Walking::GetInstance()->Process();
-    dac.sleep(0.01);
+    if( (tock - tick) >  9.5 ) Walking::GetInstance()->Stop();
+    if( (tock - tick) > 13.0 ) break;
   }
 
   r = dac.cmd(DARWIN_CMD_OFF, true);

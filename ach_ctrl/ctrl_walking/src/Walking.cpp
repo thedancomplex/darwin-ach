@@ -516,16 +516,16 @@ void Walking::Process()
   a_move_r = 0;
   b_move_r = 0;
 
-  ep[0] = x_swap + x_move_r + m_X_Offset;
-  ep[1] = y_swap + y_move_r - m_Y_Offset / 2;
-  ep[2] = z_swap + z_move_r + m_Z_Offset;
-  ep[3] = a_swap + a_move_r - m_R_Offset / 2;
-  ep[4] = b_swap + b_move_r + m_P_Offset;
-  ep[5] = c_swap + c_move_r - m_A_Offset / 2;
-  ep[6] = x_swap + x_move_l + m_X_Offset;
-  ep[7] = y_swap + y_move_l + m_Y_Offset / 2;
-  ep[8] = z_swap + z_move_l + m_Z_Offset;
-  ep[9] = a_swap + a_move_l + m_R_Offset / 2;
+  ep[0]  = x_swap + x_move_r + m_X_Offset;
+  ep[1]  = y_swap + y_move_r - m_Y_Offset / 2;
+  ep[2]  = z_swap + z_move_r + m_Z_Offset;
+  ep[3]  = a_swap + a_move_r - m_R_Offset / 2;
+  ep[4]  = b_swap + b_move_r + m_P_Offset;
+  ep[5]  = c_swap + c_move_r - m_A_Offset / 2;
+  ep[6]  = x_swap + x_move_l + m_X_Offset;
+  ep[7]  = y_swap + y_move_l + m_Y_Offset / 2;
+  ep[8]  = z_swap + z_move_l + m_Z_Offset;
+  ep[9]  = a_swap + a_move_l + m_R_Offset / 2;
   ep[10] = b_swap + b_move_l + m_P_Offset;
   ep[11] = c_swap + c_move_l + m_A_Offset / 2;
 

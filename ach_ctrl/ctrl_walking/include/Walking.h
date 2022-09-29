@@ -16,12 +16,12 @@
 #define WALKING_SECTION "Walking Config"
 #define INVALID_VALUE   -1024.0
 
-#define X_MOVE_MIN  -10
-#define X_MOVE_MAX   10
-#define Y_MOVE_MIN  -10
-#define Y_MOVE_MAX   10
-#define A_MOVE_MIN  -10
-#define A_MOVE_MAX   10
+#define X_MOVE_MIN  -30
+#define X_MOVE_MAX   30
+#define Y_MOVE_MIN  -30
+#define Y_MOVE_MAX   30
+#define A_MOVE_MIN  -30
+#define A_MOVE_MAX   30
 
 namespace Robot
 {
