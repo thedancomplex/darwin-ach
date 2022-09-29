@@ -3,12 +3,12 @@ default: all
 CFLAGS := -I./../../include -I/usr/local/include/dynamixel_sdk -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g 
 CC := g++
 
-BINARIES := test
+BINARIES := main
 all : $(BINARIES)
 
 LIBS := -lrt -ldxl_x86_cpp -lstdc++ -lach
 
-$(BINARIES): src/test.o
+$(BINARIES): src/main.o
 	gcc -o $@ $< $(LIBS)
 
 %.o: %.cpp

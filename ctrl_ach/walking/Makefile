@@ -8,7 +8,7 @@ AR = ar
 ARFLAGS = cr
 TARGET = darwin.a
 
-BINARIES := test
+BINARIES := main
 all : $(BINARIES)
 
 obj : $(TARGET)
@@ -33,7 +33,7 @@ $(TARGET): $(OBJS)
 #	$(CC) -o $(TARGET) $(OBJS) $(LFLAGS)
 
 
-$(BINARIES): src/test.o
+$(BINARIES): src/main.o
 	$(CC) -o $@ $< $(LIBS) $(OBJS)
 
 %.o: %.cpp
