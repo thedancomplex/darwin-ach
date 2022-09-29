@@ -19,6 +19,8 @@ class DarwinAchClient
     DarwinAchClient();
     int cmd(int cmd);
     int cmd(int cmd, bool block);
+    int rate(double hz);
+    int sleep();
     int sleep(double val);
     double time();
 
@@ -101,6 +103,16 @@ double DarwinAchClient::time()
 int DarwinAchClient::sleep(double val)
 {
   return this->lu->sleep(val);
+}
+
+int DarwinAchClient::sleep()
+{
+  return this->lu->sleep();
+}
+
+int DarwinAchClient::rate(double hz)
+{
+  return this->lu->rate(hz);
 }
 
 int DarwinAchClient::getState()

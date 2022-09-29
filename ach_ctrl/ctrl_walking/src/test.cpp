@@ -101,7 +101,8 @@ int main()
   }
   dac.postRef();
   dac.sleep(3.0);
-  
+
+  dac.rate(125.0);  
 
   double tick  = dac.time();  
   double tick2 = dac.time();
@@ -135,7 +136,7 @@ int main()
             dac.darwin_state.imu.acc_x,
             dac.darwin_state.imu.acc_y,
             dac.darwin_state.imu.acc_z);
-    dac.sleep(0.008);
+    dac.sleep();
 
   
    /* Test print of JointData */
