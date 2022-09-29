@@ -53,10 +53,26 @@ typedef struct darwin_cmd_def {
         double  data_float[4];
 }__attribute__((packed)) darwin_cmd_def_t;
 
+typedef struct darwin_vec3_def {
+        double x;
+        double y;
+        double z;
+}__attribute__((packed)) darwin_vec3_def_t;
+
+typedef struct darwin_twist_def {
+        darwin_vec3_def_t linear;
+        darwin_vec3_def_t angular;
+        int16_t           cmd;
+}__attribute__((packed)) darwin_twist_def_t;
+
+
+
 typedef struct darwin_data_def {
   motor_ref_def_t     motor_ref[DARWIN_MOTOR_NUM+1];
   motor_state_def_t   motor_state[DARWIN_MOTOR_NUM+1];
   imu_state_def_t     imu;
   ft_state_def_t      ft[DARWIN_FT_NUM];
+  int16_t             mode;
+  darwin_twist_def_t  cmd_vel;
 }__attribute__((packed)) darwin_data_def_t;
 

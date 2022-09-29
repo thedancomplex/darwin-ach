@@ -102,6 +102,12 @@ DarwinAch::DarwinAch()
   r = ach_open(&this->chan_darwin_cmd,        DARWIN_ACH_CHAN_CMD,        NULL);
   r = ach_open(&this->chan_darwin_cmd_return, DARWIN_ACH_CHAN_CMD_RETURN, NULL);
 
+  /* Flush all channels */
+  ach_flush(&this->chan_darwin_ref);
+  ach_flush(&this->chan_darwin_state);
+  ach_flush(&this->chan_darwin_cmd);
+  ach_flush(&this->chan_darwin_cmd_return);
+
   /* Do initial put on the channel to make sure the exist */
   ach_put(&this->chan_darwin_ref,        &this->darwin_ref,        sizeof(this->darwin_ref));
   ach_put(&this->chan_darwin_state,      &this->darwin_state,      sizeof(this->darwin_state));
