@@ -199,10 +199,17 @@ int DarwinAchClient::cmd(int cmd, int16_t data[4], bool block)
 int DarwinAchClient::cmd(int cmd, int16_t data[4], double data_float[4]){ return this->cmd(cmd, data, data_float, false); }
 int DarwinAchClient::cmd(int cmd, int16_t data[4], double data_float[4], bool block)
 {
+  if( cmd == DARWIN_CMD_MODE ) ref_mode = data[0];
+
   size_t fs;
   ach_status_t r = ACH_OK;
   memset(&this->darwin_cmd,   0, sizeof(this->darwin_cmd));
   this->darwin_cmd.cmd = cmd;
+  for( int i = 0; i < 4; i++ )
+  {
+    this->darwin_cmd.data[i] = data[i];
+    this->darwin_cmd.data_float[i] = data_float[i];
+  }
   r = ach_put(&this->chan_darwin_cmd, &this->darwin_cmd, sizeof(this->darwin_cmd));
 
   /* Waits until return of cmd if the a block of "ture" is sent */

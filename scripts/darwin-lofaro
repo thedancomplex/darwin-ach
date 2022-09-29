@@ -20,10 +20,21 @@ DARWIN_ACH_CHAN_CMD_RETURN='darwin-ach-chan-ret'
 DARWIN_IP='10.5.0.249'
 #DARWIN_IP='10.111.111.11'
 
+ResetAch()
+{
+  KillAchChannels
+  MakeAch
+}
+
+KillAchChannels()
+{
+  rm /dev/shm/achshm-darwin*
+}
+
 KillAch()
 {
   sudo kill -9 $(pidof achd)
-  rm /dev/shm/achshm-darwin*
+  KillAchChannels
 }
 
 MakeAch()
@@ -195,6 +206,11 @@ ShowUsage()
 	echo ''
 	echo 'ach-make      : Make ach channels                '
 	echo ''
+	echo 'ach-clear     : Clear and delete ach channels    '
+	echo ''
+	echo 'ach-reset     : Clear and delete ach channels    '
+	echo '                then makes them again            '
+	echo ''
 	echo 'ach-remote    : Start the remote ach daemon      '
 	echo ''
 	echo 'ach-kill      : stops remote connections and     '
@@ -234,9 +250,16 @@ case "$1" in
 	'stop-clock' )
 		DarwinLegacyClockRos2Stop $@
 	;;
-	
+
+	'ach-clear' )
+		KillAchChannels $@
+	;;	
+
 	'ach-make' )
 		MakeAch $@
+	;;
+	'ach-reset' )
+		ResetAch $@
 	;;
 
 	'ach-remote' )

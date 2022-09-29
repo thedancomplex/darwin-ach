@@ -174,19 +174,22 @@ int DarwinAch::do_cmd(int mode)
       case DARWIN_CMD_MODE:
       {
         int d0 = this->darwin_cmd.data[0];
-        if     ( d0 == MODE_REF                    )
+        if( d0 == MODE_REF )
         { 
-          m_REF_MODE = MODE_REF;                    
+          m_REF_MODE = d0;                   
+          printf("Set MODE_REF\n");
           do_return = true; 
         }
-        else if( d0 == MODE_WALKING            )
+        else if( d0 == MODE_WALKING )
         { 
-          m_REF_MODE = MODE_WALKING;            
+          m_REF_MODE = d0;            
+          printf("Set MODE_WALKING\n");
           do_return = true; 
         }
         else if( d0 == MODE_WALKING_LOWER_ONLY )
         { 
-          m_REF_MODE = MODE_WALKING_LOWER_ONLY; 
+          m_REF_MODE = d0; 
+          printf("Set MODE_WALKING_LOWER_ONLY\n");
           do_return = true; 
         }
         else
@@ -325,7 +328,7 @@ int DarwinAch::do_ref(int mode)
   size_t fs;
   /* Get the latest reference channel */
   ach_status_t r = ACH_OK;
-  r = ach_get( &this->chan_darwin_ref,         &this->darwin_ref, sizeof(this->darwin_ref),                 &fs, NULL, ACH_O_LAST );
+  r = ach_get( &this->chan_darwin_ref,         &this->darwin_ref,         sizeof(this->darwin_ref),         &fs, NULL, ACH_O_LAST );
   r = ach_get( &this->chan_darwin_ref_walking, &this->darwin_ref_walking, sizeof(this->darwin_ref_walking), &fs, NULL, ACH_O_LAST );
 
   int ret = 0;
@@ -333,49 +336,63 @@ int DarwinAch::do_ref(int mode)
   int move_mode = m_REF_MODE;
   //int move_mode = this->darwin_ref.mode;
 
-  if( move_mode == MODE_REF )
+  switch (move_mode)
   {
-    for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+    case MODE_REF:
     {
-      this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref.motor_ref[i].pos;
-      this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref.motor_ref[i].speed;
-      this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref.motor_ref[i].torque;
+//      printf("Mode: MODE_REF\n");
+      for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+      {
+        this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref.motor_ref[i].pos;
+        this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref.motor_ref[i].speed;
+       this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref.motor_ref[i].torque;
+      }
+      break;
     }
-  }
-  else if( mode == MODE_WALKING )
-  {
-    for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+
+    case MODE_WALKING:
     {
-      this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref_walking.motor_ref[i].pos;
-      this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref_walking.motor_ref[i].speed;
-      this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref_walking.motor_ref[i].torque;
-    }
-  }
-  else if( mode == MODE_WALKING_LOWER_ONLY )
-  {
-    for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
-    {
-      if( (i >= DARWIN_MOTOR_MIN_LOWER) & (i <= DARWIN_MOTOR_MAX_LOWER) )
+//      printf("Mode: MODE_WALKING\n");
+      for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
       {
         this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref_walking.motor_ref[i].pos;
         this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref_walking.motor_ref[i].speed;
         this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref_walking.motor_ref[i].torque;
       }
-      else
+      break;
+    }
+
+    case MODE_WALKING_LOWER_ONLY:
+    {
+//      printf("Mode: MODE_WALKING_LOWER_ONLY\n");
+      for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
+      {
+        if( (i >= DARWIN_MOTOR_MIN_LOWER) & (i <= DARWIN_MOTOR_MAX_LOWER) )
+        {
+          this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref_walking.motor_ref[i].pos;
+          this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref_walking.motor_ref[i].speed;
+          this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref_walking.motor_ref[i].torque;
+        }
+        else
+        {
+          this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref.motor_ref[i].pos;
+          this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref.motor_ref[i].speed;
+          this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref.motor_ref[i].torque;
+        }
+      }
+      break;
+    }
+    
+    default:
+    {
+//      printf("Mode: MODE_REF (Default)\n");
+      for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
       {
         this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref.motor_ref[i].pos;
         this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref.motor_ref[i].speed;
         this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref.motor_ref[i].torque;
       }
-    }
-  }
-  else
-  {
-    for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
-    {
-      this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref.motor_ref[i].pos;
-      this->dl->darwin_data.motor_ref[i].speed  = this->darwin_ref.motor_ref[i].speed;
-      this->dl->darwin_data.motor_ref[i].torque = this->darwin_ref.motor_ref[i].torque;
+      break;
     }
   }
 

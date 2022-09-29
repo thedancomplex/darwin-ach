@@ -3,7 +3,7 @@ default: all
 CFLAGS := -I./../../include -I/usr/local/include/dynamixel_sdk -DLINUX -D_GNU_SOURCE -Wall -m32 -O2 -O3 -g 
 CC := g++
 
-BINARIES := main
+BINARIES := darwin-server
 all : $(BINARIES)
 
 LIBS := -lrt -ldxl_x86_cpp -lstdc++ -lach

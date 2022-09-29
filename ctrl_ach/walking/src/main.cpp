@@ -63,7 +63,8 @@ int main()
 
   printf("Make system object\n");
   DarwinAchClient dac = DarwinAchClient();
-  dac.setRefMode(MODE_REF);
+  //dac.setRefMode(MODE_WALKING);
+  dac.setRefMode(MODE_WALKING_LOWER_ONLY);
 
   int r = 0;
 /*
