@@ -20,20 +20,45 @@
 #include <unistd.h>
 #include <string.h>
 
-int main()
+int main(int argc, char** argv)
 { 
+
+  bool do_slow = false;
+  
+  /* Slow option set */
+  if(argc > 1)
+  {
+    std::string str1(argv[1]);
+    if   (str1.compare("slow") == 0) do_slow = true;
+    else if(str1.compare("-h") ==0) 
+    {
+      printf("\n");
+      printf("  Darwin Ach - Turn Off                                      \n");
+      printf("  -----------------------------------------------------------\n");
+      printf("  -h        : This menue                                     \n");
+      printf("  slow      : Move to home position at default slow speed    \n");
+      printf("              before turning off the motors                  \n");
+      printf("  [no-args] : Turn off motors without goign to home posisiton\n");
+      printf("\n");
+      return 0;
+    }
+  }
+
   /* Make System Object */
   DarwinAchClient dac = DarwinAchClient();
   dac.setRefMode(MODE_REF);
 
-  /* Get into home positon */
-  for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
+  if(do_slow)
   {
-    dac.stageRefVel(i, DARWIN_REF_VEL_0);
-    dac.stageRefPos(i, DARWIN_REF_POS_0);
+    /* Get into home positon */
+    for(int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++)
+    {
+      dac.stageRefVel(i, DARWIN_REF_VEL_0);
+      dac.stageRefPos(i, DARWIN_REF_POS_0);
+    }
+    dac.postRef();
+    dac.sleep(4.0);
   }
-  dac.postRef();
-  dac.sleep(2.0);
 
   int r = 0;
 
