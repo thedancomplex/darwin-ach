@@ -16,6 +16,13 @@
 #define WALKING_SECTION "Walking Config"
 #define INVALID_VALUE   -1024.0
 
+#define X_MOVE_MIN  -10
+#define X_MOVE_MAX   10
+#define Y_MOVE_MIN  -10
+#define Y_MOVE_MAX   10
+#define A_MOVE_MIN  -10
+#define A_MOVE_MAX   10
+
 namespace Robot
 {
 	static double output_deg[21];
@@ -126,6 +133,10 @@ namespace Robot
 		double Y_MOVE_AMPLITUDE;
 		double Z_MOVE_AMPLITUDE;
 		double A_MOVE_AMPLITUDE;
+		double m_X_MOVE_AMPLITUDE;
+		double m_Y_MOVE_AMPLITUDE;
+		double m_Z_MOVE_AMPLITUDE;
+		double m_A_MOVE_AMPLITUDE;
 		bool A_MOVE_AIM_ON;
 
 		// Balance control
@@ -163,6 +174,12 @@ namespace Robot
 		double dan_gyro_y = 0.0;
                 void setGyroX(double val){ dan_gyro_x = val; }
                 void setGyroY(double val){ dan_gyro_y = val; }
+                int setStepXm(double val);
+                int setStepXmm(double val);
+                int setStepYm(double val);
+                int setStepYmm(double val);
+                int setStepADeg(double val);
+                int setStepARad(double val);
 
                 int getPGain(int id) { return m_Joint.GetPGain(id); }
                 int getIGain(int id) { return m_Joint.GetIGain(id); }

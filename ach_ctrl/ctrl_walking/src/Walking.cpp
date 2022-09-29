@@ -315,14 +315,17 @@ void Walking::update_param_balance()
 
 void Walking::Initialize()
 {
-	X_MOVE_AMPLITUDE   = 0;
+    X_MOVE_AMPLITUDE   = 0;
     Y_MOVE_AMPLITUDE   = 0;
     A_MOVE_AMPLITUDE   = 0;
+    m_X_MOVE_AMPLITUDE   = 0;
+    m_Y_MOVE_AMPLITUDE   = 0;
+    m_A_MOVE_AMPLITUDE   = 0;
 
-	m_Body_Swing_Y = 0;
+    m_Body_Swing_Y = 0;
     m_Body_Swing_Z = 0;
 
-	m_X_Swap_Phase_Shift = PI;
+    m_X_Swap_Phase_Shift = PI;
     m_X_Swap_Amplitude_Shift = 0;
     m_X_Move_Phase_Shift = PI / 2;
     m_X_Move_Amplitude_Shift = 0;
@@ -333,7 +336,7 @@ void Walking::Initialize()
     m_Z_Move_Phase_Shift = PI / 2;
     m_A_Move_Phase_Shift = PI / 2;
 
-	m_Ctrl_Running = false;
+    m_Ctrl_Running = false;
     m_Real_Running = false;
     m_Time = 0;
     update_param_time();
@@ -344,18 +347,18 @@ void Walking::Initialize()
 
 void Walking::Start()
 {
-	m_Ctrl_Running = true;
+    m_Ctrl_Running = true;
     m_Real_Running = true;
 }
 
 void Walking::Stop()
 {
-	m_Ctrl_Running = false;
+    m_Ctrl_Running = false;
 }
 		
 bool Walking::IsRunning()
 {
-	return m_Real_Running;
+    return m_Real_Running;
 }
 
 void Walking::Process()
@@ -375,8 +378,20 @@ void Walking::Process()
   // Update walk parameters
   if(m_Time == 0)
   {
+    // this is the starting phase... should be in the the DSP
+    // I think when c_Ctrl_Running goes false then that is the finish step portion, once the phase finishes it will stop
+    // This happens when you call Stop()... thus all of this should already be setup for us
+    // I think that setting X_MOVE_AMPLITUDE, Y_MOVE-AMPLITUDE, and A_MOVE_AMPLITUDE is move forward, to the side, and angle respectively.
+    // I will make methods to update this at the initial phase
+
     update_param_time();
     m_Phase = PHASE0;
+
+    // Update Movement Angles
+    X_MOVE_AMPLITUDE = m_X_MOVE_AMPLITUDE;
+    Y_MOVE_AMPLITUDE = m_Y_MOVE_AMPLITUDE;
+    A_MOVE_AMPLITUDE = m_A_MOVE_AMPLITUDE;
+
     if(m_Ctrl_Running == false)
     {
        if(m_X_Move_Amplitude == 0 && m_Y_Move_Amplitude == 0 && m_A_Move_Amplitude == 0)
@@ -646,3 +661,45 @@ double Walking::getRefRad(int id)
 {
   return m_Joint.GetAngle(id) * PI / 180.0;
 }
+
+int Walking::setStepXm(double val)
+{
+  return setStepXmm( val * 1000.0 );
+}
+
+int Walking::setStepXmm(double val)
+{
+  int ret = 0;
+  if( val < X_MOVE_MIN ){ val = X_MOVE_MIN; ret = 1; }
+  if( val > X_MOVE_MAX ){ val = X_MOVE_MAX; ret = 1; }
+  m_X_MOVE_AMPLITUDE = val;
+  return ret;
+}
+
+int Walking::setStepYm(double val)
+{
+  return setStepYmm( val * 1000.0 );
+}
+int Walking::setStepYmm(double val)
+{
+  int ret = 0;
+  if( val < Y_MOVE_MIN ){ val = Y_MOVE_MIN; ret = 1; }
+  if( val > Y_MOVE_MAX ){ val = Y_MOVE_MAX; ret = 1; }
+  m_Y_MOVE_AMPLITUDE = val;
+  return ret;
+}
+
+int Walking::setStepARad(double val)
+{
+  return setStepADeg( val * 180.0 / PI );
+}
+
+int Walking::setStepADeg(double val)
+{
+  int ret = 0;
+  if( val < A_MOVE_MIN ){ val = A_MOVE_MIN; ret = 1; }
+  if( val > A_MOVE_MAX ){ val = A_MOVE_MAX; ret = 1; }
+  m_A_MOVE_AMPLITUDE = val;
+  return ret;
+}
+
