@@ -8,7 +8,7 @@ AR = ar
 ARFLAGS = cr
 TARGET = darwin.a
 
-BINARIES := main
+BINARIES := darwin-walking
 all : $(BINARIES)
 
 obj : $(TARGET)

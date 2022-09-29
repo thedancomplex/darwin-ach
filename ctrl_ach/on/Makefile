@@ -3,7 +3,7 @@ default: all
 CFLAGS := -I./../../include  -Wall
 CC := g++
 
-BINARIES := main
+BINARIES := darwin-on
 all : $(BINARIES)
 
 LIBS := -lrt -lstdc++ -lach
