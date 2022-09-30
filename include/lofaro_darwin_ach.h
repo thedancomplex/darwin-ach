@@ -28,11 +28,12 @@ class DarwinAch
     int getState();
 
     /* Data types */
-    darwin_data_def_t darwin_ref;
-    darwin_data_def_t darwin_ref_walking;
-    darwin_data_def_t darwin_state;
-    darwin_cmd_def_t  darwin_cmd;
-    darwin_cmd_def_t  darwin_cmd_return;
+    darwin_data_def_t     darwin_ref;
+    darwin_data_def_t     darwin_ref_walking;
+    darwin_data_def_t     darwin_state;
+    darwin_cmd_def_t      darwin_cmd;
+    darwin_cmd_def_t      darwin_cmd_return;
+    darwin_cmd_vel_def_t  darwin_cmd_vel;
 
   private:
     int main_loop();
@@ -65,6 +66,9 @@ class DarwinAch
 
     /* Command Channel Return */
     ach_channel_t chan_darwin_cmd_return;
+
+    /* Command Vel Channel */
+    ach_channel_t chan_darwin_cmd_vel;
 };
 
 DarwinAch::DarwinAch()
@@ -76,6 +80,7 @@ DarwinAch::DarwinAch()
   memset(&this->darwin_state,        0, sizeof(this->darwin_state));
   memset(&this->darwin_cmd,          0, sizeof(this->darwin_cmd));
   memset(&this->darwin_cmd_return,   0, sizeof(this->darwin_cmd_return));
+  memset(&this->darwin_cmd_vel,      0, sizeof(this->darwin_cmd_vel));
 
   for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
   {
@@ -112,6 +117,7 @@ DarwinAch::DarwinAch()
   r = ach_open(&this->chan_darwin_state,       DARWIN_ACH_CHAN_STATE,       NULL);
   r = ach_open(&this->chan_darwin_cmd,         DARWIN_ACH_CHAN_CMD,         NULL);
   r = ach_open(&this->chan_darwin_cmd_return,  DARWIN_ACH_CHAN_CMD_RETURN,  NULL);
+  r = ach_open(&this->chan_darwin_cmd_vel,     DARWIN_ACH_CHAN_CMD_VEL,     NULL);
 
   /* Flush all channels */
   ach_flush(&this->chan_darwin_ref);
@@ -119,6 +125,7 @@ DarwinAch::DarwinAch()
   ach_flush(&this->chan_darwin_state);
   ach_flush(&this->chan_darwin_cmd);
   ach_flush(&this->chan_darwin_cmd_return);
+  ach_flush(&this->chan_darwin_cmd_vel);
 
   /* Do initial put on the channel to make sure the exist */
   ach_put(&this->chan_darwin_ref,         &this->darwin_ref,         sizeof(this->darwin_ref));
@@ -126,6 +133,7 @@ DarwinAch::DarwinAch()
   ach_put(&this->chan_darwin_state,       &this->darwin_state,       sizeof(this->darwin_state));
   ach_put(&this->chan_darwin_cmd,         &this->darwin_cmd,         sizeof(this->darwin_cmd));
   ach_put(&this->chan_darwin_cmd_return,  &this->darwin_cmd_return,  sizeof(this->darwin_cmd_return));
+  ach_put(&this->chan_darwin_cmd_vel,  &this->darwin_cmd_vel,  sizeof(this->darwin_cmd_vel));
   return;
 }
 

@@ -47,6 +47,15 @@ class DarwinAchClient
     int setRefMode(int mode);
     int postRef();
     
+    int stageCmdVelX(double val);
+    int stageCmdVelY(double val);
+    int stageCmdVelThetaZ(double val);
+    int postCmdVel();
+    int getCmdVel();
+    int getCmdVelMode();
+    double getCmdVelX(); 
+    double getCmdVelY();  
+    double getCmdVelThetaZ(); 
 
 
     /* Data types */
@@ -54,6 +63,7 @@ class DarwinAchClient
     darwin_data_def_t darwin_state;
     darwin_cmd_def_t  darwin_cmd;
     darwin_cmd_def_t  darwin_cmd_return;
+    darwin_cmd_vel_def_t  darwin_cmd_vel;
 
   private:
     int ref_mode = MODE_REF;
@@ -77,6 +87,10 @@ class DarwinAchClient
 
     /* Command Channel Return */
     ach_channel_t chan_darwin_cmd_return;
+
+    /* Command Vel Channel */
+    ach_channel_t chan_darwin_cmd_vel;
+
 };
 
 DarwinAchClient::DarwinAchClient()
@@ -86,6 +100,8 @@ DarwinAchClient::DarwinAchClient()
   memset(&this->darwin_state,        0, sizeof(this->darwin_state));
   memset(&this->darwin_cmd,          0, sizeof(this->darwin_cmd));
   memset(&this->darwin_cmd_return,   0, sizeof(this->darwin_cmd_return));
+  memset(&this->darwin_cmd_vel,      0, sizeof(this->darwin_cmd_vel));
+
 
   for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
   {
@@ -104,6 +120,7 @@ DarwinAchClient::DarwinAchClient()
   r = ach_open(&this->chan_darwin_state,       DARWIN_ACH_CHAN_STATE,       NULL);
   r = ach_open(&this->chan_darwin_cmd,         DARWIN_ACH_CHAN_CMD,         NULL);
   r = ach_open(&this->chan_darwin_cmd_return,  DARWIN_ACH_CHAN_CMD_RETURN,  NULL);
+  r = ach_open(&this->chan_darwin_cmd_vel,     DARWIN_ACH_CHAN_CMD_VEL,     NULL);
 
   /* Do initial put on the channel to make sure the exist */
 /*
@@ -142,6 +159,44 @@ int DarwinAchClient::getState()
   return (int)r;
 }
 
+int DarwinAchClient::getCmdVel()
+{
+  size_t fs;
+  ach_status_t r = ach_get( &this->chan_darwin_cmd_vel, &this->darwin_cmd_vel, sizeof(this->darwin_cmd_vel), &fs, NULL, ACH_O_LAST );
+  if( ( r == ACH_OK ) | ( r == ACH_MISSED_FRAME ) ) return 0;
+  return 1;
+}
+
+int DarwinAchClient::getCmdVelMode(){      return (int)this->darwin_cmd_vel.mode;  }
+double DarwinAchClient::getCmdVelX(){      return this->darwin_cmd_vel.linear.x;  }
+double DarwinAchClient::getCmdVelY(){      return this->darwin_cmd_vel.linear.y;  }
+double DarwinAchClient::getCmdVelThetaZ(){ return this->darwin_cmd_vel.angular.z; }
+
+
+int DarwinAchClient::stageCmdVelX(double val)
+{
+  this->darwin_cmd_vel.linear.x = val;
+  return 0;
+}
+
+int DarwinAchClient::stageCmdVelY(double val)
+{
+  this->darwin_cmd_vel.linear.y = val;
+  return 0;
+}
+
+int DarwinAchClient::stageCmdVelThetaZ(double val)
+{
+  this->darwin_cmd_vel.angular.z = val;
+  return 0;
+}
+int DarwinAchClient::postCmdVel()
+{
+  ach_status_t r = ACH_OK;
+  r = ach_put(&this->chan_darwin_cmd_vel, &this->darwin_cmd_vel, sizeof(this->darwin_cmd_vel));
+  if (r > 0) return 1;
+  return 0;
+}
 
 int DarwinAchClient::cmd(int cmd){ return this->cmd(cmd, false); }
 int DarwinAchClient::cmd(int cmd, bool block)

@@ -16,6 +16,7 @@ DARWIN_ACH_CHAN_REF_WALKING='darwin-ach-chan-ref-walking'
 DARWIN_ACH_CHAN_STATE='darwin-ach-chan-state'
 DARWIN_ACH_CHAN_CMD='darwin-ach-chan-cmd'
 DARWIN_ACH_CHAN_CMD_RETURN='darwin-ach-chan-ret'
+DARWIN_ACH_CHAN_CMD_VEL='darwin-ach-chan-cmd-vel'
 
 DARWIN_IP='10.5.0.249'
 #DARWIN_IP='10.111.111.11'
@@ -48,6 +49,7 @@ MakeAch()
   ach -1 mk $DARWIN_ACH_CHAN_STATE -m 10 -n 3000
   ach -1 mk $DARWIN_ACH_CHAN_CMD -m 10 -n 3000
   ach -1 mk $DARWIN_ACH_CHAN_CMD_RETURN -m 10 -n 3000
+  ach -1 mk $DARWIN_ACH_CHAN_CMD_VEL -m 10 -n 3000
   chmod 777 /dev/shm/achshm-darwin*
 }
 
@@ -58,6 +60,7 @@ AchRemote()
   achd -r pull $1 $DARWIN_ACH_CHAN_STATE &
   achd -r push $1 $DARWIN_ACH_CHAN_CMD &
   achd -r pull $1 $DARWIN_ACH_CHAN_CMD_RETURN &
+  achd -r pull $1 $DARWIN_ACH_CHAN_CMD_VEL &
 }
 
 

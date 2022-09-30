@@ -118,12 +118,29 @@ int main()
   double tock  = dac.time();
   double tock2 = dac.time();
 
+  /* Stop and wait until we get a start moving cmd */
+  Walking::GetInstance()->Stop();
+  bool do_walking = false;
   while(true)
   {
+    int ret = dac.getCmdVel();
+    if( ret == 0 )
+    {
+      int the_mode       = dac.getCmdVelMode();
+      double vel_x       = dac.getCmdVelX();
+      double vel_y       = dac.getCmdVelY();
+      double vel_theta_z = dac.getCmdVelThetaZ();
+      Walking::GetInstance()->setStepADeg(vel_theta_z);
+      Walking::GetInstance()->setStepXm(vel_x);
+      Walking::GetInstance()->setStepYm(vel_y);
+      if     ( the_mode == WALKING_START ) do_walking = true;
+      else if( the_mode == WALKING_STOP  ) do_walking = false;
+    }
 
-//    Walking::GetInstance()->setStepADeg(-30.0);
-//    Walking::GetInstance()->setStepXmm(30.0);
-//    Walking::GetInstance()->setStepYmm(-30.0);
+
+    /* Start and stop walking */
+    if(do_walking) Walking::GetInstance()->Start();
+    else Walking::GetInstance()->Stop();
 
     dac.getState();
 
@@ -146,24 +163,6 @@ int main()
             dac.darwin_state.imu.acc_y,
             dac.darwin_state.imu.acc_z);
     dac.sleep();
-
-  
-   /* Test print of JointData */
-/*
-   for(int i = 0; i < 21; i++) printf("%f, ", Walking::GetInstance()->getRefDeg(i) );
-   printf("\n");
-   for(int i = 0; i < 21; i++) printf("%f, ", Walking::GetInstance()->getRefRad(i) );
-   printf("\n");
-*/
-
-    /* Stop Walking */
-    tock = dac.time();
-    if( (tock - tick) >  9.5 ) Walking::GetInstance()->Stop();
-    if( (tock - tick) > 13.0 ) break;
   }
-/*
-  r = dac.cmd(DARWIN_CMD_OFF, true);
-  if( r == DARWIN_CMD_OK ) printf("Darwin Stopped\n");
-*/
   return 0;
 }

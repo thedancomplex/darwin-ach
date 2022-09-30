@@ -76,3 +76,8 @@ typedef struct darwin_data_def {
   darwin_twist_def_t  cmd_vel;
 }__attribute__((packed)) darwin_data_def_t;
 
+typedef struct darwin_cmd_vel_def {
+  int16_t             mode;
+  darwin_vec3_def_t linear;
+  darwin_vec3_def_t angular;
+}__attribute__((packed)) darwin_cmd_vel_def_t;

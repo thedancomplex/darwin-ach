@@ -9,6 +9,8 @@ typedef enum {
 	HZ_STATE_100_IMU_FT_SLOW,
 	HZ_STATE_100_IMU_MOTORS_SLOW,
 	HZ_REF_SLOW_TOP,
+	WALKING_START,
+	WALKING_STOP,
         DARWIN_HZ_MODE_COUNT
 }__attribute__((packed)) darwin_hz_mode_index_t;
 
@@ -28,6 +30,7 @@ typedef enum {
 #define DARWIN_ACH_CHAN_STATE        "darwin-ach-chan-state"
 #define DARWIN_ACH_CHAN_CMD          "darwin-ach-chan-cmd"
 #define DARWIN_ACH_CHAN_CMD_RETURN   "darwin-ach-chan-ret"
+#define DARWIN_ACH_CHAN_CMD_VEL      "darwin-ach-chan-cmd-vel"
 
 //#include "lofaro_defines_ach.h"
 
