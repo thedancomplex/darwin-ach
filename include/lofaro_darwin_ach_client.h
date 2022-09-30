@@ -47,6 +47,7 @@ class DarwinAchClient
     int setRefMode(int mode);
     int postRef();
     
+    int stageCmdVelMode(int val);
     int stageCmdVelX(double val);
     int stageCmdVelY(double val);
     int stageCmdVelThetaZ(double val);
@@ -172,6 +173,11 @@ double DarwinAchClient::getCmdVelX(){      return this->darwin_cmd_vel.linear.x;
 double DarwinAchClient::getCmdVelY(){      return this->darwin_cmd_vel.linear.y;  }
 double DarwinAchClient::getCmdVelThetaZ(){ return this->darwin_cmd_vel.angular.z; }
 
+int DarwinAchClient::stageCmdVelMode(int val)
+{
+  this->darwin_cmd_vel.mode = val;
+  return 0;
+}
 
 int DarwinAchClient::stageCmdVelX(double val)
 {
