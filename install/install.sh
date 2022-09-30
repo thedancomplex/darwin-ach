@@ -8,7 +8,15 @@ ROS_RUN_FILE=run_darwin_lofaro.sh
 ROS_CLOCK_RUN_FILE=run_darwin_clock_lofaro.sh
 BIN_NAME=darwin-lofaro
 SHM_NAME=setshm.sh
-
+SYSTEM_ACH_DIR=ctrl_ach
+SYSTEM_ACH_DIR_WALKING=walking
+SYSTEM_ACH_DIR_ON=on
+SYSTEM_ACH_DIR_OFF=off
+SYSTEM_ACH_DIR_SERVER=ctrl_server
+BIN_NAME_ACH_SERVER=darwin-server
+BIN_NAME_ACH_ON=darwin-on
+BIN_NAME_ACH_OFF=darwin-off
+BIN_NAME_ACH_WALKING=darwin-walking
 
 InstallRos2()
 {
@@ -224,6 +232,107 @@ DarwinLegacyRos2()
 	cd $THE_DIR
 }
 
+DarwinAchOff()
+{
+  $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_OFF/$BIN_NAME_ACH_OFF
+}
+
+DarwinAchOn()
+{
+  $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON/$BIN_NAME_ACH_ON
+}
+
+DarwinAchServer()
+{
+  case "$1" in
+    	'on' )
+		DarwinAchServerOn $@
+	;;
+    	'off' )
+		DarwinAchServerOff $@
+	;;
+	
+	* )
+		ShowUsage
+		exit 1
+  esac
+
+}
+
+DarwinAchServerOn()
+{
+  if ps -p $(pidof $BIN_NAME_ACH_SERVER) > /dev/null 2>&1
+  then
+      echo 'Darwin-Ach Server is already running'
+  else
+      echo 'Starting Darwin-Ach Server'
+      $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_SERVER/$BIN_NAME_ACH_SERVER & > /dev/null 2>&1
+  fi
+}
+
+DarwinAchServerOff()
+{
+  if ps -p $(pidof $BIN_NAME_ACH_SERVER) > /dev/null 2>&1
+  then
+      echo 'Stopping Darwin-Ach Server'
+      kill -9 $(pidof $BIN_NAME_ACH_SERVER) > /dev/null 2>&1
+  else
+      echo 'Darwin-Ach Server is already stopped'
+  fi
+}
+
+DarwinAchWalking()
+{
+  case "$1" in
+    	'on' )
+		DarwinAchWalkingOn $@
+	;;
+    	'off' )
+		DarwinAchWalkingOff $@
+	;;
+	
+	* )
+		ShowUsage
+		exit 1
+  esac
+
+}
+
+DarwinAchWalkingOn()
+{
+  if ps -p $(pidof $BIN_NAME_ACH_WALKING) > /dev/null 2>&1
+  then
+      echo 'Darwin-Ach Walking is already running'
+  else
+      echo 'Starting Darwin-Ach Walking'
+      $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_WALKING/$BIN_NAME_ACH_WALKING & > /dev/null 2>&1
+  fi
+}
+
+DarwinAchWalkingOff()
+{
+  if ps -p $(pidof $BIN_NAME_ACH_WALKING) > /dev/null 2>&1
+  then
+      echo 'Stopping Darwin-Ach Walking'
+      kill -9 $(pidof $BIN_NAME_ACH_WALKING) > /dev/null 2>&1
+  else
+      echo 'Darwin-Ach Walking is already stopped'
+  fi
+}
+
+DarwinAchInstall()
+{
+  DarwinLegacy
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_WALKING
+  source build.sh
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON
+  source build.sh
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_OFF
+  source build.sh
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_SERVER
+  source build.sh
+}
+
 DarwinLegacy()
 {
 	THE_DIR=$(pwd)
@@ -232,6 +341,7 @@ DarwinLegacy()
 	echo $INSTALL_DIR
         sudo cp -r ../include/ $INSTALL_DIR/
         sudo cp -r ../ros2/ $INSTALL_DIR/
+        sudo cp -r ../$SYSTEM_ACH_DIR $INSTALL_DIR/
 #	sudo mkdir /etc/rc.local.d
 #	chmod +x darwin-legacy.sh
 #	sudo cp darwin-legacy.sh /etc/rc.local.d/
@@ -249,7 +359,6 @@ DarwinLegacy()
 	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
 	sudo ln -s $INSTALL_DIR/$SHM_NAME /etc/rc.local.d/
 	cd $THE_DIR
-
 }
 
 ShowUsage()
@@ -278,6 +387,18 @@ ShowUsage()
 	echo 'low-latency   : sets serial to low latency mode  '
         echo 'darwin-legacy : install the darwin-legacy system '
         echo 'darwin-ros2   : install the darwin-ros2 system   '
+	echo ''
+	echo 'darwin-ach-install : installs darwin-ach         '
+	echo 'darwin-ach-server                                '
+	echo '    on             : Starts Darwin-Ach Server    '
+	echo '    off            : Stops Darwin-Ach Server     '
+	echo ''
+	echo 'darwin-ach-on      : Turns on motors             '
+	echo 'darwin-ach-off     : Turns off motors            '
+	echo ''
+	echo 'darwin-ach-walking                               '
+	echo '    on             : Starts walking process      '
+	echo '    off            : Stops walking process       '
 	echo
 }
 
@@ -315,6 +436,26 @@ case "$1" in
 
 	'darwin-ros2' )
 		DarwinLegacyRos2 $@
+	;;
+     
+        'darwin-ach-install' )
+		DarwinAchInstall $@
+	;;
+
+	'darwin-ach-server' )
+		DarwinAchServer $2
+	;;
+	
+	'darwin-ach-on' )
+		DarwinAchOn $@
+	;;
+
+	'darwin-ach-off' )
+		DarwinAchOff $@
+	;;
+
+	'darwin-ach-walking' )
+		DarwinAchWalking $2
 	;;
 	
 	
