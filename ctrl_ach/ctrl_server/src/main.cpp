@@ -22,6 +22,7 @@ int main()
 {
   printf("Make System Object\n");
   DarwinAch da = DarwinAch();
+  da.setDebug(true);
   int r = 0;
   printf("Start System Loop\n");
   r = da.loop(125.0, HZ_STATE_125_IMU);

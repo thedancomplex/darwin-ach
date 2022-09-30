@@ -23,6 +23,7 @@ class DarwinAch
     int loop(double hz, int mode_state);
     int loop(double hz, int mode_state, int mode_ref);
     int sleep(double val);
+    int setDebug(bool val);
 
     /* Update Methods */
     int getState();
@@ -43,6 +44,8 @@ class DarwinAch
     int do_state(int mode);
     int do_cmd(int mode);
     int do_gain();
+    int do_debug();
+    int do_save_previous_state();
     int m_REF_MODE = MODE_REF;
 
     DarwinLofaro* dl = new DarwinLofaro();
@@ -51,7 +54,7 @@ class DarwinAch
     darwin_data_def_t darwin_ref_0;
 
     bool run_loop = false;
-
+    bool debug_flag = false;
     /* Reference Channel */
     ach_channel_t chan_darwin_ref;  
 
@@ -276,8 +279,10 @@ int DarwinAch::loop(double hz, int mode_state, int mode_ref)
   
   bool do_loop = true;
   while(do_loop)
-  {
+  { 
     this->main_loop(mode_state, mode_ref);
+    this->do_debug();
+    this->do_save_previous_state();
     this->dl->sleep();
   }
 
@@ -285,6 +290,40 @@ int DarwinAch::loop(double hz, int mode_state, int mode_ref)
   return ref;
 }
 
+int DarwinAch::do_save_previous_state()
+{
+  this->darwin_ref_0 = this->darwin_ref;
+  return 0;
+}
+
+
+int DarwinAch::setDebug(bool val)
+{
+  debug_flag = val;
+  return 0;
+}
+
+int DarwinAch::do_debug()
+{
+  int ret = 0;
+  if(this->debug_flag)
+  {
+    for( int i = DARWIN_MOTOR_MIN; i <= DARWIN_MOTOR_MAX; i++ )
+    {
+      double p0 = this->darwin_ref_0.motor_ref[i].pos;
+      double p1 = this->darwin_ref.motor_ref[i].pos;
+      double dt = abs(p0-p1);
+      if( dt > 0.1 )
+      {
+        printf("Error: (dt = %f) (mot = %d)\n",dt,i);
+        ret += 1;
+      }
+    }
+  }
+  if( ret > 0 ) ret = 1;
+  else ret = 0;
+  return ret;
+}
 
 int ft_i = 0;
 int upper_i = 0;
@@ -325,7 +364,6 @@ int DarwinAch::do_gain()
     if( (uint8_t)this->darwin_ref.motor_ref[i].i_gain != (uint8_t)this->darwin_ref_0.motor_ref[i].i_gain ) ret += this->dl->setPGain(i, this->darwin_ref.motor_ref[i].i_gain);
     if( (uint8_t)this->darwin_ref.motor_ref[i].d_gain != (uint8_t)this->darwin_ref_0.motor_ref[i].d_gain ) ret += this->dl->setPGain(i, this->darwin_ref.motor_ref[i].d_gain);
   }
-  this->darwin_ref_0 = this->darwin_ref;
   if( ret > 0 ) ret = 1;
   return ret;
 }

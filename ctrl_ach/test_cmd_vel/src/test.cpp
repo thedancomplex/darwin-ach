@@ -24,12 +24,13 @@ int main()
 { 
   /* Make System Object */
   DarwinAchClient dac = DarwinAchClient();
-  double val = 0.03;
+  double val = 0.01;
 
 
   while(true)
   {
     val = -val;
+//    dac.stageCmdVelMode(WALKING_STOP);
     dac.stageCmdVelMode(WALKING_START);
     dac.stageCmdVelX(val);
 //    dac.stageCmdVelY(val);
