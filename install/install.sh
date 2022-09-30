@@ -324,13 +324,13 @@ DarwinAchInstall()
 {
   DarwinLegacy
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_WALKING
-  source build.sh
+  sudo ./build.sh
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON
-  source build.sh
+  sudo ./build.sh
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_OFF
-  source build.sh
+  sudo ./build.sh
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_SERVER
-  source build.sh
+  sudo ./build.sh
 }
 
 DarwinLegacy()
@@ -388,17 +388,7 @@ ShowUsage()
         echo 'darwin-legacy : install the darwin-legacy system '
         echo 'darwin-ros2   : install the darwin-ros2 system   '
 	echo ''
-	echo 'darwin-ach-install : installs darwin-ach         '
-	echo 'darwin-ach-server                                '
-	echo '    on             : Starts Darwin-Ach Server    '
-	echo '    off            : Stops Darwin-Ach Server     '
-	echo ''
-	echo 'darwin-ach-on      : Turns on motors             '
-	echo 'darwin-ach-off     : Turns off motors            '
-	echo ''
-	echo 'darwin-ach-walking                               '
-	echo '    on             : Starts walking process      '
-	echo '    off            : Stops walking process       '
+	echo 'darwin-ach    : installs darwin-ach         '
 	echo
 }
 
@@ -438,27 +428,10 @@ case "$1" in
 		DarwinLegacyRos2 $@
 	;;
      
-        'darwin-ach-install' )
+        'darwin-ach' )
 		DarwinAchInstall $@
 	;;
 
-	'darwin-ach-server' )
-		DarwinAchServer $2
-	;;
-	
-	'darwin-ach-on' )
-		DarwinAchOn $@
-	;;
-
-	'darwin-ach-off' )
-		DarwinAchOff $@
-	;;
-
-	'darwin-ach-walking' )
-		DarwinAchWalking $2
-	;;
-	
-	
 	* )
 		ShowUsage
 		exit 1

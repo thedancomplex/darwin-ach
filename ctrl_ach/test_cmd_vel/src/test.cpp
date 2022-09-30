@@ -38,6 +38,12 @@ int main()
     dac.postCmdVel();
     printf("Posted Val = %f m/s\n", val);
     dac.sleep(5.0);
+
+    dac.stageCmdVelX(0.0);
+    dac.stageCmdVelMode(WALKING_STOP);
+    dac.postCmdVel();
+    printf("Posted Val = %f m/s\n", 0.0);
+    dac.sleep(5.0);
   }
 
   return 0;

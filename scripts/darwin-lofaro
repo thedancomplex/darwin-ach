@@ -8,6 +8,16 @@ ROS_BUILD_FILE=do_build.sh
 ROS_RUN_FILE=run_darwin_lofaro.sh
 ROS_CLOCK_RUN_FILE=run_darwin_clock_lofaro.sh
 
+SYSTEM_ACH_DIR=ctrl_ach
+SYSTEM_ACH_DIR_WALKING=walking
+SYSTEM_ACH_DIR_ON=on
+SYSTEM_ACH_DIR_OFF=off
+SYSTEM_ACH_DIR_SERVER=ctrl_server
+BIN_NAME_ACH_SERVER=darwin-server
+BIN_NAME_ACH_ON=darwin-on
+BIN_NAME_ACH_OFF=darwin-off
+BIN_NAME_ACH_WALKING=darwin-walking
+
 DARWIN_CLOCK_SCREEN_NAME=darwin-lofaro-clock
 DARWIN_SCREEN_NAME=darwin-lofaro
 
@@ -168,6 +178,124 @@ DarwinLegacy()
 
 }
 
+
+DarwinAchOff()
+{
+  echo 'Turning motor power off' 
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_OFF/
+  ./$BIN_NAME_ACH_OFF
+}
+
+DarwinAchOn()
+{ 
+  echo 'Turning motor power on'
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON/
+  ./$BIN_NAME_ACH_ON
+}
+
+DarwinAchPower()
+{
+  case "$1" in
+        'on' )
+                DarwinAchOn $@
+        ;;
+        'off' )
+                DarwinAchOff $@
+        ;;
+
+        * )
+                ShowUsage
+                exit 1
+  esac
+
+}
+DarwinAchServer()
+{
+  case "$1" in
+        'on' )
+                DarwinAchServerOn $@
+        ;;
+        'off' )
+                DarwinAchServerOff $@
+        ;;
+
+        * )
+                ShowUsage
+                exit 1
+  esac
+
+}
+
+DarwinAchServerOn()
+{
+  if ps -p $(pidof $BIN_NAME_ACH_SERVER) > /dev/null 2>&1
+  then
+      echo 'Darwin-Ach Server is already running'
+  else
+      echo 'Starting Darwin-Ach Server'
+      cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_SERVER/
+      ./$BIN_NAME_ACH_SERVER & 
+      echo ''
+  fi
+}
+
+DarwinAchServerOff()
+{
+  if ps -p $(pidof $BIN_NAME_ACH_SERVER) > /dev/null 2>&1
+  then
+      echo 'Stopping Darwin-Ach Server'
+      kill -9 $(pidof $BIN_NAME_ACH_SERVER) > /dev/null 2>&1
+  else
+      echo 'Darwin-Ach Server is already stopped'
+  fi
+}
+
+DarwinAchWalkingOn()
+{
+  if ps -p $(pidof $BIN_NAME_ACH_WALKING) > /dev/null 2>&1
+  then
+      echo 'Darwin-Ach Walking is already running'
+  else
+      echo 'Starting Darwin-Ach Walking'
+      cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_WALKING/
+      ./$BIN_NAME_ACH_WALKING & 
+      echo ''
+  fi
+}
+
+DarwinAchWalkingOff()
+{
+  if ps -p $(pidof $BIN_NAME_ACH_WALKING) > /dev/null 2>&1
+  then
+      echo 'Stopping Darwin-Ach Walking'
+      kill -9 $(pidof $BIN_NAME_ACH_WALKING) > /dev/null 2>&1
+  else
+      echo 'Darwin-Ach Walking is already stopped'
+  fi
+}
+
+
+DarwinAchWalking()
+{
+  case "$1" in
+        'on' )
+                DarwinAchWalkingOn $@
+        ;;
+        'off' )
+                DarwinAchWalkingOff $@
+        ;;
+
+        * )
+                ShowUsage
+                exit 1
+  esac
+
+}
+
+
+
+
+
 ShowUsage()
 {
 	echo 
@@ -218,6 +346,18 @@ ShowUsage()
 	echo ''
 	echo 'ach-kill      : stops remote connections and     '
 	echo '                removes all ach channels         '
+	echo ''
+        echo 'darwin-ach-server                                '
+        echo '    on             : Starts Darwin-Ach Server    '
+        echo '    off            : Stops Darwin-Ach Server     '
+        echo ''
+        echo 'darwin-ach-power                                 '
+        echo '    on             : Turns on motors             '
+        echo '    off            : Turns off motors            '
+        echo ''
+        echo 'darwin-ach-walking                               '
+        echo '    on             : Starts walking process      '
+        echo '    off            : Stops walking process       '
 	echo ''
 	echo
 }
@@ -272,6 +412,19 @@ case "$1" in
 	'ach-kill' )
 		KillAch
 	;;
+
+        'darwin-ach-server' )
+                DarwinAchServer $2
+        ;;
+
+        'darwin-ach-power' )
+                DarwinAchPower $2
+        ;;
+
+        'darwin-ach-walking' )
+                DarwinAchWalking $2
+        ;;
+
 	
 	* )
 		ShowUsage
