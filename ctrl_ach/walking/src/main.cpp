@@ -133,14 +133,29 @@ int main()
       Walking::GetInstance()->setStepADeg(vel_theta_z);
       Walking::GetInstance()->setStepXm(vel_x);
       Walking::GetInstance()->setStepYm(vel_y);
-      if     ( the_mode == WALKING_START ) do_walking = true;
-      else if( the_mode == WALKING_STOP  ) do_walking = false;
+
+      /* Start and stop walking */
+      if( the_mode == WALKING_START ) 
+      {
+        if(do_walking == false)
+        {
+          Walking::GetInstance()->Start();
+          printf("Start Walking Mode\n");
+        }
+        do_walking = true;
+      }
+      else if( the_mode == WALKING_STOP  )
+      {
+        if(do_walking == true)
+        {
+          Walking::GetInstance()->Stop();
+          printf("Stop Walking Mode\n");
+        }
+        do_walking = false;
+      }
     }
 
 
-    /* Start and stop walking */
-    if(do_walking) Walking::GetInstance()->Start();
-    else Walking::GetInstance()->Stop();
 
     dac.getState();
 
@@ -158,10 +173,13 @@ int main()
 
     dac.postRef();
 
+/*
     printf("ax= %f, ay=%f, az=%f\n",
             dac.darwin_state.imu.acc_x,
             dac.darwin_state.imu.acc_y,
             dac.darwin_state.imu.acc_z);
+*/
+
     dac.sleep();
   }
   return 0;
