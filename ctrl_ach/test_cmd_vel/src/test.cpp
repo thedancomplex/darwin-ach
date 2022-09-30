@@ -32,6 +32,8 @@ int main()
     val = -val;
     dac.stageCmdVelMode(WALKING_START);
     dac.stageCmdVelX(val);
+//    dac.stageCmdVelY(val);
+//    dac.stageCmdVelThetaZ(val);
     dac.postCmdVel();
     printf("Posted Val = %f m/s\n", val);
     dac.sleep(5.0);
