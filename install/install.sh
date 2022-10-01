@@ -17,6 +17,7 @@ BIN_NAME_ACH_SERVER=darwin-server
 BIN_NAME_ACH_ON=darwin-on
 BIN_NAME_ACH_OFF=darwin-off
 BIN_NAME_ACH_WALKING=darwin-walking
+BIN_NAME_DARWIN_ACH=darwin-ach
 
 InstallRos2()
 {
@@ -323,6 +324,12 @@ DarwinAchWalkingOff()
 DarwinAchInstall()
 {
   DarwinLegacy
+
+  THE_DIR=$(pwd)
+  sudo rm /usr/bin/$BIN_NAME_DARWIN_ACH
+  sudo cp ../scripts/$BIN_NAME_DARWIN_ACH $INSTALL_DIR
+  sudo ln -s $INSTALL_DIR/$BIN_NAME_DARWIN_ACH /usr/bin
+
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_WALKING
   sudo ./build.sh
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON
@@ -331,6 +338,8 @@ DarwinAchInstall()
   sudo ./build.sh
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_SERVER
   sudo ./build.sh
+
+  cd $THE_DIR
 }
 
 DarwinLegacy()

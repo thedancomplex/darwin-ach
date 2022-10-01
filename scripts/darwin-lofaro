@@ -358,6 +358,14 @@ ShowUsage()
         echo 'darwin-ach-walking                               '
         echo '    on             : Starts walking process      '
         echo '    off            : Stops walking process       '
+	echo 'darwin-ach-status                                '
+	echo '    -n             : Running status of darwin-ach'
+	echo '                     numerica 0=stopped 1=running'
+	echo '    -h             : Human readable status of the'
+	echo '                     Darwin-ach system           '
+	echo '        server     : Server status               '
+	echo '        client     : Client status               '
+	echo '        remote     : Remote status               '
 	echo ''
 	echo
 }

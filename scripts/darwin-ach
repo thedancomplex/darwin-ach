@@ -1,0 +1,136 @@
+#!/bin/bash
+
+Power()
+{
+
+  case "$1" in
+	'on' )
+		On
+	;;
+
+  	'off' )
+		Off
+	;;
+
+	* )
+		ShowUsage
+	;;
+  esac
+}
+Start()
+{
+
+  case "$1" in
+	'server' )
+		darwin-lofaro ach-reset
+		darwin-lofaro darwin-ach-server on
+		On
+	;;
+
+  	'client' )
+		darwin-lofaro ach-reset
+		darwin-lofaro ach-remote
+	;;
+
+	'local' )
+		darwin-lofaro ach-reset
+		darwin-lofaro darwin-ach-server on
+		On
+	;;
+	* )
+		ShowUsage
+	;;
+  esac
+}
+
+Stop()
+{
+
+  case "$1" in
+	'server' )
+		Off
+		darwin-lofaro darwin-ach-server off
+		darwin-lofaro ach-clear
+	;;
+
+  	'client' )
+		darwin-lofaro ach-kill
+		darwin-lofaro ach-clear
+	;;
+
+	'local' )
+		Off
+		darwin-lofaro darwin-ach-server off
+		darwin-lofaro ach-clear
+	;;
+	* )
+		ShowUsage
+	;;
+  esac
+}
+
+On()
+{
+  darwin-lofaro darwin-ach-power on
+}
+
+Off()
+{
+  darwin-lofaro darwin-ach-power off
+}
+
+
+
+ShowUsage()
+{
+        echo 
+        echo '================================================='
+        echo '================================================='
+        echo '======  Darwin-Ach for Darin Lofaro Legacy ======'
+        echo '============   for the Darwin OP    ============='
+        echo '================================================='
+        echo '=============== Daniel M. Lofaro ================'
+        echo '=============== dan@danlofaro.com ==============='
+        echo '================================================='
+        echo '================================================='
+        echo ''
+        echo 'start                                            '
+        echo '    server    : Starts the server (darwin) side  '
+	echo '                and turns power on               '
+	echo '    client    : Starts the client (external side)'
+	echo '    local     : Starts server and client on the  '
+	echo '                same machine and turns poer on   '
+        echo ''
+        echo 'stop                                             '
+        echo '    server    : Stops the server (darwin) side   '
+	echo '                and turns power off              '
+	echo '    client    : Stops the client (external side) '
+	echo '    local     : Stops server and client on the   '
+	echo '                same machine and turns power off '
+	echo ''
+	echo 'power                                            '
+        echo '    on        : Turns power on                   '
+	echo '    off       : Turns power off                  '
+	echo ''
+}
+
+
+case "$1" in 
+	'start' )
+		Start $2
+	;;
+
+	'stop' )
+		Stop $2
+	;;
+
+	'power' )
+		Power $2
+	;;	
+
+	* )
+		ShowUsage
+		exit 1
+	;;	
+esac	
+exit 0
