@@ -19,6 +19,8 @@ BIN_NAME_ACH_OFF=darwin-off
 BIN_NAME_ACH_WALKING=darwin-walking
 BIN_NAME_DARWIN_ACH=darwin-ach
 
+THE_ARCH=$(arch)
+
 InstallRos2()
 {
   InstallRos2Dep
@@ -183,32 +185,34 @@ LowLatency()
 
 AchInstall()
 {
-THE_DIR=$(pwd)
-cd /tmp
+	THE_DIR=$(pwd)
+	cd /tmp
 
-sudo apt install autotools-dev
-sudo apt-get install autoconf
-sudo apt-get install autoconf automake libtool autoconf-archive
-sudo apt-get install linux-headers-generic dkms openbsd-inetd help2man man2html docbook-utils avahi-utils
-sudo apt-get install doxygen
-sudo apt install dkms
-apt-get install openbsd-inetd
+	sudo apt install autotools-dev
+	sudo apt-get install autoconf
+	sudo apt-get install autoconf automake libtool autoconf-archive
+	sudo apt-get install linux-headers-generic dkms openbsd-inetd help2man man2html docbook-utils avahi-utils
+	sudo apt-get install doxygen
+	sudo apt install dkms
+	sudo apt-get install openbsd-inetd
 
-git clone https://github.com/thedancomplex/ach
-cd ach
-git checkout no/benchmarks
+	git clone https://github.com/thedancomplex/ach
+	cd ach
+	#git checkout os/32bit
+	git checkout no/benchmarks
 
-autoreconf -i
-./configure --with-python --enable-dkms=no
+	autoreconf -i
+	./configure --with-python --enable-dkms=no
+	make
+	sudo make install
 
-make
-sudo make install
+	echo '8076  stream  tcp  nowait  nobody  /usr/local/bin/achd /usr/local/bin/achd serve' | sudo tee -a /etc/inetd.conf
+	
+	sudo service openbsd-inetd restart
 
-echo '8076  stream  tcp  nowait  nobody  /usr/local/bin/achd /usr/local/bin/achd serve' | sudo tee -a /etc/inetd.conf
+	sudo ln -s /usr/local/lib/libach* /usr/lib/
 
-sudo service openbsd-inetd restart
-
-cd $THE_DIR
+	cd $THE_DIR
 }
 
 DarwinLegacyRos2()
@@ -323,6 +327,7 @@ DarwinAchWalkingOff()
 
 DarwinAchInstall()
 {
+  AchInstall
   DarwinLegacy
 
   THE_DIR=$(pwd)
@@ -340,6 +345,34 @@ DarwinAchInstall()
   sudo ./build.sh
 
   cd $THE_DIR
+}
+
+DynInstall()
+{
+	THE_DIR=$(pwd)
+	cd /tmp
+	git clone https://github.com/thedancomplex/DynamixelSDK
+	cd DynamixelSDK
+	cd c++/build
+	if [ $THE_ARCH == "x86" ]
+	then
+		cd linux32
+		make
+		sudo make install
+		cd ..
+	elif [ $THE_ARCH == "x86_64" ]
+	then
+		cd linux64
+		make
+		sudo make install
+		cd ..
+	else
+		cd linux_sbc
+		make
+		sudo make install
+		cd ..
+	fi
+
 }
 
 DarwinLegacy()
