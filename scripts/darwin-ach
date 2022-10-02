@@ -23,7 +23,7 @@ Power()
 Start()
 {
 
-  CMD_SERVER='darwin-lofaro ach-reset; darwin-lofaro darwin-ach-server on; On; '
+  CMD_SERVER='darwin-lofaro ach-reset; darwin-lofaro darwin-ach-server on &; sleep 1; On; '
   CMD_CLIENT='darwin-lofaro ach-reset; darwin-lofaro ach-remote; '
   case "$2" in
 	'walking' )
@@ -36,7 +36,7 @@ Start()
 	'server' )
 		if ! screen -list | grep -q "$SCREEN_SERVER"; then
                 	echo '--- Starting Darwin-Ach Server using Darwin Lofaro Legacy ---'
-                	screen -d -m -S $SCREEN_SERVER /bin/bash -c $CMD
+                	screen -d -m -S $SCREEN_SERVER /bin/bash -c $CMD_SERVER
         	else
                 	echo '--- Darwin-Ach Server usign Darwin Lofaro Legacy already running ---'
         	fi
