@@ -7,5 +7,5 @@ network:
       dhcp4-overrides:
         route-metric: 100
       access-points:
-        "robotNet":
-          password: "robot6106496811"
+        "YOUR_SSID":
+          password: "YOUR_PASSWORD"
