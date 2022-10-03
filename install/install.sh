@@ -190,6 +190,13 @@ LowLatency()
 	echo '---- Low Latency Set ----'
 }
 
+BackpackNetwork()
+{
+  	cd $THE_INSTALL_DIR
+	sudo cp 51-wifi-init.yaml /etc/netplan
+	sudo netplan apply
+}
+
 DynInstall()
 {
   	cd $THE_INSTALL_DIR
@@ -216,6 +223,8 @@ AchInstall()
   	cd $THE_INSTALL_DIR
 	THE_DIR=$(pwd)
 	cd /tmp
+
+	sudo apt install iw
 
 	sudo apt install autotools-dev
 	sudo apt-get install autoconf
@@ -504,6 +513,9 @@ ShowUsage()
 	echo '                Use on the Darwins cpu (fit-pc)  '
 	echo '    client    : installs darwin-ach client       '
 	echo '                Use on external computer/backpack'
+	echo ''
+	echo 'backpack-network : setup the backpack (raspi)    '
+	echo '                   network via netplan           '
 	echo
 }
 
@@ -545,6 +557,10 @@ case "$1" in
      
         'darwin-ach' )
 		DarwinAchInstall $2
+	;;
+
+	'backpack-network' )
+		BackpackNetwork
 	;;
 
 	* )
