@@ -325,16 +325,9 @@ DarwinAchWalkingOff()
   fi
 }
 
-DarwinAchInstall()
+
+DarwinAchInstallServer()
 {
-  AchInstall
-  DarwinLegacy
-
-  THE_DIR=$(pwd)
-  sudo rm /usr/bin/$BIN_NAME_DARWIN_ACH
-  sudo cp ../scripts/$BIN_NAME_DARWIN_ACH $INSTALL_DIR
-  sudo ln -s $INSTALL_DIR/$BIN_NAME_DARWIN_ACH /usr/bin
-
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_WALKING
   sudo ./build.sh
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON
@@ -343,6 +336,43 @@ DarwinAchInstall()
   sudo ./build.sh
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_SERVER
   sudo ./build.sh
+}
+
+DarwinAchInstallClient()
+{
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_WALKING
+  sudo ./build.sh
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON
+  sudo ./build.sh
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_OFF
+  sudo ./build.sh
+}
+
+DarwinAchInstall()
+{
+
+  THE_DIR=$(pwd)
+
+  case "$1" in
+    	'server' )
+  		AchInstall
+		DarwinLegacy
+		DarwinAchInstallServer
+	;;
+    	'client' )
+  		AchInstall
+		DarwinLegacy
+		DarwinAchInstallClient
+	;;
+	
+	* )
+		ShowUsage
+		exit 1
+  esac
+
+  sudo rm /usr/bin/$BIN_NAME_DARWIN_ACH
+  sudo cp ../scripts/$BIN_NAME_DARWIN_ACH $INSTALL_DIR
+  sudo ln -s $INSTALL_DIR/$BIN_NAME_DARWIN_ACH /usr/bin
 
   cd $THE_DIR
 }
@@ -430,7 +460,11 @@ ShowUsage()
         echo 'darwin-legacy : install the darwin-legacy system '
         echo 'darwin-ros2   : install the darwin-ros2 system   '
 	echo ''
-	echo 'darwin-ach    : installs darwin-ach         '
+	echo 'darwin-ach                                       '
+	echo '    server    : installs darwin-ach server       '
+	echo '                Use on the Darwins cpu (fit-pc)  '
+	echo '    client    : installs darwin-ach client       '
+	echo '                Use on external computer/backpack'
 	echo
 }
 
@@ -471,7 +505,7 @@ case "$1" in
 	;;
      
         'darwin-ach' )
-		DarwinAchInstall $@
+		DarwinAchInstall $2
 	;;
 
 	* )
