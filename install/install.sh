@@ -183,6 +183,26 @@ LowLatency()
 	echo '---- Low Latency Set ----'
 }
 
+DynInstall()
+{
+	THE_DIR=$(pwd)
+	cd /tmp
+	git clone https://thedancomplex/DynamixelSDK.git
+        cd DynamixelSDK/c++
+	if [ $THE_ARCH -eq "i686" ];
+	then
+		cd linux32
+	elif [ $THE_ARCH -eq "x86_64" ];
+	then
+		cd linux64
+	else
+		cd linux_sbc
+	fi
+	make
+	sudo make install
+	cd $THE_DIR
+}
+
 AchInstall()
 {
 	THE_DIR=$(pwd)
@@ -355,6 +375,7 @@ DarwinAchInstall()
 
   case "$1" in
     	'server' )
+		DynInstall
   		AchInstall
 		DarwinLegacy
 		DarwinAchInstallServer
