@@ -370,6 +370,8 @@ DarwinAchInstall()
 		exit 1
   esac
 
+  cd $THE_DIR
+
   sudo rm /usr/bin/$BIN_NAME_DARWIN_ACH
   sudo cp ../scripts/$BIN_NAME_DARWIN_ACH $INSTALL_DIR
   sudo ln -s $INSTALL_DIR/$BIN_NAME_DARWIN_ACH /usr/bin
