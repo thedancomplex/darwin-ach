@@ -24,7 +24,9 @@ Designed to talk directly with the CM730.  Updates the state and reference
 ## Network Configuration 
 On the Darwin's comptuer (the fitpc) we will use the 'interfaces' method to apply the wifi settings and the static ip for connecting to the backpack.
 
-  vi install/interfaces
+```
+  $ vi install/interfaces
+```
 
 - Change "YOUR_SSID" to the SSID of your network.
 - Change "YOUR_PASSWORD" to the password to your wifi network.
