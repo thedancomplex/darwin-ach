@@ -190,10 +190,19 @@ LowLatency()
 	echo '---- Low Latency Set ----'
 }
 
+
+DarwinNetwork()
+{
+  	cd $THE_INSTALL_DIR
+	sudo cp /etc/network/interfaces /etc/network/interfaces.bk.$(date +%s)
+	sudo cp interfaces /etc/network/
+	sudo /etc/init.d/networking restart
+}
+
 BackpackNetwork()
 {
   	cd $THE_INSTALL_DIR
-	sudo cp 51-wifi-init.yaml /etc/netplan
+	sudo cp 51-wifi-init.yaml /etc/netplan/
 	sudo netplan apply
 }
 
@@ -514,6 +523,9 @@ ShowUsage()
 	echo '    client    : installs darwin-ach client       '
 	echo '                Use on external computer/backpack'
 	echo ''
+	echo 'darwin-network   : setup the darwin (fitpc)      '
+	echo '                   network via interfaces        '
+	echo ''
 	echo 'backpack-network : setup the backpack (raspi)    '
 	echo '                   network via netplan           '
 	echo
@@ -557,6 +569,10 @@ case "$1" in
      
         'darwin-ach' )
 		DarwinAchInstall $2
+	;;
+
+	'darwin-network' )
+		DarwinNetwork
 	;;
 
 	'backpack-network' )

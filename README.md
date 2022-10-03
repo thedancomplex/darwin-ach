@@ -18,3 +18,15 @@ Designed to talk directly with the CM730.  Updates the state and reference
 
 # Joint Index for the Darwin-Op
 ![Darwin OP Joint Index](img/op_id_map.jpg)
+
+
+# Install
+## Network Configuration 
+On the Darwin's comptuer (the fitpc) we will use the 'interfaces' method to apply the wifi settings and the static ip for connecting to the backpack.
+
+  vi install/interfaces
+
+- Change "YOUR_SSID" to the SSID of your network.
+- Change "YOUR_PASSWORD" to the password to your wifi network.
+
+Note: The ethernet is set to static with the ethernet having a higher number metric (lower priority) than the wifi.  This allows the comptuer to get internet from the wifi.
