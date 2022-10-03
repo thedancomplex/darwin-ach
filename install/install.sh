@@ -18,11 +18,12 @@ BIN_NAME_ACH_ON=darwin-on
 BIN_NAME_ACH_OFF=darwin-off
 BIN_NAME_ACH_WALKING=darwin-walking
 BIN_NAME_DARWIN_ACH=darwin-ach
-
+THE_INSTALL_DIR=$(pwd)
 THE_ARCH=$(arch)
 
 InstallRos2()
 {
+  cd $THE_INSTALL_DIR
   InstallRos2Dep
   InstallRos2SoruceIni
   CreateSwap
@@ -31,6 +32,7 @@ InstallRos2()
 
 InstallRos2Dep()
 {
+  cd $THE_INSTALL_DIR
   locale  # check for UTF-8
 
   sudo apt update && sudo apt install locales
@@ -113,6 +115,7 @@ InstallRos2Dep()
 
 InstallRos2SourceIni()
 {
+  cd $THE_INSTALL_DIR
   mkdir -p $HUMBLE_INSTALL_DIR/src
   cp ros2.repos.32bit $HUMBLE_INSTALL_DIR/
 
@@ -130,6 +133,7 @@ InstallRos2SourceIni()
 
 CreateSwap()
 {
+  cd $THE_INSTALL_DIR
   echo '-----------------------------------'
   echo '-------- Creating 4gb SWAP --------'
   echo '-----------------------------------'
@@ -155,6 +159,7 @@ CreateSwap()
 InstallRos2Source()
 {
 
+  cd $THE_INSTALL_DIR
   cd $HUMBLE_INSTALL_DIR
   colcon build --symlink-install --packages-skip-build-finished --parallel-workers 1
   echo ". ~/ros2_humble/install/local_setup.bash > /dev/null" >> ~/.bashrc
@@ -163,6 +168,7 @@ InstallRos2Source()
 
 InstallCm730()
 {
+  cd $THE_INSTALL_DIR
   sudo systemctl mask brltty.path
   sudo systemctl mask brltty
   cd $HUMBLE_INSTALL_DIR/src
@@ -175,6 +181,7 @@ InstallCm730()
 
 LowLatency()
 {
+  	cd $THE_INSTALL_DIR
 	setserial /dev/ttyUSB0 low_latency
 #	sudo setserial /dev/ttyUSB0 low_latency
 	sync
@@ -185,6 +192,7 @@ LowLatency()
 
 DynInstall()
 {
+  	cd $THE_INSTALL_DIR
 	THE_DIR=$(pwd)
 	cd /tmp
 	git clone https://thedancomplex/DynamixelSDK.git
@@ -205,6 +213,7 @@ DynInstall()
 
 AchInstall()
 {
+  	cd $THE_INSTALL_DIR
 	THE_DIR=$(pwd)
 	cd /tmp
 
@@ -237,6 +246,7 @@ AchInstall()
 
 DarwinLegacyRos2()
 {
+  	cd $THE_INSTALL_DIR
 	DarwinLegacy
 	THE_DIR=$(pwd)
 	sudo chmod -R 777 $INSTALL_DIR/ros2
@@ -269,6 +279,7 @@ DarwinAchOn()
 
 DarwinAchServer()
 {
+  cd $THE_INSTALL_DIR
   case "$1" in
     	'on' )
 		DarwinAchServerOn $@
@@ -348,6 +359,7 @@ DarwinAchWalkingOff()
 
 DarwinAchInstallServer()
 {
+  cd $THE_INSTALL_DIR
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_WALKING
   sudo ./build.sh
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON
@@ -360,6 +372,7 @@ DarwinAchInstallServer()
 
 DarwinAchInstallClient()
 {
+  cd $THE_INSTALL_DIR
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_WALKING
   sudo ./build.sh
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON
@@ -371,6 +384,7 @@ DarwinAchInstallClient()
 DarwinAchInstall()
 {
 
+  cd $THE_INSTALL_DIR
   THE_DIR=$(pwd)
 
   case "$1" in
@@ -402,6 +416,7 @@ DarwinAchInstall()
 
 DynInstall()
 {
+  	cd $THE_INSTALL_DIR
 	THE_DIR=$(pwd)
 	cd /tmp
 	git clone https://github.com/thedancomplex/DynamixelSDK
@@ -430,6 +445,7 @@ DynInstall()
 
 DarwinLegacy()
 {
+  	cd $THE_INSTALL_DIR
 	THE_DIR=$(pwd)
 	sudo rm -rf $INSTALL_DIR
 	sudo mkdir -p $INSTALL_DIR
