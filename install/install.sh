@@ -202,6 +202,13 @@ DarwinNetwork()
 BackpackNetwork()
 {
   	cd $THE_INSTALL_DIR
+	sudo cp 50-cloud-init.yaml /etc/netplan/
+	sudo netplan apply
+}
+
+BackpackNetworkWifi()
+{
+  	cd $THE_INSTALL_DIR
 	sudo cp 51-wifi-init.yaml /etc/netplan/
 	sudo netplan apply
 }
@@ -528,6 +535,9 @@ ShowUsage()
 	echo ''
 	echo 'backpack-network : setup the backpack (raspi)    '
 	echo '                   network via netplan           '
+	echo ''
+	echo 'backpack-network-wifi : setup the backpack (raspi)'
+	echo '                        wifi network via netplan  '
 	echo
 }
 
@@ -573,6 +583,10 @@ case "$1" in
 
 	'darwin-network' )
 		DarwinNetwork
+	;;
+
+	'backpack-network-wifi' )
+		BackpackNetworkWifi
 	;;
 
 	'backpack-network' )

@@ -50,16 +50,38 @@ This will conect the Darwin's comptuer to your wifi network and set the ethernet
 ### Backpack Computer
 The backpack and the main darwin computer are hooked up via a single cable.  In "olden days" this would require a "crossover cable" but a regualr eithernet cable will be sufficent as modern ethernet chipsets automatically detect when a system is in a crossover mode.
 
+#### Backpack Ethernet
+
 The following will automatically configure the ethernet to connect with the Darwin OP's computer:
 
 ```
+$ cd install
 $ ./install.sh backpack-network
 ```
 
 This will connect the backpack to the Darwin's computer via a network with a static IP.  The static IP of the backpack computer is:
 
 ```
-10.111.111.12
+10.111.111.10
 ```
 
 Note: The 10.111.111.xxx network is only avaliable between the backpack and the Darwin's computer.  You will need to use the wifi connection to connect to the robot from an external computer.
+
+#### Backpack Wifi
+To set the wifi for the backpack computer run the following:
+
+```
+$ vi install/51-wifi-init.yaml
+```
+
+- Change "YOUR_SSID" to the SSID of your network.
+- Change "YOUR_PASSWORD" to the password to your wifi network.
+
+Now install and apply the settings.
+
+```
+$ cd install
+$ ./install.sh backpack-network-wifi
+```
+
+Now the backpack computer should be connected to your wifi network.  
