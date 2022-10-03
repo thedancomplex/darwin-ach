@@ -22,13 +22,44 @@ Designed to talk directly with the CM730.  Updates the state and reference
 
 # Install
 ## Network Configuration 
+### Darwin OP's Computer
 On the Darwin's comptuer (the fitpc) we will use the 'interfaces' method to apply the wifi settings and the static ip for connecting to the backpack.
 
 ```
-  $ vi install/interfaces
+$ vi install/interfaces
 ```
 
 - Change "YOUR_SSID" to the SSID of your network.
 - Change "YOUR_PASSWORD" to the password to your wifi network.
 
 Note: The ethernet is set to static with the ethernet having a higher number metric (lower priority) than the wifi.  This allows the comptuer to get internet from the wifi.
+
+Now run the following:
+
+```
+$ cd install
+$ ./install.sh darwin-network
+```
+
+This will conect the Darwin's comptuer to your wifi network and set the ethernet on the back to have the static ip of:
+
+```
+10.111.111.11
+```
+
+### Backpack Computer
+The backpack and the main darwin computer are hooked up via a single cable.  In "olden days" this would require a "crossover cable" but a regualr eithernet cable will be sufficent as modern ethernet chipsets automatically detect when a system is in a crossover mode.
+
+The following will automatically configure the ethernet to connect with the Darwin OP's computer:
+
+```
+$ ./install.sh backpack-network
+```
+
+This will connect the backpack to the Darwin's computer via a network with a static IP.  The static IP of the backpack computer is:
+
+```
+10.111.111.12
+```
+
+Note: The 10.111.111.xxx network is only avaliable between the backpack and the Darwin's computer.  You will need to use the wifi connection to connect to the robot from an external computer.
