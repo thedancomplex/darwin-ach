@@ -14,7 +14,7 @@ ifeq ($(THE_ARCH),i686)
 	LIBS += -ldxl_x86_cpp
 else
 ifeq ($(THE_ARCH),x86_64)
-	LIBS += -ldxl_x86_64_cpp
+	LIBS += -ldxl_x64_cpp
 else
 	LIBS += -ldxl_sbc_cpp
 endif
