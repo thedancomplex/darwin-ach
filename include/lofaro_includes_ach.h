@@ -1,4 +1,4 @@
-#define DARWIN_ACH_DEFINE 1
+#ifndef DARWIN_ACH_DEFINE 
 
 // for ach
 #include <errno.h>
@@ -19,3 +19,6 @@
 #define DARWIN_REF_VEL_0 0.75
 #define DARWIN_REF_TOR_0 0.5
 */
+#endif
+
+#define DARWIN_ACH_DEFINE 1

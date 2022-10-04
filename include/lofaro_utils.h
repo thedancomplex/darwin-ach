@@ -1,4 +1,5 @@
-#define LOFARO_UTILS 1
+#ifndef LOFARO_UTILS 
+
 #include <sys/time.h>
 #include <unistd.h>
 #include <cstddef>
@@ -92,4 +93,5 @@ class LofaroUtils
     double T    = 0.01;
 
 };
-
+#endif
+#define LOFARO_UTILS 1

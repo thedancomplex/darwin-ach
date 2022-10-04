@@ -164,11 +164,37 @@ int DarwinAch::do_cmd(int mode)
   {
     switch (this->darwin_cmd.cmd)
     {
+      case DARWIN_CMD_CLOSE:
+      {
+        this->dl->close();
+        this->dl->sleep(2.0);
+        run_loop = false;
+        do_return = true;
+        break;
+      }
+      case DARWIN_CMD_OPEN:
+      {
+        this->dl->setup("/dev/ttyUSB0", true);
+        this->dl->sleep(2.0);
+        run_loop = true;
+        do_return = true;
+        break;
+      }
       case DARWIN_CMD_ON:
       {
         this->dl->setup("/dev/ttyUSB0", true);
         this->dl->sleep(1.0);
         this->dl->on();
+        this->dl->sleep(1.0);
+        run_loop = true;
+        do_return = true;
+        break;
+      }
+      case DARWIN_CMD_ON_MOTOR:
+      {
+        this->dl->setup("/dev/ttyUSB0", true);
+        this->dl->sleep(1.0);
+        this->dl->on(darwin_cmd.data[0]);
         this->dl->sleep(1.0);
         run_loop = true;
         do_return = true;

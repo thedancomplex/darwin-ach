@@ -1,9 +1,10 @@
-#define DARWIN_TYPES 1	
 
 #ifndef DARWIN_DEFINES
 #include "lofaro_defines.h"
 #endif
 
+
+#ifndef DARWIN_TYPES
 #include <stdint.h>
 
 typedef struct imu_state_def {
@@ -81,3 +82,6 @@ typedef struct darwin_cmd_vel_def {
   darwin_vec3_def_t linear;
   darwin_vec3_def_t angular;
 }__attribute__((packed)) darwin_cmd_vel_def_t;
+
+#endif
+#define DARWIN_TYPES 1	

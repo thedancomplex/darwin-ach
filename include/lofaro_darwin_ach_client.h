@@ -1,4 +1,4 @@
-#define DARWIN_LOFARO_ACH 1
+#ifndef DARWIN_LOFARO_ACH 
 
 #include "lofaro_includes_ach.h"
 #include "lofaro_defines_ach.h"
@@ -355,3 +355,8 @@ int DarwinAchClient::postRef()
   }
   return (int)r;
 }
+
+#endif
+
+
+#define DARWIN_LOFARO_ACH 1

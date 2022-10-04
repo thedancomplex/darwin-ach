@@ -1,4 +1,4 @@
-#define LOFARO_DEFINE_ACH 1
+#ifndef LOFARO_DEFINE_ACH
 
 typedef enum {
         HZ_STATE_NULL,
@@ -46,6 +46,14 @@ typedef enum {
 	DARWIN_CMD_OFF,
 	DARWIN_CMD_START,
 	DARWIN_CMD_MODE,
+	DARWIN_CMD_ON_MOTOR,
+	DARWIN_CMD_OFF_MOTOR,
+	DARWIN_CMD_OPEN,
+	DARWIN_CMD_CLOSE,
 	DARWIN_CMD_COUNT
         
 }__attribute__((packed)) darwin_cmd_mode_index_t;
+
+#endif
+
+#define LOFARO_DEFINE_ACH 1
