@@ -27,7 +27,7 @@ Ros2AchBridge::Ros2AchBridge() : Node("darwin_lofaro_legacy_daemon")
 
   subscription_ref_tor_     = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_TOR,         10, std::bind(&Ros2AchBridge::topic_callback_ref_tor, this, _1));
 
-  subscription_ref_cmd_     = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_REF_CMD,         10, std::bind(&Ros2AchBridge::topic_callback_ref_cmd, this, _1));
+  subscription_cmd_         = this->create_subscription<std_msgs::msg::String>(DARWIN_TOPIC_CMD,             10, std::bind(&Ros2AchBridge::topic_callback_cmd, this, _1));
 
   publisher_state_imu_      = this->create_publisher<geometry_msgs::msg::Twist>(DARWIN_TOPIC_STATE_IMU,      1);
 
