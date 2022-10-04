@@ -89,7 +89,7 @@ InstallRos2Dep()
   sudo pip3 install netifaces
   sudo apt install setserial
   sudo apt install python3-colcon-common-extensions
-
+  sudo apt install ufw
 
   # Remove  root access for serial port
   sudo apt remove modemmanager
@@ -209,8 +209,10 @@ BackpackNetwork()
 BackpackNetworkWifi()
 {
   	cd $THE_INSTALL_DIR
+	sudo ufw allow 22
 	sudo cp 51-wifi-init.yaml /etc/netplan/
 	sudo netplan apply
+
 }
 
 DynInstall()
@@ -250,6 +252,8 @@ AchInstall()
 	sudo apt install dkms
 	sudo apt-get install openbsd-inetd
 
+	sudo apt install ufw
+
 	git clone https://github.com/thedancomplex/ach
 	cd ach
 	#git checkout os/32bit
@@ -265,6 +269,9 @@ AchInstall()
 	sudo service openbsd-inetd restart
 
 	sudo ln -s /usr/local/lib/libach* /usr/lib/
+
+	sudo ufw allow 8076
+	sudo ufw allow 22
 
 	cd $THE_DIR
 }
