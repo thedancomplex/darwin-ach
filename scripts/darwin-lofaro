@@ -31,6 +31,78 @@ DARWIN_ACH_CHAN_CMD_VEL='darwin-ach-chan-cmd-vel'
 #DARWIN_IP='10.5.0.249'
 DARWIN_IP='10.111.111.11'
 
+DarwinAchStatus()
+{
+  THE_OUT_HUMAN=''
+  THE_OUT_ROBOT=''
+  case "$2" in
+        'server' )
+		if ps -p $(pidof $BIN_NAME_ACH_SERVER) > /dev/null 2>&1
+		then
+			THE_OUT_HUMAN="Darwin Ach Server is Running"
+			THE_OUT_ROBOT=1
+		else
+			THE_OUT_HUMAN="Darwin Ach Servers is not Running"
+			THE_OUT_ROBOT=0
+		fi
+        ;;
+
+        'client' )
+		if ps -p $(pidof $BIN_NAME_ACH_CLIENT) > /dev/null 2>&1
+		then
+			THE_OUT_HUMAN="Darwin Ach Client is Running"
+			THE_OUT_ROBOT=1
+		else
+			THE_OUT_HUMAN="Darwin Ach Client is not Running"
+			THE_OUT_ROBOT=0
+		fi
+        ;;
+
+        'walking' )
+		if ps -p $(pidof $BIN_NAME_ACH_WALKING) > /dev/null 2>&1
+		then
+			THE_OUT_HUMAN="Darwin Ach Walking is Running"
+			THE_OUT_ROBOT=1
+		else
+			THE_OUT_HUMAN="Darwin Ach Walking is not Running"
+			THE_OUT_ROBOT=0
+		fi
+        ;;
+
+        'remote' )
+		if ps -p $(pidof achd) > /dev/null 2>&1
+		then
+			THE_OUT_HUMAN="Darwin Ach Remote is Running"
+			THE_OUT_ROBOT=1
+		else
+			THE_OUT_HUMAN="Darwin Ach Remote is not Running"
+			THE_OUT_ROBOT=0
+		fi
+        ;;
+
+
+        * )
+                ShowUsage
+                exit 1
+	;;
+  esac
+
+  case "$1" in
+        '-h' )
+		echo $THE_OUT_HUMAN
+        ;;
+        '-n' )
+                echo $THE_OUT_ROBOT
+        ;;
+
+        * )
+                ShowUsage
+                exit 1
+	;;
+  esac
+}
+
+
 ResetAch()
 {
   KillAchChannels
@@ -358,6 +430,7 @@ ShowUsage()
         echo 'darwin-ach-walking                               '
         echo '    on             : Starts walking process      '
         echo '    off            : Stops walking process       '
+	echo ''
 	echo 'darwin-ach-status                                '
 	echo '    -n             : Running status of darwin-ach'
 	echo '                     numerica 0=stopped 1=running'
@@ -365,6 +438,7 @@ ShowUsage()
 	echo '                     Darwin-ach system           '
 	echo '        server     : Server status               '
 	echo '        client     : Client status               '
+	echo '        walking    : Walking status              '
 	echo '        remote     : Remote status               '
 	echo ''
 	echo
@@ -433,6 +507,9 @@ case "$1" in
                 DarwinAchWalking $2
         ;;
 
+	'darwin-ach-status' )
+		DarwinAchStatus $2 $3
+	;;
 	
 	* )
 		ShowUsage

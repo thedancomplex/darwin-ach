@@ -186,6 +186,49 @@ Off()
   darwin-lofaro darwin-ach-power off
 }
 
+DarwinAchStatus()
+{
+  THE_OUT=''
+  case "$2" in
+        'server' )
+		THE_OUT=$(darwin-lofaro darwin-ach-status $1 $2)
+        ;;
+
+        'client' )
+		THE_OUT=$(darwin-lofaro darwin-ach-status $1 $2)
+        ;;
+
+        'walking' )
+		THE_OUT=$(darwin-lofaro darwin-ach-status $1 $2)
+        ;;
+
+        'remote' )
+		THE_OUT=$(darwin-lofaro darwin-ach-status $1 $2)
+        ;;
+
+        * )
+                ShowUsage
+                exit 1
+        ;;
+  esac
+
+  case "$1" in
+        '-h' )
+                echo $THE_OUT
+        ;;
+        '-n' )
+                echo $THE_OUT
+        ;;
+
+        * )
+                ShowUsage
+                exit 1
+        ;;
+  esac
+}
+
+
+
 
 
 ShowUsage()
@@ -226,6 +269,20 @@ ShowUsage()
 	echo '-  client     : Kills client, ach channels, and  '
 	echo '                achd remote connection           '
 	echo '-  all        : Kills the client and server      '
+        echo ''
+        echo 'status                                           '
+	echo ' [arg 0] [arg 1]                                 '
+        echo '    -n             : Running status of darwin-ach'
+        echo '                     numerica 0=stopped 1=running'
+        echo '    -h             : Human readable status of the'
+        echo '                     Darwin-ach system           '
+        echo '          server   : Server status               '
+        echo '          client   : Client status               '
+        echo '          walking  : Walking status              '
+        echo '          remote   : Remote status               '
+        echo ''
+        echo
+
 	echo ''
 }
 
@@ -246,6 +303,10 @@ case "$1" in
 	'kill' )
 		Kill $2
 	;;	
+	
+	'status' )
+		DarwinAchStatus $2 $3
+	;;
 
 	* )
 		ShowUsage
