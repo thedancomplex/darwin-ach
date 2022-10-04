@@ -3,6 +3,35 @@
 SCREEN_SERVER=darwin-ach-server
 SCREEN_CLIENT=darwin-ach-client
 
+Kill()
+{
+  case "$1" in
+	'server' )
+		darwin-lofaro darwin-ach-walking off
+		darwin-lofaro darwin-ach-server off
+		darwin-lofaro ach-clear
+	;;
+
+  	'client' )
+		darwin-lofaro darwin-ach-walking off
+		darwin-lofaro ach-kill
+		darwin-lofaro ach-clear
+	;;
+
+	'all' )
+		darwin-lofaro darwin-ach-walking off
+		darwin-lofaro darwin-ach-server off
+		darwin-lofaro ach-kill
+		darwin-lofaro ach-clear
+	;;
+
+	* )
+		ShowUsage
+	;;
+  esac
+}
+
+
 Power()
 {
   case "$1" in
@@ -36,8 +65,8 @@ Start()
 
   case "$2" in
 	'walking' )
-		echo 'darwin-lofaro darwin-ach-walking' >> /tmp/darwin-ach-server.sh
-		echo 'darwin-lofaro darwin-ach-walking' >> /tmp/darwin-ach-client.sh
+		echo 'darwin-lofaro darwin-ach-walking on' >> /tmp/darwin-ach-server.sh
+		echo 'darwin-lofaro darwin-ach-walking on' >> /tmp/darwin-ach-client.sh
 	;;
   esac
 
@@ -178,6 +207,12 @@ ShowUsage()
         echo '-  on         : Turns power on                   '
 	echo '-  off        : Turns power off                  '
 	echo ''
+	echo 'kill             	                               '
+	echo '-  server     : Kills server and ach channels    '
+	echo '-  client     : Kills client, ach channels, and  '
+	echo '                achd remote connection           '
+	echo '-  all        : Kills the client and server      '
+	echo ''
 }
 
 
@@ -192,6 +227,10 @@ case "$1" in
 
 	'power' )
 		Power $2
+	;;
+
+	'kill' )
+		Kill $2
 	;;	
 
 	* )
