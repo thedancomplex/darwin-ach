@@ -63,17 +63,18 @@ Start()
   chmod +x /tmp/darwin-ach-server.sh
   chmod +x /tmp/darwin-ach-client.sh
 
-  case "$2" in
-	'walking' )
-		echo 'darwin-lofaro darwin-ach-walking on' >> /tmp/darwin-ach-server.sh
-		echo 'darwin-lofaro darwin-ach-walking on' >> /tmp/darwin-ach-client.sh
-	;;
-  esac
-
   case "$1" in
+	'walking' )
+	        echo '--- Starting Darwin-ach Walking ---'
+		darwin-lofaro darwin-ach-walking on
+	;;
+
 	'server' )
 	        echo '--- Starting Darwin-ach Server using Darwin Lofaro Legacy ---'
-		/tmp/darwin-ach-server.sh
+  		darwin-lofaro ach-reset
+		darwin-lofaro darwin-ach-server on
+
+#		/tmp/darwin-ach-server.sh
 #		if ! screen -list | grep -q "$SCREEN_SERVER"; then
 #                	echo '--- Starting Darwin-Ach Server using Darwin Lofaro Legacy ---'
 #                	screen -d -m -S $SCREEN_SERVER /bin/bash -c /tmp/darwin-ach-server.sh
@@ -86,7 +87,10 @@ Start()
 
   	'client' )
 	        echo '--- Starting Darwin-ach Client using Darwin Lofaro Legacy ---'
-		/tmp/darwin-ach-client.sh
+  		darwin-lofaro ach-reset
+  		darwin-lofaro ach-remote
+
+#		/tmp/darwin-ach-client.sh
 #		if ! screen -list | grep -q "$SCREEN_CLIENT"; then
 #                	echo '--- Starting Darwin-Ach Client using Darwin Lofaro Legacy ---'
 #                	screen -d -m -S $SCREEN_CLIENT /bin/bash -c /tmp/darwin-ach-client.sh
@@ -99,7 +103,10 @@ Start()
 
 	'local' )
 	        echo '--- Starting Darwin-ach Server (local) using Darwin Lofaro Legacy ---'
-		/tmp/darwin-ach-server.sh
+  		darwin-lofaro ach-reset
+		darwin-lofaro darwin-ach-server on
+
+#		/tmp/darwin-ach-server.sh
 #		if ! screen -list | grep -q "$SCREEN_SERVER"; then
 #                	echo '--- Starting Darwin-Ach Server using Darwin Lofaro Legacy ---'
 #                	screen -d -m -S $SCREEN_SERVER /bin/bash -c $CMD_SERVER
@@ -107,6 +114,7 @@ Start()
 #                	echo '--- Darwin-Ach Server usign Darwin Lofaro Legacy already running ---'
 #        	fi
 	;;
+
 	* )
 		ShowUsage
 	;;
@@ -117,6 +125,11 @@ Stop()
 {
 
   case "$1" in
+	'walking' )
+	        echo '--- Stopping Darwin-ach Walking ---'
+		darwin-lofaro darwin-ach-walking off
+	;;
+
 	'server' )
 	        echo '--- Stopping Darwin-ach Server using Darwin Lofaro Legacy ---'
 		darwin-lofaro darwin-ach-walking off
@@ -194,7 +207,7 @@ ShowUsage()
 	echo '-  client     : Starts the client (external side)'
 	echo '-  local      : Starts server and client on the  '
 	echo '                same machine and turns poer on   '
-	echo '--    walking : Starts with waking process       '
+	echo '-  walking    : Starts the waking process        '
         echo ''
         echo 'stop                                             '
         echo '-  server     : Stops the server (darwin) side   '
@@ -202,6 +215,7 @@ ShowUsage()
 	echo '-  client     : Stops the client (external side) '
 	echo '-  local      : Stops server and client on the   '
 	echo '                same machine and turns power off '
+	echo '-  walking    : Stops the walking process        '
 	echo ''
 	echo 'power                                            '
         echo '-  on         : Turns power on                   '
