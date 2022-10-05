@@ -31,7 +31,7 @@ include_directories(include)
 
 # Build
 add_executable(${PROJECT_NAME} src/ros2_ach_bridge.cpp)
-###add_executable(${PROJECT_NAME}_imu src/ros2_ach_bridge_imu.cpp)
+add_executable(${PROJECT_NAME}_state src/ros2_ach_bridge_state.cpp)
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES IMPORTED_LOCATION /usr/lib/libach.so /usr/lib/libach.so.4 /usr/lib/libach.so.4.0.0)
 

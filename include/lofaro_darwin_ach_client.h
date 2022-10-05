@@ -37,6 +37,7 @@ class DarwinAchClient
 
     /* Update Methods */
     int getState();
+    int getState(bool wait);
     int stageRefPos(int mot, double val);
     int stageRefPosD(int mot, double val);
     int stageRefVel(int mot, double val);
@@ -158,6 +159,21 @@ int DarwinAchClient::getState()
   size_t fs;
   ach_status_t r = ach_get( &this->chan_darwin_state, &this->darwin_state, sizeof(this->darwin_state), &fs, NULL, ACH_O_LAST );
   return (int)r;
+}
+
+int DarwinAchClient::getState(bool wait)
+{
+  if(wait)
+  {
+    size_t fs;
+    ach_status_t r = ach_get( &this->chan_darwin_state, &this->darwin_state, sizeof(this->darwin_state), &fs, NULL, ACH_O_WAIT );
+    return (int)r;
+  }
+  else
+  {
+    return this->getState();
+  }
+  return 1;
 }
 
 int DarwinAchClient::getCmdVel()

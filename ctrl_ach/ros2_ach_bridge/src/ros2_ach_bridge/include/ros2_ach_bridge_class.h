@@ -16,7 +16,8 @@ using std::placeholders::_1;
 class Ros2AchBridge : public rclcpp::Node
 {
   public:
-    Ros2AchBridge();
+    Ros2AchBridge(int mode);
+    int state_loop();
 
   private:
     void topic_callback_ref_pos(const std_msgs::msg::String & msg);
@@ -39,5 +40,11 @@ class Ros2AchBridge : public rclcpp::Node
     bool do_debug = false;
     bool started = false;
     DarwinAchClient dac = DarwinAchClient();
+    
+    typedef enum {
+	    MODE_BRIDGE_REF,
+	    MODE_BRIDGE_STATE,
+	    MODE_BRIDGE_COUNT
+    }__attribute__((packed)) darwin_bridge_mode_index_t;
 };
 

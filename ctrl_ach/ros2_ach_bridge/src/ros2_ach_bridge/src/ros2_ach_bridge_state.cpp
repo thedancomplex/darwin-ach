@@ -3,7 +3,11 @@
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<Ros2AchBridge>());
+  Ros2AchBridge rab = Ros2AchBridge(MODE_BRIDGE_STATE);
+  while(true)
+  {
+    rab.state_loop();
+  }
   rclcpp::shutdown();
   return 0;
 }
