@@ -1,0 +1,154 @@
+In file included from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:4,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge.h:6,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/src/ros2_ach_bridge.cpp:1:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods_ref_pos.h: In member function ‘void Ros2AchBridge::topic_callback_ref_pos(const String&)’:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods_ref_pos.h:11:11: warning: unused variable ‘i’ [-Wunused-variable]
+   11 |       int i = 0;
+      |           ^
+In file included from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:5,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge.h:6,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/src/ros2_ach_bridge.cpp:1:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods_ref_vel.h: In member function ‘void Ros2AchBridge::topic_callback_ref_vel(const String&)’:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods_ref_vel.h:11:11: warning: unused variable ‘i’ [-Wunused-variable]
+   11 |       int i = 0;
+      |           ^
+In file included from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:6,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge.h:6,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/src/ros2_ach_bridge.cpp:1:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods_ref_tor.h: In member function ‘void Ros2AchBridge::topic_callback_ref_tor(const String&)’:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods_ref_tor.h:11:11: warning: unused variable ‘i’ [-Wunused-variable]
+   11 |       int i = 0;
+      |           ^
+In file included from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:7,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge.h:6,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/src/ros2_ach_bridge.cpp:1:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods_cmd.h: In member function ‘void Ros2AchBridge::topic_callback_cmd(const String&)’:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods_cmd.h:11:11: warning: unused variable ‘i’ [-Wunused-variable]
+   11 |       int i = 0;
+      |           ^
+In file included from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge.h:6,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/src/ros2_ach_bridge.cpp:1:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h: In member function ‘int Ros2AchBridge::state_loop()’:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:46:21: error: no matching function for call to ‘DarwinAchClient::getState(bool)’
+   46 |   this->dac.getState(true);
+      |   ~~~~~~~~~~~~~~~~~~^~~~~~
+In file included from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge.h:1,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/src/ros2_ach_bridge.cpp:1:
+/etc/darwin-legacy/include/lofaro_darwin_ach_client.h:156:5: note: candidate: ‘int DarwinAchClient::getState()’
+  156 | int DarwinAchClient::getState()
+      |     ^~~~~~~~~~~~~~~
+/etc/darwin-legacy/include/lofaro_darwin_ach_client.h:156:5: note:   candidate expects 0 arguments, 1 provided
+In file included from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge.h:6,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/src/ros2_ach_bridge.cpp:1:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:58:45: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   58 |     buff_motor_pos.data.push_back(this->dac.darwin_data.motor_state[i].pos);
+      |                                             ^~~~~~~~~~~
+      |                                             darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:59:45: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   59 |     buff_motor_vel.data.push_back(this->dac.darwin_data.motor_state[i].speed);
+      |                                             ^~~~~~~~~~~
+      |                                             darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:60:45: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   60 |     buff_motor_tor.data.push_back(this->dac.darwin_data.motor_state[i].load);
+      |                                             ^~~~~~~~~~~
+      |                                             darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:61:45: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   61 |     buff_motor_vol.data.push_back(this->dac.darwin_data.motor_state[i].voltage);
+      |                                             ^~~~~~~~~~~
+      |                                             darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:62:45: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   62 |     buff_motor_tmp.data.push_back(this->dac.darwin_data.motor_state[i].temp);
+      |                                             ^~~~~~~~~~~
+      |                                             darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:65:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   65 |   buff_imu.linear.x  =         this->dac.darwin_data.imu.acc_x;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:66:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   66 |   buff_imu.linear.y  =         this->dac.darwin_data.imu.acc_y;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:67:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   67 |   buff_imu.linear.z  =         this->dac.darwin_data.imu.acc_z;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:68:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   68 |   buff_imu.angular.x =         this->dac.darwin_data.imu.gyro_x;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:69:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   69 |   buff_imu.angular.y =         this->dac.darwin_data.imu.gyro_y;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:70:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   70 |   buff_imu.angular.z =         this->dac.darwin_data.imu.gyro_z;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:73:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   73 |   buff_ft_left.linear.x  =     this->dac.darwin_data.ft[id].x;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:74:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   74 |   buff_ft_left.linear.y  =     this->dac.darwin_data.ft[id].y;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:75:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   75 |   buff_ft_left.linear.z  = (  (this->dac.darwin_data.ft[id].raised_x) | (this->dac.darwin_data.ft[id].raised_y)  );
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:75:84: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   75 |   buff_ft_left.linear.z  = (  (this->dac.darwin_data.ft[id].raised_x) | (this->dac.darwin_data.ft[id].raised_y)  );
+      |                                                                                    ^~~~~~~~~~~
+      |                                                                                    darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:76:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   76 |   buff_ft_left.angular.x =     this->dac.darwin_data.ft[id].raised_x ;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:77:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   77 |   buff_ft_left.angular.y =     this->dac.darwin_data.ft[id].raised_y;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:81:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   81 |   buff_ft_right.linear.x  =    this->dac.darwin_data.ft[id].x;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:82:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   82 |   buff_ft_right.linear.y  =    this->dac.darwin_data.ft[id].y;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:83:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   83 |   buff_ft_right.linear.z  = ( (this->dac.darwin_data.ft[id].raised_x) | (this->dac.darwin_data.ft[id].raised_y) );
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:83:84: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   83 |   buff_ft_right.linear.z  = ( (this->dac.darwin_data.ft[id].raised_x) | (this->dac.darwin_data.ft[id].raised_y) );
+      |                                                                                    ^~~~~~~~~~~
+      |                                                                                    darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:84:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   84 |   buff_ft_right.angular.x =    this->dac.darwin_data.ft[id].raised_x ;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge_methods.h:85:42: error: ‘class DarwinAchClient’ has no member named ‘darwin_data’; did you mean ‘darwin_state’?
+   85 |   buff_ft_right.angular.y =    this->dac.darwin_data.ft[id].raised_y;
+      |                                          ^~~~~~~~~~~
+      |                                          darwin_state
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/src/ros2_ach_bridge.cpp: In function ‘int main(int, char**)’:
+/home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/src/ros2_ach_bridge.cpp:6:48: error: invalid use of ‘this’ in non-member function
+    6 |   rclcpp::spin(std::make_shared<Ros2AchBridge>(this->MODE_BRIDGE_REF));
+      |                                                ^~~~
+In file included from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/include/ros2_ach_bridge.h:1,
+                 from /home/ubuntu/projects/darwin-op-debian-11/ctrl_ach/ros2_ach_bridge/src/ros2_ach_bridge/src/ros2_ach_bridge.cpp:1:
+/etc/darwin-legacy/include/lofaro_darwin_ach_client.h: In member function ‘int DarwinAchClient::cmd(int, int16_t*, double*, bool)’:
+/etc/darwin-legacy/include/lofaro_darwin_ach_client.h:279:14: warning: ignoring return value of ‘ach_status ach_flush(ach_channel_t*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  279 |     ach_flush(&this->chan_darwin_cmd_return);
+      |     ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gmake[2]: *** [CMakeFiles/ros2_ach_bridge.dir/build.make:76: CMakeFiles/ros2_ach_bridge.dir/src/ros2_ach_bridge.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:139: CMakeFiles/ros2_ach_bridge.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2
+---
+Failed   <<< ros2_ach_bridge [1min 1s, exited with code 2]
+
+Summary: 0 packages finished [1min 3s]
+  1 package failed: ros2_ach_bridge
+  1 package had stderr output: ros2_ach_bridge
+
