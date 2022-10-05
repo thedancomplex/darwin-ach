@@ -1,6 +1,6 @@
 void Ros2AchBridge::topic_callback_ref_vel(const std_msgs::msg::String & msg)
 {
-      RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
+      if(this->do_debug) RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
 
       std::string str_msg = msg.data;
 

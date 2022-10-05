@@ -1,7 +1,6 @@
 void Ros2AchBridge::topic_callback_cmd(const std_msgs::msg::String & msg)
 {
-      RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
-
+      if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"I heard: '%s'\n", msg.data.c_str()); }
 
       std::string str_msg = msg.data;
 
@@ -11,26 +10,25 @@ void Ros2AchBridge::topic_callback_cmd(const std_msgs::msg::String & msg)
 
       int i = 0;
       int length = dout.size();
-
       if(length < 1) return;
       std::string s0 = dout[0];
       if( s0.compare("post") == 0 )
       {
-         if(this->do_debug) RCLCPP_INFO(this->get_logger(), "Darwin-Lofaro Legacy: Post Ref");
+         if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Darwin-Lofaro Legacy: Post Ref\n"); }
          this->dac.postRef();
          this->started = true;
          return;
       }
       else if( s0.compare("open") == 0 )
       {
-         if(this->do_debug) RCLCPP_INFO(this->get_logger(), "Darwin-Lofaro Legacy: Startup");
+         if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Darwin-Lofaro Legacy: Startup\n"); }
          this->dac.cmd(DARWIN_CMD_OPEN, false);
          this->started = true;
          return;
       }
       else if( s0.compare("close") == 0 )
       {
-         if(this->do_debug) RCLCPP_INFO(this->get_logger(), "Darwin-Lofaro Legacy: Close");
+         if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Darwin-Lofaro Legacy: Close\n"); }
          this->dac.cmd(DARWIN_CMD_CLOSE, false);
          this->started = false;
          return;
@@ -41,10 +39,10 @@ void Ros2AchBridge::topic_callback_cmd(const std_msgs::msg::String & msg)
            std::string s1 = dout[1];
            if( s1.compare("all") == 0 )
            {
-             if(this->do_debug) printf("Setting up Darwin-Ach using Darwin-Lofaro Legacy\n");
+             if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Setting up Darwin-Ach using Darwin-Lofaro Legacy\n"); }
              this->dac.cmd(DARWIN_CMD_ON, false);
              this->dac.sleep(4.0);
-             if(this->do_debug) printf("Actuators On\n");
+             if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Actuators On\n"); }
              this->started = true;
              return;
            }
@@ -53,7 +51,7 @@ void Ros2AchBridge::topic_callback_cmd(const std_msgs::msg::String & msg)
               try
               {
                 int mot_num = std::stoi(s1);
-                if(this->do_debug) RCLCPP_INFO(this->get_logger(), "Turing on Darwin-Lofaro Legacy Mot: %d", mot_num);
+                if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Turing on Darwin-Lofaro Legacy Mot: %d\n", mot_num); }
                 this->dac.cmd(DARWIN_CMD_ON_MOTOR, mot_num, false);
                 this->dac.sleep(4.0);
                 return;
@@ -61,7 +59,7 @@ void Ros2AchBridge::topic_callback_cmd(const std_msgs::msg::String & msg)
               }
               catch(...)
               {
-                if(this->do_debug) RCLCPP_INFO(this->get_logger(), "Bad CMD");
+                if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Bad CMD\n"); }
                 return;
               }
            }
@@ -72,7 +70,7 @@ void Ros2AchBridge::topic_callback_cmd(const std_msgs::msg::String & msg)
            std::string s1 = dout[1];
            if( s1.compare("all") == 0 )
            {
-             if(this->do_debug) RCLCPP_INFO(this->get_logger(), "Turing off Darwin-Lofaro Legacy");
+             if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Turing off Darwin-Lofaro Legacy\n"); }
              this->dac.cmd(DARWIN_CMD_OFF, false);
              this->dac.sleep(4.0);
              this->started = false;
@@ -82,14 +80,14 @@ void Ros2AchBridge::topic_callback_cmd(const std_msgs::msg::String & msg)
               try
               {
                 int mot_num = std::stoi(s1);
-                if(this->do_debug) RCLCPP_INFO(this->get_logger(), "Turing off Darwin-Lofaro Legacy Mot: %d", mot_num);
+                if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Turing off Darwin-Lofaro Legacy Mot: %d\n", mot_num); }
                 this->dac.cmd(DARWIN_CMD_OFF_MOTOR, mot_num, false);
                 return;
                 throw 1;
               }
               catch(...)
               {
-                if(this->do_debug) RCLCPP_INFO(this->get_logger(), "Bad CMD");
+                if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Bad CMD\n"); }
                 return;
               }
            }
@@ -98,11 +96,11 @@ void Ros2AchBridge::topic_callback_cmd(const std_msgs::msg::String & msg)
       {
            if(length < 2) return;
            std::string s1 = dout[1];
-           if( s1.compare("true") == 0  ) this->do_debug = true;
-           if( s1.compare("false") == 0 ) this->do_debug = false;
+           if( s1.compare("true") == 0  ){ this->do_debug = true; }
+           if( s1.compare("false") == 0 ){ this->do_debug = false; }
       }
   
-      if(this->do_debug) RCLCPP_INFO(this->get_logger(), "Message: '%s'", msg.data.c_str());
+      if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Message: '%s'", msg.data.c_str()); }
       return;
 }
 
