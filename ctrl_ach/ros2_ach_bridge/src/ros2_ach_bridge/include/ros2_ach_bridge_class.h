@@ -36,7 +36,7 @@ class Ros2AchBridge : public rclcpp::Node
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_tor_;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_vol_;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_tmp_;
-
+    bool do_debug = false;
     bool started = false;
     DarwinAchClient dac = DarwinAchClient();
 };
