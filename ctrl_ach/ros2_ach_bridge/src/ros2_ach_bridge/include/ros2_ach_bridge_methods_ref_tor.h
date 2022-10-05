@@ -16,7 +16,12 @@ void Ros2AchBridge::topic_callback_ref_tor(const std_msgs::msg::String & msg)
       
       std::string s_head = dout[0];
       double scale = 1.0;
-      if     ( s_head.compare("p") == 0 )
+      if     ( s_head.compare("post") == 0 )
+      {
+         this->dac.postRef();
+         return;
+      }
+      else if( s_head.compare("p") == 0 )
       { 
          scale = 1.0;
       }
