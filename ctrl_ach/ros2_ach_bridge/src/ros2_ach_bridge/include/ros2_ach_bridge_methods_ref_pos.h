@@ -16,6 +16,12 @@ void Ros2AchBridge::topic_callback_ref_pos(const std_msgs::msg::String & msg)
       
       std::string s_head = dout[0];
       double scale = 1.0;
+      if( s_head.compare("post") == 0 )
+      {
+         this->dac.postRef();
+         return;
+      }
+
       if     ( s_head.compare("d") == 0 )
       { 
          scale = M_PI / 180.0;
