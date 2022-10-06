@@ -20,6 +20,9 @@ BIN_NAME_ACH_WALKING=darwin-walking
 BIN_NAME_DARWIN_ACH=darwin-ach
 THE_INSTALL_DIR=$(pwd)
 THE_ARCH=$(arch)
+DIR_ROS_ACH_BRIDGE_ROOT=$SYSTEM_ACH_DIR/ros2_ach_bridge/src/
+DIR_ROS_ACH_BRIDGE=$DIR_ROS_ACH_BRIDGE_ROOT/build/ros2_ach_bridge/
+
 
 InstallRos2()
 {
@@ -456,6 +459,10 @@ DarwinAchInstall()
 		DarwinLegacy
 		DarwinAchInstallClient
 	;;
+	'ros-bridge' )
+		RosBridgeInstall
+	;;
+
 	'headers' )
 		DarwinLegacyHeaders
 	;;
@@ -525,6 +532,18 @@ DarwinLegacyHeaders()
 	cd $THE_DIR
 }
 
+RosBridgeInstall()
+{
+  	cd $THE_INSTALL_DIR
+	sudo mkdir -p $INSTALL_DIR
+	cd ../$DIR_ROS_ACH_BRIDGE_ROOT
+	ls
+	./do_build.sh
+
+  	cd $THE_INSTALL_DIR
+        sudo cp -r ../$SYSTEM_ACH_DIR $INSTALL_DIR/
+}
+
 DarwinLegacy()
 {
   	cd $THE_INSTALL_DIR
@@ -583,11 +602,12 @@ ShowUsage()
         echo 'darwin-ros2   : install the darwin-ros2 system   '
 	echo ''
 	echo 'darwin-ach                                       '
-	echo '    server    : installs darwin-ach server       '
+	echo '   server     : installs darwin-ach server       '
 	echo '                Use on the Darwins cpu (fit-pc)  '
-	echo '    client    : installs darwin-ach client       '
+	echo '   client     : installs darwin-ach client       '
 	echo '                Use on external computer/backpack'
-	echo '    headers   : Install the headers only         '
+	echo '   ros-bridge : Installs the ros2ach bridge      '
+	echo '   headers    : Install the headers only         '
 	echo ''
 	echo 'darwin-network   : setup the darwin (fitpc)      '
 	echo '                   network via interfaces        '

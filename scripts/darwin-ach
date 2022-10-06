@@ -124,6 +124,10 @@ Start()
 #		darwin-lofaro ach-reset
 #		darwin-lofaro ach-remote
 	;;
+	'client-ros' )
+		darwin-ach reset client 
+		darwin-lofaro ros-ach-bridge-reset
+	;;
 
 	'local' )
 	        echo '--- Starting Darwin-ach Server (local) using Darwin Lofaro Legacy ---'
@@ -272,6 +276,8 @@ ShowUsage()
         echo '-  server     : Starts the server (darwin) side  '
 	echo '                and turns power on               '
 	echo '-  client     : Starts the client (external side)'
+	echo '-  client-ros : Starts the client (external side)'
+	echo '                with the ros2 bridge enabled     '
 	echo '-  local      : Starts server and client on the  '
 	echo '                same machine and turns poer on   '
 	echo '-  walking    : Starts the waking process        '

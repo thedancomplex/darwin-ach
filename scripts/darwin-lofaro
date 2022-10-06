@@ -28,8 +28,41 @@ DARWIN_ACH_CHAN_CMD='darwin-ach-chan-cmd'
 DARWIN_ACH_CHAN_CMD_RETURN='darwin-ach-chan-ret'
 DARWIN_ACH_CHAN_CMD_VEL='darwin-ach-chan-cmd-vel'
 
+DIR_ROS_ACH_BRIDGE=$SYSTEM_ACH_DIR/ros2_ach_bridge/src/build/ros2_ach_bridge/
+BIN_NAME_ROS_ACH_BRIDGE_REF=ros2_ach_bridge
+BIN_NAME_ROS_ACH_BRIDGE_STATE=ros2_ach_bridge_state
+
 #DARWIN_IP='10.5.0.249'
 DARWIN_IP='10.111.111.11'
+
+
+
+RosAchBridgeStart()
+{
+  echo 'Starting Ros2Ach Bridge for Reference'
+  $INSTALL_DIR/$DIR_ROS_ACH_BRIDGE/$BIN_NAME_ROS_ACH_BRIDGE_REF &
+  echo 'Started Ros2Ach Bridge for Reference'
+  echo 'Starting Ros2Ach Bridge for State'
+  $INSTALL_DIR/$DIR_ROS_ACH_BRIDGE/$BIN_NAME_ROS_ACH_BRIDGE_STATE &
+  echo 'Started Ros2Ach Bridge for State'
+}
+
+RosAchBridgeStop()
+{
+  echo 'Stopping Ros2Ach Bridge for Reference'
+  kill -9 $(pidof $BIN_NAME_ROS_ACH_BRIDGE_REF)
+  echo 'Stoped Ros2Ach Bridge for Reference'
+  echo 'Stopping Ros2Ach Bridge for State'
+  kill -9 $(pidof $BIN_NAME_ROS_ACH_BRIDGE_STATE)
+  echo 'Stopped Ros2Ach Bridge for State'
+}
+
+RosAchBridgeReset()
+{
+	RosAchBridgeStop
+	RosAchBridgeStart
+}
+
 
 DarwinAchStatus()
 {
@@ -431,6 +464,13 @@ ShowUsage()
         echo '    on             : Starts walking process      '
         echo '    off            : Stops walking process       '
 	echo ''
+	echo 'ros-ach-bridge-start : Starts the ros client on the'
+	echo '                       external/backpack comptuer  '
+	echo 'ros-ach-bridge-stop  : Stops the ros client on the '
+	echo '                       external/backpack comptuer  '
+	echo 'ros-ach-bridge-reset : Resets the ros client on the'
+	echo '                       external/backpack comptuer  '
+	echo ''
 	echo 'darwin-ach-status                                '
 	echo '    -n             : Running status of darwin-ach'
 	echo '                     numerica 0=stopped 1=running'
@@ -506,6 +546,18 @@ case "$1" in
         'darwin-ach-walking' )
                 DarwinAchWalking $2
         ;;
+
+	'ros-ach-bridge-start' )
+		RosAchBridgeStart
+	;;
+	
+	'ros-ach-bridge-stop' )
+		RosAchBridgeStop
+	;;
+
+	'ros-ach-bridge-reset' )
+		RosAchBridgeReset
+	;;
 
 	'darwin-ach-status' )
 		DarwinAchStatus $2 $3
