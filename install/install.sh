@@ -524,6 +524,7 @@ DarwinLegacyHeaders()
 	sudo ln -s $INSTALL_DIR/$SHM_NAME /etc/rc.local.d/
 	cd $THE_DIR
 }
+
 DarwinLegacy()
 {
   	cd $THE_INSTALL_DIR
