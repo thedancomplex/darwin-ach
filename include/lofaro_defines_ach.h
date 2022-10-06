@@ -21,6 +21,14 @@ typedef enum {
         MODE_COUNT
 }__attribute__((packed)) darwin_ach_mode_index_t;
 
+typedef enum {
+        MODE_BRIDGE_REF,
+        MODE_BRIDGE_STATE,
+        MODE_BRIDGE_COUNT
+}__attribute__((packed)) darwin_bridge_mode_index_t;
+
+
+
 #define HZ_REF_DEFAULT HZ_REF_NULL
 #define HZ_STATE_DEFAULT HZ_STATE_100_IMU_FT_SLOW
 #define HZ_RATE_DEFAULT 100.0

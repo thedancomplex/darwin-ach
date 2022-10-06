@@ -3,6 +3,30 @@
 SCREEN_SERVER=darwin-ach-server
 SCREEN_CLIENT=darwin-ach-client
 
+Reset()
+{
+  case "$1" in
+	'server' )
+		darwin-ach stop server
+		darwin-ach start server
+	;;
+
+  	'client' )
+		darwin-ach stop client
+		darwin-ach start client
+	;;
+
+	'all' )
+		darwin-ach reset server
+		darwin-ach reset client
+	;;
+
+	* )
+		ShowUsage
+	;;
+  esac
+}
+
 Kill()
 {
   case "$1" in
@@ -270,6 +294,12 @@ ShowUsage()
 	echo '                achd remote connection           '
 	echo '-  all        : Kills the client and server      '
         echo ''
+	echo 'reset             	                       '
+	echo '-  server     : Stops and starts the server      '
+	echo '-  client     : Stops and start the client       '
+	echo '-  all        : Stops and starts the client and  '
+	echo '                server                           '
+        echo ''
         echo 'status                                           '
 	echo ' [arg 0] [arg 1]                                 '
         echo '    -n             : Running status of darwin-ach'
@@ -302,6 +332,10 @@ case "$1" in
 
 	'kill' )
 		Kill $2
+	;;	
+
+	'reset' )
+		Reset $2
 	;;	
 	
 	'status' )

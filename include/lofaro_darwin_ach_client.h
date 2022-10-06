@@ -17,6 +17,7 @@ class DarwinAchClient
 {
   public:
     DarwinAchClient();
+    DarwinAchClient(bool do_flush);
     int cmd(int cmd);
     int cmd(int cmd, bool block);
     int cmd(int cmd, int16_t d0);
@@ -70,6 +71,7 @@ class DarwinAchClient
   private:
     int ref_mode = MODE_REF;
     int stageGain(int mot, double val);
+    void constructDarwinAchClient(bool do_flush);
 
     LofaroUtils* lu = new LofaroUtils();
 
@@ -94,8 +96,19 @@ class DarwinAchClient
     ach_channel_t chan_darwin_cmd_vel;
 
 };
-
 DarwinAchClient::DarwinAchClient()
+{
+  this->constructDarwinAchClient(false);
+  return;
+}
+
+DarwinAchClient::DarwinAchClient(bool do_flush)
+{
+  this->constructDarwinAchClient(do_flush);
+  return;
+}
+
+void DarwinAchClient::constructDarwinAchClient(bool do_flush)
 {
   /* Zero Data */
   memset(&this->darwin_ref,          0, sizeof(this->darwin_ref));
@@ -123,6 +136,13 @@ DarwinAchClient::DarwinAchClient()
   r = ach_open(&this->chan_darwin_cmd,         DARWIN_ACH_CHAN_CMD,         NULL);
   r = ach_open(&this->chan_darwin_cmd_return,  DARWIN_ACH_CHAN_CMD_RETURN,  NULL);
   r = ach_open(&this->chan_darwin_cmd_vel,     DARWIN_ACH_CHAN_CMD_VEL,     NULL);
+
+  /* Flush Ach Channels */
+  if(do_flush)
+  {
+    r = ach_flush(&this->chan_darwin_state);
+    r = ach_flush(&this->chan_darwin_cmd_return);
+  }
 
   /* Do initial put on the channel to make sure the exist */
 /*

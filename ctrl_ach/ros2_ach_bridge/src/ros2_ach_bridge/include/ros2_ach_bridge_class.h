@@ -13,6 +13,10 @@
 
 using std::placeholders::_1;
 
+#define MODE_BRIDGE_REF    1
+#define MODE_BRIDGE_STATE  2
+#define MODE_BRIDGE_COUNT  3
+
 class Ros2AchBridge : public rclcpp::Node
 {
   public:
@@ -39,12 +43,8 @@ class Ros2AchBridge : public rclcpp::Node
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_tmp_;
     bool do_debug = false;
     bool started = false;
-    DarwinAchClient dac = DarwinAchClient();
+    DarwinAchClient dac = DarwinAchClient(true);
+
     
-    typedef enum {
-	    MODE_BRIDGE_REF,
-	    MODE_BRIDGE_STATE,
-	    MODE_BRIDGE_COUNT
-    }__attribute__((packed)) darwin_bridge_mode_index_t;
 };
 

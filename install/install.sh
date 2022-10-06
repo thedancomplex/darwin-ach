@@ -130,6 +130,31 @@ InstallRos2SourceIni()
   rosdep install --from-paths src --ignore-src -y --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers"
 }
 
+CreateSwapSmall()
+{
+  cd $THE_INSTALL_DIR
+  echo '-----------------------------------'
+  echo '-------- Creating 1gb SWAP --------'
+  echo '-----------------------------------'
+## create 4gb swap
+  # Create the partition path
+  sudo mkdir -p /var/cache/swap/
+  # Set the size of the partition
+  # bs=64M is the block size, count=64 is the number of blocks, so the swap space size is bs*count=4096MB=4GB
+  sudo dd if=/dev/zero of=/var/cache/swap/swap0 bs=64M count=16
+  # Set permissions for this directory
+  sudo chmod 0600 /var/cache/swap/swap0
+  # Create the SWAP file
+  sudo mkswap /var/cache/swap/swap0
+  # Activate the SWAP file
+  sudo swapon /var/cache/swap/swap0
+  # Check if SWAP information is correct
+  sudo swapon -s
+  echo '-----------------------------------'
+  echo '-------- 1gb SWAP Created ---------'
+  echo '-----------------------------------'
+}
+
 
 CreateSwap()
 {
@@ -431,6 +456,9 @@ DarwinAchInstall()
 		DarwinLegacy
 		DarwinAchInstallClient
 	;;
+	'headers' )
+		DarwinLegacyHeaders
+	;;
 	
 	* )
 		ShowUsage
@@ -475,6 +503,27 @@ DynInstall()
 
 }
 
+DarwinLegacyHeaders()
+{
+  	cd $THE_INSTALL_DIR
+	THE_DIR=$(pwd)
+	sudo mkdir -p $INSTALL_DIR
+	echo $INSTALL_DIR
+        sudo cp -r ../include/ $INSTALL_DIR/
+        sudo cp -r ../ros2/ $INSTALL_DIR/
+        sudo cp -r ../$SYSTEM_ACH_DIR $INSTALL_DIR/
+	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
+        sudo mkdir -p /etc/rc.local.d/
+        sudo cp ../scripts/$SHM_NAME $INSTALL_DIR
+	cd $INSTALL_DIR
+	sudo chmod +x $BIN_NAME
+	sudo chmod +x $SHM_NAME
+	sudo rm /usr/bin/$BIN_NAME
+	sudo rm /etc/rc.local.d/$SHM_NAME
+	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
+	sudo ln -s $INSTALL_DIR/$SHM_NAME /etc/rc.local.d/
+	cd $THE_DIR
+}
 DarwinLegacy()
 {
   	cd $THE_INSTALL_DIR
@@ -526,6 +575,7 @@ ShowUsage()
         echo '                 (~24hr on Darwin OPs CPU)       '
         echo '                 (~20hr on raspi 3b+ CPU)        '
 	echo 'swap          : Create 4gb swap                  '
+	echo 'swap-1g       : Create 1gb swap (faster)         '
 	echo 'cm730         : installs cm730 (ros2) drivers    '
 	echo 'low-latency   : sets serial to low latency mode  '
         echo 'darwin-legacy : install the darwin-legacy system '
@@ -536,6 +586,7 @@ ShowUsage()
 	echo '                Use on the Darwins cpu (fit-pc)  '
 	echo '    client    : installs darwin-ach client       '
 	echo '                Use on external computer/backpack'
+	echo '    headers   : Install the headers only         '
 	echo ''
 	echo 'darwin-network   : setup the darwin (fitpc)      '
 	echo '                   network via interfaces        '
@@ -559,6 +610,10 @@ case "$1" in
 	;;
 	'ros2-src' )
 		InstallRos2SourceIni $@
+	;;
+
+	'swap-1g' )
+		CreateSwapSmall $@
 	;;
 
 	'swap' )
