@@ -11,7 +11,7 @@ int main(int argc, char * argv[])
   rclcpp::init(argc, argv);
   Ros2AchBridge rab = Ros2AchBridge(MODE_BRIDGE_STATE);
 
-  double tick_timeout = rad.dac.time();
+  double tick_timeout = rab.dac.time();
 
   int r = 0;
 

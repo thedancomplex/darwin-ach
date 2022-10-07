@@ -23,6 +23,7 @@ class Ros2AchBridge : public rclcpp::Node
   public:
     Ros2AchBridge(int mode);
     int state_loop();
+    DarwinAchClient dac = DarwinAchClient(true);
 
   private:
     void topic_callback_ref_pos(const std_msgs::msg::String & msg);
@@ -45,7 +46,6 @@ class Ros2AchBridge : public rclcpp::Node
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_state_time_;
     bool do_debug = false;
     bool started = false;
-    DarwinAchClient dac = DarwinAchClient(true);
 
     
 };
