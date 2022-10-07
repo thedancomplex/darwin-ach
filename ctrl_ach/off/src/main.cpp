@@ -24,13 +24,14 @@ int main(int argc, char** argv)
 { 
 
   bool do_slow = false;
-  
+  bool do_wait = true;
   /* Slow option set */
   if(argc > 1)
   {
     std::string str1(argv[1]);
-    if   (str1.compare("slow") == 0) do_slow = true;
-    else if(str1.compare("-h") ==0) 
+    if      (str1.compare("slow") == 0) do_slow = true;
+    else if (str1.compare("no_wait") == 0) do_wait = false;
+    else if (str1.compare("-h") ==0) 
     {
       printf("\n");
       printf("  Darwin Ach - Turn Off                                      \n");
@@ -38,6 +39,7 @@ int main(int argc, char** argv)
       printf("  -h        : This menue                                     \n");
       printf("  slow      : Move to home position at default slow speed    \n");
       printf("              before turning off the motors                  \n");
+      printf("  no_wait   : Turn off motors without waiting                \n");
       printf("  [no-args] : Turn off motors without goign to home posisiton\n");
       printf("\n");
       return 0;
@@ -63,7 +65,7 @@ int main(int argc, char** argv)
   int r = 0;
 
   /* Turn Off System */
-  r = dac.cmd(DARWIN_CMD_OFF, true);
+  r = dac.cmd(DARWIN_CMD_OFF, do_wait);
   if( r == DARWIN_CMD_OK ){ r=0; }
   else{ printf("1\n"); return 1; }
 

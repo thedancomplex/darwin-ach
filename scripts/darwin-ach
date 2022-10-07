@@ -55,16 +55,36 @@ Kill()
   esac
 }
 
+Ach()
+{
+  case "$1" in
+	'make' )
+		darwin-lofaro ach-make
+	;;
+
+  	'rm' )
+		darwin-lofaro ach-clear
+	;;
+	
+	'reset' )
+		darwin-lofaro ach-reset
+	;;
+
+	* )
+		ShowUsage
+	;;
+  esac
+}
 
 Power()
 {
   case "$1" in
 	'on' )
-		On
+		On $2
 	;;
 
   	'off' )
-		Off
+		Off $2
 	;;
 
 	* )
@@ -161,7 +181,7 @@ Stop()
 	'server' )
 	        echo '--- Stopping Darwin-ach Server using Darwin Lofaro Legacy ---'
 		darwin-lofaro darwin-ach-walking off
-		Off
+		Off $2
 		darwin-lofaro darwin-ach-server off
 		darwin-lofaro ach-clear
 #        	screen -S "$SCREEN_SERVER" -X quit > /dev/null
@@ -188,7 +208,7 @@ Stop()
 	'local' )
 		echo '--- Stopping Darwin-ach Server/Client (local) using Darwin Lofaro Legacy ---'
 		darwin-lofaro darwin-ach-walking off
-		Off
+		Off $2
 		darwin-lofaro darwin-ach-server off
 		darwin-lofaro ach-clear
 #        	screen -S "$SCREEN_SERVER" -X quit > /dev/null
@@ -206,12 +226,26 @@ Stop()
 
 On()
 {
-  darwin-lofaro darwin-ach-power on
+  case "$1" in
+	'no_wait' )
+  		darwin-lofaro darwin-ach-power-no-wait on
+	;;
+	* )
+  		darwin-lofaro darwin-ach-power on
+	;;
+  esac
 }
 
 Off()
 {
-  darwin-lofaro darwin-ach-power off
+  case "$1" in
+	'no_wait' )
+  		darwin-lofaro darwin-ach-power-no-wait off
+	;;
+	* )
+  		darwin-lofaro darwin-ach-power off
+	;;
+  esac
 }
 
 DarwinAchStatus()
@@ -283,16 +317,22 @@ ShowUsage()
 	echo '-  walking    : Starts the waking process        '
         echo ''
         echo 'stop                                             '
-        echo '-  server     : Stops the server (darwin) side   '
+  	echo ' [arg 0] [arg 1]                                 '
+        echo '- server      : Stops the server (darwin) side   '
 	echo '                and turns power off              '
-	echo '-  client     : Stops the client (external side) '
-	echo '-  local      : Stops server and client on the   '
+	echo '- client      : Stops the client (external side) '
+	echo '- local       : Stops server and client on the   '
 	echo '                same machine and turns power off '
-	echo '-  walking    : Stops the walking process        '
+	echo '- walking     : Stops the walking process        '
+	echo '-     no_wait : Will not block when waiting for  '
+	echo '                a response                       '
 	echo ''
 	echo 'power                                            '
-        echo '-  on         : Turns power on                   '
-	echo '-  off        : Turns power off                  '
+  	echo ' [arg 0] [arg 1]                                 '
+        echo '-  on           : Turns power on                 '
+	echo '-  off          : Turns power off                '
+	echo '-       no_wait : Will not block when waiting for'
+	echo '                  a response                     '
 	echo ''
 	echo 'kill             	                               '
 	echo '-  server     : Kills server and ach channels    '
@@ -316,6 +356,10 @@ ShowUsage()
         echo '          client   : Client status               '
         echo '          walking  : Walking status              '
         echo '          remote   : Remote status               '
+	echo 'ach                                              '
+	echo '   make       : make ach channels                '
+	echo '   rm         : remove ach channels              '
+	echo '   reset      : destroy the remake ach channels  '
         echo ''
         echo
 
@@ -329,11 +373,11 @@ case "$1" in
 	;;
 
 	'stop' )
-		Stop $2
+		Stop $2 $3
 	;;
 
 	'power' )
-		Power $2
+		Power $2 $3
 	;;
 
 	'kill' )
@@ -346,6 +390,10 @@ case "$1" in
 	
 	'status' )
 		DarwinAchStatus $2 $3
+	;;
+
+	'ach' )
+		Ach $2
 	;;
 
 	* )

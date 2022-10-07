@@ -291,11 +291,42 @@ DarwinAchOff()
   ./$BIN_NAME_ACH_OFF
 }
 
+DarwinAchOffNoWait()
+{
+  echo 'Turning motor power off (no wait mode)' 
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_OFF/
+  ./$BIN_NAME_ACH_OFF no_wait
+}
+
 DarwinAchOn()
 { 
   echo 'Turning motor power on'
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON/
   ./$BIN_NAME_ACH_ON
+}
+
+DarwinAchOnNoWait()
+{ 
+  echo 'Turning motor power on (no wait mode)'
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON/
+  ./$BIN_NAME_ACH_ON no_wait
+}
+
+DarwinAchPowerNoWait()
+{
+  case "$1" in
+        'on' )
+                DarwinAchOnNoWait
+        ;;
+        'off' )
+                DarwinAchOffNoWait 
+        ;;
+
+        * )
+                ShowUsage
+                exit 1
+  esac
+
 }
 
 DarwinAchPower()
@@ -460,6 +491,10 @@ ShowUsage()
         echo '    on             : Turns on motors             '
         echo '    off            : Turns off motors            '
         echo ''
+        echo 'darwin-ach-power-no-wait                         '
+        echo '    on             : Turns on motors             '
+        echo '    off            : Turns off motors            '
+        echo ''
         echo 'darwin-ach-walking                               '
         echo '    on             : Starts walking process      '
         echo '    off            : Stops walking process       '
@@ -541,6 +576,10 @@ case "$1" in
 
         'darwin-ach-power' )
                 DarwinAchPower $2
+        ;;
+        
+	'darwin-ach-power-no-wait' )
+                DarwinAchPowerNoWait $2
         ;;
 
         'darwin-ach-walking' )

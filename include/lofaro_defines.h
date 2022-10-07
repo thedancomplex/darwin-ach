@@ -165,6 +165,7 @@
 #define LED_MODE_0                         0
 #define LED_MODE_1                         1
 #define LED_MODE_2                         2
+#define LED_MODE_3                         3
 
 
 #endif

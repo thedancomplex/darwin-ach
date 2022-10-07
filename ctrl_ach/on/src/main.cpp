@@ -20,8 +20,20 @@
 #include <unistd.h>
 #include <string.h>
 
-int main()
-{ 
+int main(int argc, char *argv[])
+{
+
+  bool do_wait = true;
+  if( argc >= 2)
+  {
+    std::string str = argv[1];
+
+    if(str.compare("no_wait") == 0)
+    {
+      do_wait = false;
+    }
+  } 
+
   /* Make System Object */
   DarwinAchClient dac = DarwinAchClient();
   dac.setRefMode(MODE_REF);
@@ -29,7 +41,7 @@ int main()
   int r = 0;
 
   /* Turn On System */
-  r = dac.cmd(DARWIN_CMD_ON, true);
+  r = dac.cmd(DARWIN_CMD_ON, do_wait);
   if( r == DARWIN_CMD_OK ){ r=0; }
   else{ printf("1\n"); return 1; }
 

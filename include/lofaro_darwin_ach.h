@@ -57,6 +57,7 @@ class DarwinAch
     int button_on();
     int button_off();
     int button_walking();
+    int button_reset();
 
     /* Led State */
     uint8_t led_mode = LED_MODE_0;
@@ -364,11 +365,13 @@ int DarwinAch::do_button()
       uint8_t the_mode = 0;
       if     (this->led_mode == LED_MODE_0) this->led_mode = LED_MODE_1;
       else if(this->led_mode == LED_MODE_1) this->led_mode = LED_MODE_2;
-      else if(this->led_mode == LED_MODE_2) this->led_mode = LED_MODE_0;
+      else if(this->led_mode == LED_MODE_2) this->led_mode = LED_MODE_3;
+      else if(this->led_mode == LED_MODE_3) this->led_mode = LED_MODE_0;
       else                                  this->led_mode = LED_MODE_0;
       the_mode = this->led_mode;
       uint8_t b = 1;
       b = b << the_mode;
+      if(the_mode == LED_MODE_3) b = 7;
       this->dl->setLed(b);   
     }
 
@@ -377,6 +380,7 @@ int DarwinAch::do_button()
       if     (this->led_mode == LED_MODE_0)  this->button_on();
       else if(this->led_mode == LED_MODE_1)  this->button_walking();
       else if(this->led_mode == LED_MODE_2)  this->button_off();
+      else if(this->led_mode == LED_MODE_3)  this->button_reset();
       else return 1;
     }
 
@@ -388,6 +392,16 @@ int DarwinAch::do_button()
     return 1;
   }
 
+  return 0;
+}
+
+int DarwinAch::button_reset()
+{
+  printf("Button: Resetting System\n");
+  this->run_loop = false;
+  this->dl->off();
+  std::system("darwin-ach stop walking");
+  std::system("darwin-ach stop server no_wait");
   return 0;
 }
 

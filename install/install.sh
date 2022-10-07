@@ -448,9 +448,11 @@ DarwinAchInstall()
   THE_DIR=$(pwd)
 
   case "$1" in
-    	'server' )
+	'base' )
 		DynInstall
   		AchInstall
+	;;
+    	'server' )
 		DarwinLegacy
 		DarwinAchInstallServer
 	;;
@@ -602,6 +604,8 @@ ShowUsage()
         echo 'darwin-ros2   : install the darwin-ros2 system   '
 	echo ''
 	echo 'darwin-ach                                       '
+	echo '   base       : install base system including the'
+	echo '                ach IPC and the Dynamixel drivers'
 	echo '   server     : installs darwin-ach server       '
 	echo '                Use on the Darwins cpu (fit-pc)  '
 	echo '   client     : installs darwin-ach client       '
