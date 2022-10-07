@@ -162,6 +162,10 @@
 #define DARWIN_BUTTON_START                1
 #define DARWIN_BUTTON_MODE                 0
 
+#define LED_MODE_0                         0
+#define LED_MODE_1                         1
+#define LED_MODE_2                         2
+
 
 #endif
 

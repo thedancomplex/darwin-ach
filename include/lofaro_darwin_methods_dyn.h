@@ -48,6 +48,8 @@ int DarwinLofaro::open()
 /* Open Port and change port number */
 int DarwinLofaro::open(const char *port)
 {
+ try
+ {
   portHandler->setPacketTimeout(0.001);
 
   // Open port
@@ -71,6 +73,11 @@ int DarwinLofaro::open(const char *port)
     printf("Failed to change the baudrate!\n");
     return RETURN_FAIL;
   }
+ }
+ catch(...)
+ {
+    return RETURN_FAIL;
+ }
 
   return RETURN_OK;
 }
@@ -782,7 +789,7 @@ uint8_t DarwinLofaro::getButton()
   return buff;
 }
 
-int DarwinLofaro::getButton(int butt)
+int DarwinLofaro::getButton(int butt, uint8_t buff)
 {
   if(butt > 1) return -1;
   if(butt < 0) return -1;
@@ -790,10 +797,16 @@ int DarwinLofaro::getButton(int butt)
   uint8_t b = 1;
   b = b << butt;
   
-  uint8_t buff = this->getButton();
   buff = buff & b;
   if( buff > 0 ) return 1;
   return 0;
+}
+
+
+int DarwinLofaro::getButton(int butt)
+{
+  uint8_t buff = this->getButton();
+  return this->getButton(butt, buff);
 }
 
 

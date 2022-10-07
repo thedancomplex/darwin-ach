@@ -24,6 +24,10 @@ int main()
   DarwinAch da = DarwinAch();
   da.setDebug(true);
   int r = 0;
+  
+  printf("Opening Serial Port\n");
+  r = da.open();
+
   printf("Start System Loop\n");
   r = da.loop(125.0, HZ_STATE_125_IMU);
   

@@ -124,6 +124,7 @@ class DarwinLofaro
     /* Get Button */
     uint8_t getButton();
     int getButton(int butt);
+    int getButton(int butt, uint8_t buff);
 
     /* Closes port */
     int close();

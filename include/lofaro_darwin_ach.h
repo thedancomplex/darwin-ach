@@ -24,6 +24,7 @@ class DarwinAch
     int loop(double hz, int mode_state, int mode_ref);
     int sleep(double val);
     int setDebug(bool val);
+    int open();
 
     /* Update Methods */
     int getState();
@@ -44,9 +45,21 @@ class DarwinAch
     int do_state(int mode);
     int do_cmd(int mode);
     int do_gain();
+    int do_button();
     int do_debug();
     int do_save_previous_state();
     int m_REF_MODE = MODE_REF;
+
+    /* Previous Button States */
+    int button_mode_0  = 0;
+    int button_start_0 = 0;
+
+    int button_on();
+    int button_off();
+    int button_walking();
+
+    /* Led State */
+    uint8_t led_mode = LED_MODE_0;
 
     DarwinLofaro* dl = new DarwinLofaro();
 
@@ -140,6 +153,18 @@ DarwinAch::DarwinAch()
   return;
 }
 
+int DarwinAch::open()
+{
+  this->dl->setup("/dev/ttyUSB0", true);
+  this->dl->sleep(2.0);
+
+  uint8_t b = 1;
+  b = b << this->led_mode;
+  this->dl->setLed(b);   
+
+  return 0;
+}
+
 int DarwinAch::sleep(double val)
 {
   return this->dl->sleep(val);
@@ -168,7 +193,7 @@ int DarwinAch::do_cmd(int mode)
       {
         this->dl->close();
         this->dl->sleep(2.0);
-        run_loop = false;
+        this->run_loop = false;
         do_return = true;
         break;
       }
@@ -176,7 +201,7 @@ int DarwinAch::do_cmd(int mode)
       {
         this->dl->setup("/dev/ttyUSB0", true);
         this->dl->sleep(2.0);
-        run_loop = true;
+        this->run_loop = true;
         do_return = true;
         break;
       }
@@ -186,7 +211,7 @@ int DarwinAch::do_cmd(int mode)
         this->dl->sleep(1.0);
         this->dl->on();
         this->dl->sleep(1.0);
-        run_loop = true;
+        this->run_loop = true;
         do_return = true;
         break;
       }
@@ -196,13 +221,13 @@ int DarwinAch::do_cmd(int mode)
         this->dl->sleep(1.0);
         this->dl->on(darwin_cmd.data[0]);
         this->dl->sleep(1.0);
-        run_loop = true;
+        this->run_loop = true;
         do_return = true;
         break;
       }
       case DARWIN_CMD_OFF:
       {
-        run_loop = false;
+        this->run_loop = false;
         this->dl->off();
         this->dl->stop();
         do_return = true;
@@ -309,11 +334,81 @@ int DarwinAch::loop(double hz, int mode_state, int mode_ref)
     this->main_loop(mode_state, mode_ref);
     this->do_debug();
     this->do_save_previous_state();
+
+    this->do_button();
+
     this->dl->sleep();
   }
 
   if( ref > 0 ) ref = 1;
   return ref;
+}
+
+int DarwinAch::do_button()
+{
+  try
+  {
+    uint8_t buff = this->dl->getButton();
+    int button_mode  = this->dl->getButton(DARWIN_BUTTON_MODE,  buff);
+    int button_start = this->dl->getButton(DARWIN_BUTTON_START, buff);
+
+    /* Debounce */
+    int button_mode_pressed  = 0;
+    int button_start_pressed = 0;
+    if( (button_mode  == 0) & (button_mode_0  == 1) ) button_mode_pressed  = 1;
+    if( (button_start == 0) & (button_start_0 == 1) ) button_start_pressed = 1;
+
+    /* Progress Buttons */
+    if(button_mode_pressed == 1)
+    {
+      uint8_t the_mode = 0;
+      if     (this->led_mode == LED_MODE_0) this->led_mode = LED_MODE_1;
+      else if(this->led_mode == LED_MODE_1) this->led_mode = LED_MODE_2;
+      else if(this->led_mode == LED_MODE_2) this->led_mode = LED_MODE_0;
+      else                                  this->led_mode = LED_MODE_0;
+      the_mode = this->led_mode;
+      uint8_t b = 1;
+      b = b << the_mode;
+      this->dl->setLed(b);   
+    }
+
+    if(button_start_pressed)
+    {
+      if     (this->led_mode == LED_MODE_0)  this->button_on();
+      else if(this->led_mode == LED_MODE_1)  this->button_walking();
+      else if(this->led_mode == LED_MODE_2)  this->button_off();
+      else return 1;
+    }
+
+    this->button_mode_0  = button_mode;
+    this->button_start_0 = button_start;
+  }
+  catch(...)
+  {
+    return 1;
+  }
+
+  return 0;
+}
+
+int DarwinAch::button_walking()
+{
+  return 0;
+}
+
+int DarwinAch::button_off()
+{
+  this->run_loop = false;
+  this->dl->off();
+  return 0;
+}
+
+int DarwinAch::button_on()
+{
+  this->dl->on();
+  this->dl->sleep(1.0);
+  this->run_loop = true;
+  return 0;
 }
 
 int DarwinAch::do_save_previous_state()
@@ -369,7 +464,7 @@ int DarwinAch::main_loop(int mode_state, int mode_ref)
 {
   int ret = 0;
   ret += this->do_cmd(0);
-  if(run_loop)
+  if(this->run_loop)
   {
     ret += this->do_gain();
     ret += this->do_ref(mode_ref);
