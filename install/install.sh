@@ -460,12 +460,17 @@ DarwinAchInstall()
 		DynInstall
   		AchInstall
 	;;
+	'base-dyn' )
+		DynInstall
+	;;
+	'base-ach' )
+  		AchInstall
+	;;
     	'server' )
 		DarwinLegacy
 		DarwinAchInstallServer
 	;;
     	'client' )
-  		AchInstall
 		DarwinLegacy
 		DarwinAchInstallClient
 	;;
@@ -627,6 +632,8 @@ ShowUsage()
 	echo 'darwin-ach                                       '
 	echo '   base       : install base system including the'
 	echo '                ach IPC and the Dynamixel drivers'
+	echo '   base-ach   : installs the ach IPC             '
+	echo '   base-dyn   : installs the Dynamixel drivers   '
 	echo '   server     : installs darwin-ach server       '
 	echo '                Use on the Darwins cpu (fit-pc)  '
 	echo '   client     : installs darwin-ach client       '
