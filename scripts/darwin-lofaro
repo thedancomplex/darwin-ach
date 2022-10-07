@@ -27,6 +27,7 @@ DARWIN_ACH_CHAN_STATE='darwin-ach-chan-state'
 DARWIN_ACH_CHAN_CMD='darwin-ach-chan-cmd'
 DARWIN_ACH_CHAN_CMD_RETURN='darwin-ach-chan-ret'
 DARWIN_ACH_CHAN_CMD_VEL='darwin-ach-chan-cmd-vel'
+DARWIN_ACH_CHAN_TIME='darwin-ach-chan-time'
 
 DIR_ROS_ACH_BRIDGE=$SYSTEM_ACH_DIR/ros2_ach_bridge/src/build/ros2_ach_bridge/
 BIN_NAME_ROS_ACH_BRIDGE_REF=ros2_ach_bridge
@@ -165,6 +166,7 @@ MakeAch()
   ach -1 mk $DARWIN_ACH_CHAN_CMD -m 10 -n 3000
   ach -1 mk $DARWIN_ACH_CHAN_CMD_RETURN -m 10 -n 3000
   ach -1 mk $DARWIN_ACH_CHAN_CMD_VEL -m 10 -n 3000
+  ach -1 mk $DARWIN_ACH_CHAN_TIME -m 10 -n 3000
   chmod 777 /dev/shm/achshm-darwin*
 }
 
@@ -176,6 +178,7 @@ AchRemote()
   achd -r push $1 $DARWIN_ACH_CHAN_CMD &
   achd -r pull $1 $DARWIN_ACH_CHAN_CMD_RETURN &
   achd -r pull $1 $DARWIN_ACH_CHAN_CMD_VEL &
+  achd -r pull $1 $DARWIN_ACH_CHAN_TIME &
 }
 
 

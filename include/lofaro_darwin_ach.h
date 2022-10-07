@@ -36,6 +36,7 @@ class DarwinAch
     darwin_cmd_def_t      darwin_cmd;
     darwin_cmd_def_t      darwin_cmd_return;
     darwin_cmd_vel_def_t  darwin_cmd_vel;
+    double                darwin_time = 0.0;
 
   private:
     int main_loop();
@@ -47,6 +48,7 @@ class DarwinAch
     int do_gain();
     int do_button();
     int do_debug();
+    int do_time();
     int do_save_previous_state();
     int m_REF_MODE = MODE_REF;
 
@@ -86,6 +88,9 @@ class DarwinAch
 
     /* Command Vel Channel */
     ach_channel_t chan_darwin_cmd_vel;
+
+    /* Command Time Channel */
+    ach_channel_t chan_darwin_time;
 };
 
 DarwinAch::DarwinAch()
@@ -135,6 +140,7 @@ DarwinAch::DarwinAch()
   r = ach_open(&this->chan_darwin_cmd,         DARWIN_ACH_CHAN_CMD,         NULL);
   r = ach_open(&this->chan_darwin_cmd_return,  DARWIN_ACH_CHAN_CMD_RETURN,  NULL);
   r = ach_open(&this->chan_darwin_cmd_vel,     DARWIN_ACH_CHAN_CMD_VEL,     NULL);
+  r = ach_open(&this->chan_darwin_time,        DARWIN_ACH_CHAN_TIME,        NULL);
 
   /* Flush all channels */
   ach_flush(&this->chan_darwin_ref);
@@ -143,6 +149,7 @@ DarwinAch::DarwinAch()
   ach_flush(&this->chan_darwin_cmd);
   ach_flush(&this->chan_darwin_cmd_return);
   ach_flush(&this->chan_darwin_cmd_vel);
+  ach_flush(&this->chan_darwin_time);
 
   /* Do initial put on the channel to make sure the exist */
   ach_put(&this->chan_darwin_ref,         &this->darwin_ref,         sizeof(this->darwin_ref));
@@ -151,7 +158,17 @@ DarwinAch::DarwinAch()
   ach_put(&this->chan_darwin_cmd,         &this->darwin_cmd,         sizeof(this->darwin_cmd));
   ach_put(&this->chan_darwin_cmd_return,  &this->darwin_cmd_return,  sizeof(this->darwin_cmd_return));
   ach_put(&this->chan_darwin_cmd_vel,  &this->darwin_cmd_vel,  sizeof(this->darwin_cmd_vel));
+
+  this->darwin_time = this->dl->time();
+  ach_put(&this->chan_darwin_time,  &this->darwin_time,  sizeof(this->darwin_time));
   return;
+}
+
+int DarwinAch::do_time()
+{
+  this->darwin_time = this->dl->time();
+  ach_put(&this->chan_darwin_time,  &this->darwin_time,  sizeof(this->darwin_time));
+  return 0;
 }
 
 int DarwinAch::open()
@@ -332,6 +349,7 @@ int DarwinAch::loop(double hz, int mode_state, int mode_ref)
   bool do_loop = true;
   while(do_loop)
   { 
+    this->do_time();
     this->main_loop(mode_state, mode_ref);
     this->do_debug();
     this->do_save_previous_state();

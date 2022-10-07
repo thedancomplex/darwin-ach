@@ -38,6 +38,7 @@ Ros2AchBridge::Ros2AchBridge(int mode) : Node("darwin_lofaro_legacy_daemon")
     publisher_state_motor_tor_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_TOR, 1);
     publisher_state_motor_vol_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_VOL, 1);
     publisher_state_motor_tmp_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(DARWIN_TOPIC_STATE_MOTOR_TMP, 1);
+    publisher_state_time_      = this->create_publisher<std_msgs::msg::Float64>(DARWIN_TOPIC_STATE_TIME, 1);
   }
 }
 
@@ -52,6 +53,9 @@ int Ros2AchBridge::state_loop()
   auto buff_motor_tor = std_msgs::msg::Float64MultiArray();
   auto buff_motor_vol = std_msgs::msg::Float64MultiArray();
   auto buff_motor_tmp = std_msgs::msg::Float64MultiArray();
+  auto buff_time      = std_msgs::msg::Float64();
+
+  buff_time.data = this->dac.darwin_time;
 
   for( int i = 0; i <= DARWIN_MOTOR_MAX; i++ )
   {
@@ -91,6 +95,7 @@ int Ros2AchBridge::state_loop()
   publisher_state_motor_tor_->publish(buff_motor_tor);
   publisher_state_motor_vol_->publish(buff_motor_vol);
   publisher_state_motor_tmp_->publish(buff_motor_tmp);
+  publisher_state_time_->publish(buff_time);
 
   return 0;
 }

@@ -39,6 +39,7 @@ typedef enum {
 #define DARWIN_ACH_CHAN_CMD          "darwin-ach-chan-cmd"
 #define DARWIN_ACH_CHAN_CMD_RETURN   "darwin-ach-chan-ret"
 #define DARWIN_ACH_CHAN_CMD_VEL      "darwin-ach-chan-cmd-vel"
+#define DARWIN_ACH_CHAN_TIME         "darwin-ach-chan-time"
 
 //#include "lofaro_defines_ach.h"
 
