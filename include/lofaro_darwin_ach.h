@@ -393,11 +393,14 @@ int DarwinAch::do_button()
 
 int DarwinAch::button_walking()
 {
+  printf("Button: Turning on Walking\n");
+  std::system("darwin-ach start walking");
   return 0;
 }
 
 int DarwinAch::button_off()
 {
+  printf("Button: Turning off power\n");
   this->run_loop = false;
   this->dl->off();
   return 0;
@@ -405,6 +408,7 @@ int DarwinAch::button_off()
 
 int DarwinAch::button_on()
 {
+  printf("Button: Turning on power\n");
   this->dl->on();
   this->dl->sleep(1.0);
   this->run_loop = true;
