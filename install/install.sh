@@ -24,7 +24,8 @@ DIR_ROS_ACH_BRIDGE_ROOT=$SYSTEM_ACH_DIR/ros2_ach_bridge/src/
 DIR_ROS_ACH_BRIDGE=$DIR_ROS_ACH_BRIDGE_ROOT/build/ros2_ach_bridge/
 BIN_NAME_AUTO_RUN=darwin-ach-auto-run.sh 
 RC_LOCAL_SCREEN_NAME=darwin_ach.sh
-
+SERVICE_NAME=darwin-ach.service
+SERVICE_DIR=/lib/systemd/system/
 
 InstallRos2()
 {
@@ -526,6 +527,9 @@ DarwinLegacyHeaders()
 	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
 	sudo cp ../scripts/$BIN_NAME_AUTO_RUN $INSTALL_DIR
 	sudo cp ../scripts/$RC_LOCAL_SCREEN_NAME $INSTALL_DIR
+	sudo cp ../scripts/$SERVICE_NAME $SERVICE_DIR/
+	sudo systemctl enable $SERVICE_NAME 
+
         sudo mkdir -p /etc/rc.local.d/
         sudo cp ../scripts/$SHM_NAME $INSTALL_DIR
 	cd $INSTALL_DIR
@@ -564,6 +568,8 @@ DarwinLegacy()
         sudo cp -r ../$SYSTEM_ACH_DIR $INSTALL_DIR/
 	sudo cp ../scripts/$BIN_NAME_AUTO_RUN $INSTALL_DIR
 	sudo cp ../scripts/$RC_LOCAL_SCREEN_NAME $INSTALL_DIR
+	sudo cp ../scripts/$SERVICE_NAME $SERVICE_DIR/
+	sudo systemctl enable $SERVICE_NAME 
 #	sudo mkdir /etc/rc.local.d
 #	chmod +x darwin-legacy.sh
 #	sudo cp darwin-legacy.sh /etc/rc.local.d/
