@@ -22,6 +22,8 @@ THE_INSTALL_DIR=$(pwd)
 THE_ARCH=$(arch)
 DIR_ROS_ACH_BRIDGE_ROOT=$SYSTEM_ACH_DIR/ros2_ach_bridge/src/
 DIR_ROS_ACH_BRIDGE=$DIR_ROS_ACH_BRIDGE_ROOT/build/ros2_ach_bridge/
+BIN_NAME_AUTO_RUN=darwin-ach-auto-run.sh 
+RC_LOCAL_SCREEN_NAME=darwin_ach.sh
 
 
 InstallRos2()
@@ -522,6 +524,8 @@ DarwinLegacyHeaders()
         sudo cp -r ../ros2/ $INSTALL_DIR/
         sudo cp -r ../$SYSTEM_ACH_DIR $INSTALL_DIR/
 	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
+	sudo cp ../scripts/$BIN_NAME_AUTO_RUN $INSTALL_DIR
+	sudo cp ../scripts/$RC_LOCAL_SCREEN_NAME $INSTALL_DIR
         sudo mkdir -p /etc/rc.local.d/
         sudo cp ../scripts/$SHM_NAME $INSTALL_DIR
 	cd $INSTALL_DIR
@@ -529,8 +533,10 @@ DarwinLegacyHeaders()
 	sudo chmod +x $SHM_NAME
 	sudo rm /usr/bin/$BIN_NAME
 	sudo rm /etc/rc.local.d/$SHM_NAME
+	sudo rm /etc/rc.local.d/$RC_LOCAL_SCREEN_NAME
 	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
 	sudo ln -s $INSTALL_DIR/$SHM_NAME /etc/rc.local.d/
+	sudo ln -s $INSTALL_DIR/$RC_LOCAL_SCREEN_NAME /etc/rc.local.d/
 	cd $THE_DIR
 }
 
@@ -556,6 +562,8 @@ DarwinLegacy()
         sudo cp -r ../include/ $INSTALL_DIR/
         sudo cp -r ../ros2/ $INSTALL_DIR/
         sudo cp -r ../$SYSTEM_ACH_DIR $INSTALL_DIR/
+	sudo cp ../scripts/$BIN_NAME_AUTO_RUN $INSTALL_DIR
+	sudo cp ../scripts/$RC_LOCAL_SCREEN_NAME $INSTALL_DIR
 #	sudo mkdir /etc/rc.local.d
 #	chmod +x darwin-legacy.sh
 #	sudo cp darwin-legacy.sh /etc/rc.local.d/
@@ -570,8 +578,10 @@ DarwinLegacy()
 	sudo chmod +x $SHM_NAME
 	sudo rm /usr/bin/$BIN_NAME
 	sudo rm /etc/rc.local.d/$SHM_NAME
+	sudo rm /etc/rc.local.d/$RC_LOCAL_SCREEN_NAME
 	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
 	sudo ln -s $INSTALL_DIR/$SHM_NAME /etc/rc.local.d/
+	sudo ln -s $INSTALL_DIR/$RC_LOCAL_SCREEN_NAME /etc/rc.local.d/
 	cd $THE_DIR
 }
 

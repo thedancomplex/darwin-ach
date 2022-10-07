@@ -7,10 +7,10 @@ do
   SERVER_STATUS=$(darwin-ach status -n server)
   if [ $SERVER_STATUS -eq 0 ]
   then
-    darwin-ach stop server
-    darwin-ach kill server
-    darwin-ach ach reset
-    darwin-ach start server
+    darwin-ach stop server no_wait
+    darwin-ach kill server no_wait
+    darwin-ach ach reset no_wait
+    darwin-ach start server no_wait
   else
     sleep 5
   fi

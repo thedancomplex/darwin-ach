@@ -290,7 +290,30 @@ DarwinAchStatus()
 }
 
 
+DARWIN_SCREEN=darwin-ach-server
 
+Darwin()
+{
+  case "$1" in
+        'start' )
+		if ! screen -list | grep -q "$DARWIN_SCREEN"; then
+			screen -S $DARWIN_SCREEN -d -m bash -c "/etc/darwin-legacy/darwin-ach-auto-run.sh"
+		else
+			echo 'Darwin-Ach System Already Started'
+		fi
+        ;;
+        'stop' )
+                screen -S $DARWIN_SCREEN -p 0 -X quit
+		echo 'Darwin-Ach System Stopped'
+        ;;
+
+        * )
+                ShowUsage
+                exit 1
+        ;;
+  esac
+
+}
 
 
 ShowUsage()
@@ -360,9 +383,12 @@ ShowUsage()
 	echo '   make       : make ach channels                '
 	echo '   rm         : remove ach channels              '
 	echo '   reset      : destroy the remake ach channels  '
-        echo ''
-        echo
-
+	echo ''
+	echo 'darwin                                           '
+	echo '   start      : Starts the darwin side of the    '
+	echo '                system in the background         '
+	echo '   stop       : Stops the darwin side of the     '
+	echo '                background system                '
 	echo ''
 }
 
@@ -394,6 +420,10 @@ case "$1" in
 
 	'ach' )
 		Ach $2
+	;;
+
+	'darwin' )
+		Darwin $2
 	;;
 
 	* )
