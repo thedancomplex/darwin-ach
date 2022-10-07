@@ -25,7 +25,7 @@ int main(int argc, char * argv[])
       return 1;    
     }
 
-    int d = rad.dac.getTime();
+    int d = rab.dac.getTime();
     if ( d == 0 ) r++;
     if( r > LOOP_ENABLE_SECONDS_COUNT ) break;
 
