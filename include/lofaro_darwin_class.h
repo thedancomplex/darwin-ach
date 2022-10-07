@@ -113,6 +113,18 @@ class DarwinLofaro
     /* Set D Gain */
     int setDGain(int mot, double val);
 
+    /* Set LED */
+    int setLed(uint8_t val);
+    int setLed(int led, int val);
+
+    /* Get LED */
+    uint8_t getLed();
+    int getLed(int val);
+
+    /* Get Button */
+    uint8_t getButton();
+    int getButton(int butt);
+
     /* Closes port */
     int close();
 
@@ -139,6 +151,13 @@ class DarwinLofaro
 
     /* Direct write packet to try to get around the seg fault */
     int write(uint8_t *txpacket);
+    int write(uint8_t id, uint8_t addr, uint8_t d0);
 
+    /* Reads one packet */
+    int read(uint8_t id, uint8_t addr, uint8_t* buff);
+    uint8_t read(uint8_t id, uint8_t addr);
+
+    /* LED current state */
+    uint8_t led_state = 0;
 };
 

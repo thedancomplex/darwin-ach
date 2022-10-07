@@ -68,6 +68,8 @@ CM730_ADDRESS_IMU_GYRO_X         =  42
 CM730_ADDRESS_IMU_ACC_X          =  44
 CM730_ADDRESS_IMU_ACC_Y          =  46
 CM730_ADDRESS_IMU_ACC_Z          =  48
+CM730_ADDRESS_LED_PANNEL         =  25
+
 
 MX_ID                            =  2  
 MX_ADDRESS_READ_DATA_OFFSET      =  5

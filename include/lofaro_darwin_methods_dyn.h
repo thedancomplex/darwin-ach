@@ -215,7 +215,31 @@ int DarwinLofaro::on()
   return RETURN_OK;
 }
 
+int DarwinLofaro::write(uint8_t id, uint8_t addr, uint8_t d0)
+{
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+    uint8_t dxl_error = 0;                          // Dynamixel error
 
+    dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, 
+                                                          id, 
+                                                          addr, 
+                                                          d0, 
+                                                          &dxl_error);
+    if (dxl_comm_result != COMM_SUCCESS)
+    {
+      return RETURN_FAIL;
+    }
+    else if (dxl_error != 0)
+    {
+      printf("%s\n", packetHandler->getRxPacketError(dxl_error));
+      return RETURN_FAIL;
+    }
+    else
+    {
+      return RETURN_OK;;
+    }
+    return RETURN_OK;;
+}
 
 int DarwinLofaro::on(int id)
 {
@@ -750,6 +774,104 @@ int DarwinLofaro::setDGain(int mot, double val)
 }
 
 
+/* Get Button */
+uint8_t DarwinLofaro::getButton()
+{
+  uint8_t buff = 0;
+  int e = this->read(ID_CM730, CM730_ADDRESS_BUTTON, &buff);
+  return buff;
+}
+
+int DarwinLofaro::getButton(int butt)
+{
+  if(butt > 1) return -1;
+  if(butt < 0) return -1;
+
+  uint8_t b = 1;
+  b = b << butt;
+  
+  uint8_t buff = this->getButton();
+  buff = buff | b;
+  if( buff > 0 ) return 1;
+  return 0;
+}
+
+
+/* Get LED */
+int DarwinLofaro::getLed(int val)
+{
+  if( val > 2 ) return -1;
+
+  uint8_t buff = this->getLed();
+  uint8_t err = 128 & buff;
+
+  if( err > 0 ) return -1;
+
+  uint8_t the_out = 1;
+  the_out = the_out << val;
+  the_out = the_out & buff;
+  if( buff > 0 ) return 1;
+  return 0;
+}
+
+uint8_t DarwinLofaro::getLed()
+{
+  uint8_t buff     = 0;
+  uint8_t buff_err = 128;
+  int e = this->read(ID_CM730, CM730_ADDRESS_LED_PANNEL, &buff);
+  if( e == RETURN_FAIL) buff = buff | buff_err;
+  return buff;
+}
+
+/* Set LED */
+int DarwinLofaro::setLed(uint8_t val)
+{
+  return this->write(ID_CM730, CM730_ADDRESS_LED_PANNEL, val);
+}
+
+int DarwinLofaro::setLed(int led, int val)
+{
+  if(led > 2 ) return RETURN_FAIL;
+
+  uint8_t d = 0;
+  if( val > 0 ) d = 1;
+
+  uint8_t tmp = d << led;
+  this->led_state = this->led_state | tmp;
+  return this->setLed(this->led_state);
+}
+
+/* Read one byte */
+uint8_t DarwinLofaro::read(uint8_t id, uint8_t addr)
+{
+  uint8_t buff = 0;
+  this->read(id, addr, &buff);
+  return buff;
+}
+
+int DarwinLofaro::read(uint8_t id, uint8_t addr, uint8_t* buff)
+{
+  uint8_t dxl_error = 0;
+  uint8_t buff_err = 128;
+  int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+
+  // Read 1 byte
+  dxl_comm_result = packetHandler->read1ByteTxRx(portHandler, id, addr, buff, &dxl_error);
+  if (dxl_comm_result != COMM_SUCCESS)
+  {
+    return RETURN_FAIL;
+//    buff = buff | buff_err;
+    // printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+  }
+  else if (dxl_error != 0)
+  {
+    return RETURN_FAIL;
+//    buff = buff | buff_err;
+    // printf("%s\n", packetHandler->getRxPacketError(dxl_error));
+  }
+
+  return RETURN_OK;
+}
 
 
   /* Set Motor Position */

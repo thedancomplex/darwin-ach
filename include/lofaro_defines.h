@@ -1,4 +1,4 @@
-# define DARWIN_DEFINES 1
+#ifndef DARWIN_DEFINES 
 
 # define M_PI                              3.14159265358979323846
 
@@ -69,9 +69,13 @@
 #define CM730_ADDRESS_IMU_ACC_Y            46
 #define CM730_ADDRESS_IMU_ACC_Z            48
 
+#define CM730_ADDRESS_LED_PANNEL           25
+#define CM730_ADDRESS_BUTTON               30
+
+
 #define MX_ID                              2  
 #define MX_ADDRESS_READ_DATA_OFFSET        5
-#define MX_ADDRESS_STATE_START             36
+//#define MX_ADDRESS_STATE_START             36
 #define MX_ADDRESS_STATE_LENGTH            8
 
 #define MX_PACKET_PING                     0X01
@@ -154,3 +158,11 @@
 #define DARWIN_ENUM_P_GAIN                 1
 #define DARWIN_ENUM_I_GAIN                 2
 #define DARWIN_ENUM_D_GAIN                 3
+
+#define DARWIN_BUTTON_START                1
+#define DARWIN_BUTTON_MODE                 0
+
+
+#endif
+
+# define DARWIN_DEFINES 1
