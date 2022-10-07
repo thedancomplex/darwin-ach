@@ -1,0 +1,9 @@
+[Unit]
+Description=Darwin-Ach Auto Server
+Before=multi-user.target
+
+[Service]
+ExecStart=/bin/bash /etc/darwin-legacy/darwin_ach.sh
+
+[Install]
+WantedBy=multi-user.target
