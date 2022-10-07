@@ -791,7 +791,7 @@ int DarwinLofaro::getButton(int butt)
   b = b << butt;
   
   uint8_t buff = this->getButton();
-  buff = buff | b;
+  buff = buff & b;
   if( buff > 0 ) return 1;
   return 0;
 }

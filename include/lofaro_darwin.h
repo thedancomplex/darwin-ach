@@ -24,7 +24,8 @@
 
 #include "lofaro_darwin_class.h"
 
-#ifdef DARWIN_LOFARO_DYN
+//#ifdef DARWIN_LOFARO_DYN
+#ifndef DARWIN_LOFARO_DAN
 #include "lofaro_darwin_methods_dyn.h"
 #endif
 

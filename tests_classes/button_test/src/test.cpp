@@ -28,13 +28,7 @@ int main()
   int si = 0;
   while(1)
   { 
-    uint8_t b = 1;
-    b = b << si;
-    si++;
-    if(si > 2) si = 0;
-
-    dl.setLed(b);
-    dl.sleep();
+    printf("button mode=%d start=%d\n",dl.getButton(DARWIN_BUTTON_MODE), dl.getButton(DARWIN_BUTTON_START));
   }
 
 
