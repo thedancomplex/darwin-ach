@@ -9,11 +9,13 @@ Designed to talk directly with the CM730.  Updates the state and reference
 * Call motors, FTs, and the CM730 to have a return status level of 1 (default is 2)
 * Change the LEFT FT sensor to have an ID of 111.
 * Change the RIGHT FT sensor to have an ID of 112.
+* Added a timer to watch the achd and restart the ros2achd bridge if needed
 
 # Todo:
 * Impliment walking via ROS utilizing the ROBOTIS walking gate but comunicating via ROS
 * Impliment alternative serial library to cut down on the latency and overhead caused by the dyn lib
 * Make a version that just publishes the IMU data and takes upper body commands and a twist message for walking
+* Put the ros2ach bridge monitor in the darwin-ach script
 
 
 # Joint Index for the Darwin-Op
