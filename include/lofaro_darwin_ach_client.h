@@ -186,7 +186,8 @@ int DarwinAchClient::getTime()
 {
   size_t fs;
   ach_status_t r = ach_get( &this->chan_darwin_time, &this->darwin_time, sizeof(this->darwin_time), &fs, NULL, ACH_O_LAST );
-  return (int)r;
+  if( ( r == ACH_OK ) | ( r == ACH_MISSED_FRAME ) ) return 0;
+  return 1;
 }
 
 int DarwinAchClient::getTime(bool wait)
@@ -195,7 +196,8 @@ int DarwinAchClient::getTime(bool wait)
   {
     size_t fs;
     ach_status_t r = ach_get( &this->chan_darwin_time, &this->darwin_time, sizeof(this->darwin_time), &fs, NULL, ACH_O_WAIT );
-    return (int)r;
+    if( ( r == ACH_OK ) | ( r == ACH_MISSED_FRAME ) ) return 0;
+    return 1;
   }
   else
   {
