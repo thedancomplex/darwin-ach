@@ -17,7 +17,7 @@ int main(int argc, char * argv[])
 
   while(true)
   {
-    double tock_timeout = rad.dac.time();
+    double tock_timeout = rab.dac.time();
     double dt = tock_timeout - tick_timeout;
     if( dt > LOOP_TIMEOUT )
     {
@@ -29,7 +29,7 @@ int main(int argc, char * argv[])
     if ( d == 0 ) r++;
     if( r > LOOP_ENABLE_SECONDS_COUNT ) break;
 
-    rad.dac.sleep(LOOP_TIMEOUT_SLEEP_PERIOD);
+    rab.dac.sleep(LOOP_TIMEOUT_SLEEP_PERIOD);
   }
 
   printf("Start Ach2Ros State Loop\n");
