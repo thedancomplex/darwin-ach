@@ -10,6 +10,7 @@
 #include "std_msgs/msg/string.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
+#include "std_msgs/msg/float64.hpp"
 
 using std::placeholders::_1;
 
@@ -41,7 +42,7 @@ class Ros2AchBridge : public rclcpp::Node
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_tor_;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_vol_;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_motor_tmp_;
-    rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr publisher_state_time_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_state_time_;
     bool do_debug = false;
     bool started = false;
     DarwinAchClient dac = DarwinAchClient(true);

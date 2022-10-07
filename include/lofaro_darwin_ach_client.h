@@ -39,6 +39,8 @@ class DarwinAchClient
     /* Update Methods */
     int getState();
     int getState(bool wait);
+    int getTime();
+    int getTime(bool wait);
     int stageRefPos(int mot, double val);
     int stageRefPosD(int mot, double val);
     int stageRefVel(int mot, double val);
@@ -62,11 +64,12 @@ class DarwinAchClient
 
 
     /* Data types */
-    darwin_data_def_t darwin_ref;
-    darwin_data_def_t darwin_state;
-    darwin_cmd_def_t  darwin_cmd;
-    darwin_cmd_def_t  darwin_cmd_return;
+    darwin_data_def_t     darwin_ref;
+    darwin_data_def_t     darwin_state;
+    darwin_cmd_def_t      darwin_cmd;
+    darwin_cmd_def_t      darwin_cmd_return;
     darwin_cmd_vel_def_t  darwin_cmd_vel;
+    double                darwin_time = 0.0;
 
   private:
     int ref_mode = MODE_REF;
@@ -94,6 +97,9 @@ class DarwinAchClient
 
     /* Command Vel Channel */
     ach_channel_t chan_darwin_cmd_vel;
+
+    /* Command Time Channel */
+    ach_channel_t chan_darwin_time;
 
 };
 DarwinAchClient::DarwinAchClient()
@@ -136,12 +142,14 @@ void DarwinAchClient::constructDarwinAchClient(bool do_flush)
   r = ach_open(&this->chan_darwin_cmd,         DARWIN_ACH_CHAN_CMD,         NULL);
   r = ach_open(&this->chan_darwin_cmd_return,  DARWIN_ACH_CHAN_CMD_RETURN,  NULL);
   r = ach_open(&this->chan_darwin_cmd_vel,     DARWIN_ACH_CHAN_CMD_VEL,     NULL);
+  r = ach_open(&this->chan_darwin_time,        DARWIN_ACH_CHAN_TIME,        NULL);
 
   /* Flush Ach Channels */
   if(do_flush)
   {
     r = ach_flush(&this->chan_darwin_state);
     r = ach_flush(&this->chan_darwin_cmd_return);
+    r = ach_flush(&this->chan_darwin_time);
   }
 
   /* Do initial put on the channel to make sure the exist */
@@ -172,6 +180,28 @@ int DarwinAchClient::sleep()
 int DarwinAchClient::rate(double hz)
 {
   return this->lu->rate(hz);
+}
+
+int DarwinAchClient::getTime()
+{
+  size_t fs;
+  ach_status_t r = ach_get( &this->chan_darwin_time, &this->darwin_time, sizeof(this->darwin_time), &fs, NULL, ACH_O_LAST );
+  return (int)r;
+}
+
+int DarwinAchClient::getTime(bool wait)
+{
+  if(wait)
+  {
+    size_t fs;
+    ach_status_t r = ach_get( &this->chan_darwin_time, &this->darwin_time, sizeof(this->darwin_time), &fs, NULL, ACH_O_WAIT );
+    return (int)r;
+  }
+  else
+  {
+    return this->getTime();
+  }
+  return 1;
 }
 
 int DarwinAchClient::getState()

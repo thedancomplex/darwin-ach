@@ -45,6 +45,8 @@ Ros2AchBridge::Ros2AchBridge(int mode) : Node("darwin_lofaro_legacy_daemon")
 int Ros2AchBridge::state_loop()
 {
   this->dac.getState(true);
+  this->dac.getTime();
+
   auto buff_imu       = geometry_msgs::msg::Twist();
   auto buff_ft_left   = geometry_msgs::msg::Twist();
   auto buff_ft_right  = geometry_msgs::msg::Twist();

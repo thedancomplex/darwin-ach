@@ -13,6 +13,7 @@
 #define DARWIN_TOPIC_STATE_MOTOR_TOR "/darwin/state/motor/load"
 #define DARWIN_TOPIC_STATE_MOTOR_VOL "/darwin/state/motor/voltage"
 #define DARWIN_TOPIC_STATE_MOTOR_TMP "/darwin/state/motor/temperature"
+#define DARWIN_TOPIC_STATE_TIME      "/darwin/time"
 #define DARWIN_MOT_MIN                1
 #define DARWIN_MOT_MAX                20
 
