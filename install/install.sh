@@ -13,6 +13,7 @@ SYSTEM_ACH_DIR_WALKING=walking
 SYSTEM_ACH_DIR_ON=on
 SYSTEM_ACH_DIR_OFF=off
 SYSTEM_ACH_DIR_SERVER=ctrl_server
+SYSTEM_ACH_DIR_TIMEOUT=ach_timeout
 BIN_NAME_ACH_SERVER=darwin-server
 BIN_NAME_ACH_ON=darwin-on
 BIN_NAME_ACH_OFF=darwin-off
@@ -431,6 +432,8 @@ DarwinAchInstallServer()
   sudo ./build.sh
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_SERVER
   sudo ./build.sh
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_TIMEOUT
+  sudo ./build.sh
 }
 
 DarwinAchInstallClient()
@@ -441,6 +444,8 @@ DarwinAchInstallClient()
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_ON
   sudo ./build.sh
   cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_OFF
+  sudo ./build.sh
+  cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_TIMEOUT
   sudo ./build.sh
 }
 

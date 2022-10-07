@@ -13,11 +13,12 @@ SYSTEM_ACH_DIR_WALKING=walking
 SYSTEM_ACH_DIR_ON=on
 SYSTEM_ACH_DIR_OFF=off
 SYSTEM_ACH_DIR_SERVER=ctrl_server
+SYSTEM_ACH_DIR_TIMEOUT=ach_timeout
 BIN_NAME_ACH_SERVER=darwin-server
 BIN_NAME_ACH_ON=darwin-on
 BIN_NAME_ACH_OFF=darwin-off
 BIN_NAME_ACH_WALKING=darwin-walking
-
+BIN_NAME_ACH_TIMEOUT=darwin-ach-timeout
 DARWIN_CLOCK_SCREEN_NAME=darwin-lofaro-clock
 DARWIN_SCREEN_NAME=darwin-lofaro
 
@@ -36,7 +37,34 @@ BIN_NAME_ROS_ACH_BRIDGE_STATE=ros2_ach_bridge_state
 #DARWIN_IP='10.5.0.249'
 DARWIN_IP='10.111.111.11'
 
+RosAchBridgeMonitor()
+{
 
+  DO_EXIT=0
+  while [ 1 -gt $DO_EXIT ]
+  do
+     echo ''
+     echo '-------------------------------------------'
+     echo '------- Starting Darwin-Ach to Ros2 -------'
+     echo ' System will auto re-start if not connected'
+     echo '-------------------------------------------'
+     darwin-ach stop client
+     darwin-ach start client
+     sleep 1
+     RosAchBridgeStart
+
+     cd $INSTALL_DIR/$SYSTEM_ACH_DIR/$SYSTEM_ACH_DIR_TIMEOUT
+     ./$BIN_NAME_ACH_TIMEOUT
+
+     RosAchBridgeStop
+
+     echo ''
+     echo 'Darwin-Ach to Ros2 connection timeout'
+     echo 'Restarting in 5 seconds'
+     echo ''
+     sleep 5
+  done
+}
 
 RosAchBridgeStart()
 {
@@ -508,6 +536,10 @@ ShowUsage()
 	echo '                       external/backpack comptuer  '
 	echo 'ros-ach-bridge-reset : Resets the ros client on the'
 	echo '                       external/backpack comptuer  '
+	echo 'ros-ach-bridge-monitor : System that automaticall   '
+	echo '                         restarts the ros2ach bridge'
+	echo '                         if there is no connection  '
+	echo '                         Note: this process blocks  '
 	echo ''
 	echo 'darwin-ach-status                                '
 	echo '    -n             : Running status of darwin-ach'
@@ -599,6 +631,10 @@ case "$1" in
 
 	'ros-ach-bridge-reset' )
 		RosAchBridgeReset
+	;;
+
+	'ros-ach-bridge-monitor' )
+		RosAchBridgeMonitor
 	;;
 
 	'darwin-ach-status' )
