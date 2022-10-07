@@ -350,7 +350,10 @@ int DarwinAch::loop(double hz, int mode_state, int mode_ref)
   while(do_loop)
   { 
     this->do_time();
+
     this->main_loop(mode_state, mode_ref);
+    //if(this->run_loop) this->main_loop(mode_state, mode_ref);
+
     this->do_debug();
     this->do_save_previous_state();
 
