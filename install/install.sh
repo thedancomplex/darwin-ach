@@ -562,8 +562,6 @@ DarwinLegacyHeaders()
 	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
 	sudo cp ../scripts/$BIN_NAME_AUTO_RUN $INSTALL_DIR
 	sudo cp ../scripts/$RC_LOCAL_SCREEN_NAME $INSTALL_DIR
-	sudo cp ../scripts/$SERVICE_NAME $SERVICE_DIR/
-	sudo systemctl enable $SERVICE_NAME 
 
         sudo mkdir -p /etc/rc.local.d/
         sudo cp ../scripts/$SHM_NAME $INSTALL_DIR
@@ -603,8 +601,6 @@ DarwinLegacy()
         sudo cp -r ../$SYSTEM_ACH_DIR $INSTALL_DIR/
 	sudo cp ../scripts/$BIN_NAME_AUTO_RUN $INSTALL_DIR
 	sudo cp ../scripts/$RC_LOCAL_SCREEN_NAME $INSTALL_DIR
-	sudo cp ../scripts/$SERVICE_NAME $SERVICE_DIR/
-	sudo systemctl enable $SERVICE_NAME 
 #	sudo mkdir /etc/rc.local.d
 #	chmod +x darwin-legacy.sh
 #	sudo cp darwin-legacy.sh /etc/rc.local.d/
