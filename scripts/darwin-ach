@@ -2,6 +2,7 @@
 
 SCREEN_SERVER=darwin-ach-server
 SCREEN_CLIENT=darwin-ach-client
+DARWIN_SCREEN=darwin-ach-server-auto
 
 Reset()
 {
@@ -289,8 +290,29 @@ DarwinAchStatus()
   esac
 }
 
+DarwinRosBridge()
+{
+  case "$1" in
+        'start' )
+		if ! screen -list | grep -q "$DARWIN_SCREEN"; then
+			screen -S $DARWIN_SCREEN -d -m bash -c "darwin-lofaro ros-ach-bridge-monitor"
+		else
+			echo 'Darwin-Ach to Ros System Already Started'
+		fi
+        ;;
+        'stop' )
+                screen -S $DARWIN_SCREEN -p 0 -X quit
+		echo 'Darwin-Ach to Ros System Stopped'
+        ;;
 
-DARWIN_SCREEN=darwin-ach-server
+        * )
+                ShowUsage
+                exit 1
+        ;;
+  esac
+}
+
+
 
 Darwin()
 {
@@ -390,6 +412,12 @@ ShowUsage()
 	echo '   stop       : Stops the darwin side of the     '
 	echo '                background system                '
 	echo ''
+	echo 'darwin-ros                                       '
+	echo '   start      : Starts the darwin to ros2 system '
+	echo '                in the background                '
+	echo '   stop       : Stops the darwin to ros2         '
+	echo '                background system                '
+	echo ''
 }
 
 
@@ -424,6 +452,10 @@ case "$1" in
 
 	'darwin' )
 		Darwin $2
+	;;
+
+	'darwin-ros' )
+		DarwinRosBridge $2
 	;;
 
 	* )
