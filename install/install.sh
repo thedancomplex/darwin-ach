@@ -26,6 +26,7 @@ DIR_ROS_ACH_BRIDGE=$DIR_ROS_ACH_BRIDGE_ROOT/build/ros2_ach_bridge/
 BIN_NAME_AUTO_RUN=darwin-ach-auto-run.sh 
 RC_LOCAL_SCREEN_NAME=darwin_ach.sh
 SERVICE_NAME=darwin-ach.service
+SERVICE_ROS_NAME=darwin-ach-ros.service
 SERVICE_DIR=/lib/systemd/system/
 
 InstallRos2()
@@ -525,6 +526,30 @@ DynInstall()
 
 }
 
+DarwinAchAutoStartServer()
+{
+  	cd $THE_INSTALL_DIR
+	sudo cp ../scripts/$SERVICE_NAME $SERVICE_DIR/
+	sudo systemctl enable $SERVICE_NAME 
+}
+
+DarwinAchAutoStartServerStop()
+{
+	sudo systemctl disable $SERVICE_NAME 
+}
+
+DarwinAchAutoStartRosBridge()
+{
+  	cd $THE_INSTALL_DIR
+	sudo cp ../scripts/$SERVICE_ROS_NAME $SERVICE_DIR/
+	sudo systemctl enable $SERVICE_ROS_NAME 
+}
+
+DarwinAchAutoStartRosBridgeStop()
+{
+	sudo systemctl disable $SERVICE_ROS_NAME 
+}
+
 DarwinLegacyHeaders()
 {
   	cd $THE_INSTALL_DIR
@@ -649,7 +674,22 @@ ShowUsage()
 	echo ''
 	echo 'backpack-network-wifi : setup the backpack (raspi)'
 	echo '                        wifi network via netplan  '
-	echo
+	echo ''
+	echo 'darwin-auto-start-server                         ' 
+	echo '                      : makes the darwin side    '
+	echo '                        auto start on boot       '
+	echo 'darwin-auto-start-ros-bridge                     '
+	echo '                      : makes the back pack side '
+	echo '                        ros to ach bridge start  '
+	echo '                        on boot                  '
+	echo 'darwin-auto-start-server-stop                    ' 
+	echo '                      : disables the darwin side '
+	echo '                        auto start on boot       '
+	echo 'darwin-auto-start-ros-bridge-stop                '
+	echo '                      : disables the back pack side '
+	echo '                        ros to ach bridge start  '
+	echo '                        on boot                  '
+	echo ''
 }
 
 
@@ -706,6 +746,22 @@ case "$1" in
 
 	'backpack-network' )
 		BackpackNetwork
+	;;
+
+	'darwin-auto-start-server' )
+		DarwinAchAutoStartServer
+	;;
+
+	'darwin-auto-start-ros-bridge' )
+		DarwinAchAutoStartRosBridge
+	;;
+
+	'darwin-auto-start-server-stop' )
+		DarwinAchAutoStartServerStop
+	;;
+
+	'darwin-auto-start-ros-bridge-stop' )
+		DarwinAchAutoStartRosBridgeStop
 	;;
 
 	* )
