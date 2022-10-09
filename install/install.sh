@@ -25,6 +25,7 @@ DIR_ROS_ACH_BRIDGE_ROOT=$SYSTEM_ACH_DIR/ros2_ach_bridge/src/
 DIR_ROS_ACH_BRIDGE=$DIR_ROS_ACH_BRIDGE_ROOT/build/ros2_ach_bridge/
 BIN_NAME_AUTO_RUN=darwin-ach-auto-run.sh 
 RC_LOCAL_SCREEN_NAME=darwin_ach.sh
+RC_LOCAL_ROS_SCREEN_NAME=darwin_ach_ros.sh
 SERVICE_NAME=darwin-ach.service
 SERVICE_ROS_NAME=darwin-ach-ros.service
 SERVICE_DIR=/lib/systemd/system/
@@ -530,6 +531,9 @@ DarwinAchAutoStartServer()
 {
   	cd $THE_INSTALL_DIR
 	sudo cp ../scripts/$SERVICE_NAME $SERVICE_DIR/
+	sudo systemctl daemon-reload
+	sudo systemctl disable $SERVICE_NAME 
+	sudo systemctl daemon-reload
 	sudo systemctl enable $SERVICE_NAME 
 }
 
@@ -541,7 +545,11 @@ DarwinAchAutoStartServerStop()
 DarwinAchAutoStartRosBridge()
 {
   	cd $THE_INSTALL_DIR
+	sudo cp ../scripts/$RC_LOCAL_ROS_SCREEN_NAME $INSTALL_DIR/
 	sudo cp ../scripts/$SERVICE_ROS_NAME $SERVICE_DIR/
+	sudo systemctl daemon-reload
+	sudo systemctl disable $SERVICE_ROS_NAME 
+	sudo systemctl daemon-reload
 	sudo systemctl enable $SERVICE_ROS_NAME 
 }
 
