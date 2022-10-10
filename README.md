@@ -16,7 +16,9 @@ Designed to talk directly with the CM730.  Updates the state and reference
 * Impliment alternative serial library to cut down on the latency and overhead caused by the dyn lib
 * Make a version that just publishes the IMU data and takes upper body commands and a twist message for walking
 * Put the ros2ach bridge monitor in the darwin-ach script
-
+* Design a backpack for Raspi Zero W2
+* Procure a Zero W2
+* Impliment USB to Ethernet on Zero W2
 
 # Joint Index for the Darwin-Op
 ![Darwin OP Joint Index](img/op_id_map.jpg)
