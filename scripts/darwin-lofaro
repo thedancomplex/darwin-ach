@@ -33,13 +33,14 @@ DARWIN_ACH_CHAN_TIME='darwin-ach-chan-time'
 DIR_ROS_ACH_BRIDGE=$SYSTEM_ACH_DIR/ros2_ach_bridge/src/build/ros2_ach_bridge/
 BIN_NAME_ROS_ACH_BRIDGE_REF=ros2_ach_bridge
 BIN_NAME_ROS_ACH_BRIDGE_STATE=ros2_ach_bridge_state
+ROS_SORUCE_SCRIPT=source /etc/ros2/install/local_setup.bash
 
 #DARWIN_IP='10.5.0.249'
 DARWIN_IP='10.111.111.11'
 
 RosAchBridgeMonitor()
 {
-
+  source $ROS_SOURCE_SCRIPT
   DO_EXIT=0
   while [ 1 -gt $DO_EXIT ]
   do

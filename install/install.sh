@@ -29,6 +29,8 @@ RC_LOCAL_ROS_SCREEN_NAME=darwin_ach_ros.sh
 SERVICE_NAME=darwin-ach.service
 SERVICE_ROS_NAME=darwin-ach-ros.service
 SERVICE_DIR=/lib/systemd/system/
+ROS_INSTALL_DIR_BASE=/etc/
+ROS_INSTALL_DIR_NAME=ros2
 
 InstallRos2()
 {
@@ -196,8 +198,17 @@ InstallRos2Source()
   cd $THE_INSTALL_DIR
   cd $HUMBLE_INSTALL_DIR
   colcon build --symlink-install --packages-skip-build-finished --parallel-workers 1
-  echo ". ~/ros2_humble/install/local_setup.bash > /dev/null" >> ~/.bashrc
+  echo ". $ROS_INSTALL_DIR_BASE/$ROS_INSTALL_DIR_NAME/install/local_setup.bash > /dev/null" >> ~/.bashrc
+#  echo ". ~/ros2_humble/install/local_setup.bash > /dev/null" >> ~/.bashrc
   echo "setserial /dev/ttyUSB0 low_latency > /dev/null" >> ~/.bashrc
+}
+
+InstallRos2Etc()
+{
+	sudo rm $ROS_INSTALL_DIR_BASE/$ROS_INSTALL_DIR_NAME
+	cd $ROS_INSTALL_DIR_BASE
+	sudo ln -s $HUMBLE_INSTALL_DIR $ROS_INSTALL_DIR_NAME
+  	echo ". $ROS_INSTALL_DIR_BASE/$ROS_INSTALL_DIR_NAME/install/local_setup.bash > /dev/null" >> ~/.bashrc
 }
 
 InstallCm730()
@@ -651,6 +662,8 @@ ShowUsage()
 	echo 'ros2-src      : installs ros2 from source        '
         echo '                 (~24hr on Darwin OPs CPU)       '
         echo '                 (~20hr on raspi 3b+ CPU)        '
+	echo 'ros2-etc      : make a simlink of the ros2 dir in'
+        echo '                etc                              '
 	echo 'swap          : Create 4gb swap                  '
 	echo 'swap-1g       : Create 1gb swap (faster)         '
 	echo 'cm730         : installs cm730 (ros2) drivers    '
@@ -705,8 +718,12 @@ case "$1" in
 	'ros2-src' )
 		InstallRos2Source $@
 	;;
-	'ros2-src' )
+	'ros2-src-ini' )
 		InstallRos2SourceIni $@
+	;;
+
+	'ros2-etc' )
+		InstallRos2Etc
 	;;
 
 	'swap-1g' )

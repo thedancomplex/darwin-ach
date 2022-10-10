@@ -1,10 +1,13 @@
 [Unit]
 Description=Darwin-Ach Ros Bridge Auto Server
-Before=multi-user.target
+After=network.target
 
 [Service]
+Type=simple
 User=ubuntu
+Group=admin
 ExecStart=/bin/bash /etc/darwin-legacy/darwin_ach_ros.sh
+RemainAfterExit=yes
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

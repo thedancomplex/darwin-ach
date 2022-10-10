@@ -296,6 +296,7 @@ DarwinRosBridge()
         'start' )
 		if ! screen -list | grep -q "$DARWIN_SCREEN"; then
 			screen -S $DARWIN_SCREEN -d -m bash -c "darwin-lofaro ros-ach-bridge-monitor"
+#			screen -S $DARWIN_SCREEN -d -m bash -c "/etc/darwin-legacy/darwin-lofaro ros-ach-bridge-monitor"
 		else
 			echo 'Darwin-Ach to Ros System Already Started'
 		fi
