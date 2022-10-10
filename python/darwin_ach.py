@@ -156,3 +156,39 @@ DARWIN_Z                         =  3
 DARWIN_ENUM_P_GAIN               =  1
 DARWIN_ENUM_I_GAIN               =  2
 DARWIN_ENUM_D_GAIN               =  3
+
+
+DARWIN_TOPIC_REF_POS         = "/darwin/ref/position"
+DARWIN_TOPIC_REF_VEL         = "/darwin/ref/speed"
+DARWIN_TOPIC_REF_TOR         = "/darwin/ref/torque"
+DARWIN_TOPIC_CMD             = "/darwin/cmd"
+DARWIN_TOPIC_CLOCK           = "/darwin/clock"
+DARWIN_TOPIC_STATE_IMU       = "/darwin/state/imu"
+DARWIN_TOPIC_STATE_FT_LEFT   = "/darwin/state/ft/left"
+DARWIN_TOPIC_STATE_FT_RIGHT  = "/darwin/state/ft/right"
+DARWIN_TOPIC_STATE_MOTOR_POS = "/darwin/state/motor/position"
+DARWIN_TOPIC_STATE_MOTOR_VEL = "/darwin/state/motor/speed"
+DARWIN_TOPIC_STATE_MOTOR_TOR = "/darwin/state/motor/load"
+DARWIN_TOPIC_STATE_MOTOR_VOL = "/darwin/state/motor/voltage"
+DARWIN_TOPIC_STATE_MOTOR_TMP = "/darwin/state/motor/temperature"
+DARWIN_TOPIC_STATE_TIME      = "/darwin/time"
+DARWIN_MOT_MIN               = 1
+DARWIN_MOT_MAX               = 20
+
+DARWIN_REF_POS_0             = 0.0
+DARWIN_REF_VEL_0             = 0.75
+DARWIN_REF_TOR_0             = 0.5
+ENUM_FT_LEFT                 = 0
+ENUM_FT_RIGHT                = 1
+
+RATE_100HZ                   = 0
+RATE_125HZ                   = 1
+RATE_50HZ                    = 2
+RATE_100HZ_MOTOR_STATE       = 3
+RATE_50HZ_IMU                = 4
+
+HZ_MODE_MOTORS               = 0
+HZ_MODE_MOTORS_AND_STATE     = 1
+HZ_IMU                       = 2
+HZ_NULL                      = 3
+
