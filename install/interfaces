@@ -8,8 +8,8 @@ auto lo wlx000df0951ee5
 iface lo inet loopback
 
 # The primary network interface
-allow-hotplug wlx000df0951ee5
-iface wlx000df0951ee5 inet dhcp
+allow-hotplug YOUR_WIFI_INTERFACE
+iface YOUR_WIFI_INTERFACE inet dhcp
   wpa-ssid YOUR_SSID
   wpa-psk YOUR_PASSWORD
   metric 100
