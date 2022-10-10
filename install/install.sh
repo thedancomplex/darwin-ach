@@ -31,6 +31,9 @@ SERVICE_ROS_NAME=darwin-ach-ros.service
 SERVICE_DIR=/lib/systemd/system/
 ROS_INSTALL_DIR_BASE=/etc/
 ROS_INSTALL_DIR_NAME=ros2
+DARWIN_ACH_PYTHON_PATH_NAME=darwin_ach_python_path.sh
+DARWIN_ACH_PYTHON_DIR=python/
+SERVICE_DARWIN_ACH_PYTHON_NAME=darwin-ach-python.service
 
 InstallRos2()
 {
@@ -577,6 +580,7 @@ DarwinLegacyHeaders()
 	echo $INSTALL_DIR
         sudo cp -r ../include/ $INSTALL_DIR/
         sudo cp -r ../ros2/ $INSTALL_DIR/
+        sudo cp -r ../$DARWIN_ACH_PYTHON_DIR $INSTALL_DIR/
         sudo cp -r ../$SYSTEM_ACH_DIR $INSTALL_DIR/
 	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
 	sudo cp ../scripts/$BIN_NAME_AUTO_RUN $INSTALL_DIR
@@ -584,15 +588,29 @@ DarwinLegacyHeaders()
 
         sudo mkdir -p /etc/rc.local.d/
         sudo cp ../scripts/$SHM_NAME $INSTALL_DIR
+        sudo cp ../scripts/$DARWIN_ACH_PYTHON_PATH_NAME $INSTALL_DIR
 	cd $INSTALL_DIR
 	sudo chmod +x $BIN_NAME
 	sudo chmod +x $SHM_NAME
 	sudo rm /usr/bin/$BIN_NAME
 	sudo rm /etc/rc.local.d/$SHM_NAME
 	sudo rm /etc/rc.local.d/$RC_LOCAL_SCREEN_NAME
+	sudo rm /etc/rc.local.d/$DARWIN_ACH_PYTHON_PATH_NAME
 	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
 	sudo ln -s $INSTALL_DIR/$SHM_NAME /etc/rc.local.d/
 	sudo ln -s $INSTALL_DIR/$RC_LOCAL_SCREEN_NAME /etc/rc.local.d/
+#	sudo ln -s $INSTALL_DIR/$DARWIN_ACH_PYTHON_PATH_NAME /etc/rc.local.d/
+
+
+        echo "export PYTHONPATH=\$PYTHONPATH:$INSTALL_DIR/$DARWIN_ACH_PYTHON_DIR" >> ~/.bashrc
+
+#  	cd $THE_INSTALL_DIR
+#	sudo cp ../scripts/$SERVICE_DARWIN_ACH_PYTHON_NAME $SERVICE_DIR/
+#	sudo systemctl daemon-reload
+#	sudo systemctl disable $SERVICE_DARWIN_ACH_PYTHON_NAME 
+#	sudo systemctl daemon-reload
+#	sudo systemctl enable $SERVICE_DARWIN_ACH_PYTHON_NAME
+
 	cd $THE_DIR
 }
 
@@ -614,30 +632,32 @@ DarwinLegacy()
 	THE_DIR=$(pwd)
 	sudo rm -rf $INSTALL_DIR
 	sudo mkdir -p $INSTALL_DIR
-	echo $INSTALL_DIR
-        sudo cp -r ../include/ $INSTALL_DIR/
-        sudo cp -r ../ros2/ $INSTALL_DIR/
-        sudo cp -r ../$SYSTEM_ACH_DIR $INSTALL_DIR/
-	sudo cp ../scripts/$BIN_NAME_AUTO_RUN $INSTALL_DIR
-	sudo cp ../scripts/$RC_LOCAL_SCREEN_NAME $INSTALL_DIR
+	DarwinLegacyHeaders
+
+##	echo $INSTALL_DIR
+##        sudo cp -r ../include/ $INSTALL_DIR/
+##        sudo cp -r ../ros2/ $INSTALL_DIR/
+##        sudo cp -r ../$SYSTEM_ACH_DIR $INSTALL_DIR/
+##	sudo cp ../scripts/$BIN_NAME_AUTO_RUN $INSTALL_DIR
+##	sudo cp ../scripts/$RC_LOCAL_SCREEN_NAME $INSTALL_DIR
 #	sudo mkdir /etc/rc.local.d
 #	chmod +x darwin-legacy.sh
 #	sudo cp darwin-legacy.sh /etc/rc.local.d/
 #	echo $INCLUDE_DIR
 #	sudo rm $INCLUDE_DIR
 #        sudo ln -s $INSTALL_DIR/include $INCLUDE_DIR
-	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
-        sudo mkdir -p /etc/rc.local.d/
-        sudo cp ../scripts/$SHM_NAME $INSTALL_DIR
-	cd $INSTALL_DIR
-	sudo chmod +x $BIN_NAME
-	sudo chmod +x $SHM_NAME
-	sudo rm /usr/bin/$BIN_NAME
-	sudo rm /etc/rc.local.d/$SHM_NAME
-	sudo rm /etc/rc.local.d/$RC_LOCAL_SCREEN_NAME
-	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
-	sudo ln -s $INSTALL_DIR/$SHM_NAME /etc/rc.local.d/
-	sudo ln -s $INSTALL_DIR/$RC_LOCAL_SCREEN_NAME /etc/rc.local.d/
+##	sudo cp ../scripts/$BIN_NAME $INSTALL_DIR
+##       sudo mkdir -p /etc/rc.local.d/
+##      sudo cp ../scripts/$SHM_NAME $INSTALL_DIR
+##	cd $INSTALL_DIR
+##	sudo chmod +x $BIN_NAME
+##	sudo chmod +x $SHM_NAME
+##	sudo rm /usr/bin/$BIN_NAME
+##	sudo rm /etc/rc.local.d/$SHM_NAME
+##	sudo rm /etc/rc.local.d/$RC_LOCAL_SCREEN_NAME
+##	sudo ln -s $INSTALL_DIR/$BIN_NAME /usr/bin
+##	sudo ln -s $INSTALL_DIR/$SHM_NAME /etc/rc.local.d/
+##	sudo ln -s $INSTALL_DIR/$RC_LOCAL_SCREEN_NAME /etc/rc.local.d/
 	cd $THE_DIR
 }
 

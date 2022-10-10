@@ -145,7 +145,7 @@ NOT_RAISED                       =  0
 
 BAUDRATE                         =  1000000
 STDIN_FILENO                     =  0
-SERIAL_PORT_LOW_LATENCY_DEFAULT  =  false
+SERIAL_PORT_LOW_LATENCY_DEFAULT  =  False
 
 PROTOCOL_VERSION                 =  1.0
 

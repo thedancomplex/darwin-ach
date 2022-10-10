@@ -1,0 +1,9 @@
+[Unit]
+Description=Darwin-Ach Python Path Export
+After=multi-user.target
+
+[Service]
+ExecStart=/bin/bash /etc/darwin-legacy/darwin_ach_python_path.sh
+
+[Install]
+WantedBy=multi-user.target
