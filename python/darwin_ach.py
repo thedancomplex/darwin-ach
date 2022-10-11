@@ -196,14 +196,31 @@ class DarwinAch:
   HZ_NULL                      = 3
 
 
+import threading
+ 
+class thread(threading.Thread):
+    def __init__(self, thread_name, r_info):
+      threading.Thread.__init__(self)
+      self.thread_name = thread_name
+      self.ros_py = r_info[0]
+      self.ros_node = r_info[1]
+ 
+    # helper function to execute the threads
+    def run(self):
+      print(str(self.thread_name))
+      self.ros_py.spin(self.ros_node)
+
+
 class DarwinAchRos:
   from time import sleep
-  import time
   import rclpy
   from std_msgs.msg import String
+  from std_msgs.msg import Float64
+  from std_msgs.msg import Float64MultiArray
+  from geometry_msgs.msg import Twist
   PI = 3.14159265359
 
-  def __init__(self):
+  def __init__(self, state=False):
     self.da = DarwinAch()
     self.rclpy.init()
     self.node = self.rclpy.create_node('darwin_simple_demo_ros2_python_publisher')
@@ -212,7 +229,68 @@ class DarwinAchRos:
     self.pub_tor = self.node.create_publisher(self.String, self.da.DARWIN_TOPIC_REF_TOR, 10)
     self.pub_cmd = self.node.create_publisher(self.String, self.da.DARWIN_TOPIC_CMD,     10)
 
+    if state:
+      self.sub_imu      = self.node.create_subscription(self.Twist,             self.da.DARWIN_TOPIC_STATE_IMU,       self.cb_state_imu,      10)
+      self.sub_ft_left  = self.node.create_subscription(self.Twist,             self.da.DARWIN_TOPIC_STATE_FT_LEFT,   self.cb_state_ft_left,  10)
+      self.sub_ft_right = self.node.create_subscription(self.Twist,             self.da.DARWIN_TOPIC_STATE_FT_RIGHT,  self.cb_state_ft_right, 10)
+      self.sub_time     = self.node.create_subscription(self.Float64,           self.da.DARWIN_TOPIC_STATE_TIME,      self.cb_state_time,     10)
+      self.sub_mot_pos  = self.node.create_subscription(self.Float64MultiArray, self.da.DARWIN_TOPIC_STATE_MOTOR_POS, self.cb_state_mot_pos,  10)
+      self.sub_mot_vel  = self.node.create_subscription(self.Float64MultiArray, self.da.DARWIN_TOPIC_STATE_MOTOR_VEL, self.cb_state_mot_vel,  10)
+      self.sub_mot_vol  = self.node.create_subscription(self.Float64MultiArray, self.da.DARWIN_TOPIC_STATE_MOTOR_VOL, self.cb_state_mot_vol,  10)
+      self.sub_mot_tor  = self.node.create_subscription(self.Float64MultiArray, self.da.DARWIN_TOPIC_STATE_MOTOR_TOR, self.cb_state_mot_tor,  10)
+      self.sub_mot_tmp  = self.node.create_subscription(self.Float64MultiArray, self.da.DARWIN_TOPIC_STATE_MOTOR_TMP, self.cb_state_mot_tmp,  10)
+      self.thread_state = None
+      self.imu_acc_x  = 0.0
+      self.imu_acc_y  = 0.0
+      self.imu_acc_z  = 0.0
+      self.imu_gyro_x = 0.0
+      self.imu_gyro_y = 0.0
+      self.imu_gyro_z = 0.0
+      self.time       = 0.0
+      self.do_spin_thread()
+
     return
+  
+  def do_spin_thread(self):
+    r_buff = (self.rclpy, self.node)
+    self.thread_state = thread("StateThread",r_buff)
+    self.thread_state.start()
+    return
+
+  def cb_state_imu(self, msg):
+    self.imu_acc_x  = msg.linear.x
+    self.imu_acc_y  = msg.linear.y
+    self.imu_acc_z  = msg.linear.z
+    self.imu_gyro_x = msg.angular.x
+    self.imu_gyro_y = msg.angular.y
+    self.imu_gyro_z = msg.angular.z
+    return
+
+  def cb_state_ft_left(self, msg):
+    return
+
+  def cb_state_ft_right(self, msg):
+    return
+
+  def cb_state_time(self, msg):
+    self.time = msg.data
+    return
+
+  def cb_state_mot_pos(self, msg):
+    return
+
+  def cb_state_mot_vel(self, msg):
+    return
+
+  def cb_state_mot_vol(self, msg):
+    return
+
+  def cb_state_mot_tor(self, msg):
+    return
+
+  def cb_state_mot_tmp(self, msg):
+    return
+
 
   def close(self):
     self.node.destroy_node()
