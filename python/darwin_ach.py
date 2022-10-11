@@ -259,6 +259,11 @@ class DarwinAchRos:
       self.ft_right_lift   = False
       self.ft_right_lift_x = False
       self.ft_right_lift_y = False
+      self.motor_postion     = [None] * (self.da.DARWIN_MOTOR_NUM + 1)
+      self.motor_velocity    = [None] * (self.da.DARWIN_MOTOR_NUM + 1)
+      self.motor_torque      = [None] * (self.da.DARWIN_MOTOR_NUM + 1)
+      self.motor_voltage     = [None] * (self.da.DARWIN_MOTOR_NUM + 1)
+      self.motor_temperature = [None] * (self.da.DARWIN_MOTOR_NUM + 1)
       self.do_spin_thread()
 
     return
@@ -283,19 +288,18 @@ class DarwinAchRos:
     self.ft_left_y      = msg.linear.y
     if( msg.linear.z > 0.1 ):
       self.ft_left_lift   = True
-    else
+    else:
       self.ft_left_lift   = False
 
     if( msg.angular.x > 0.1 ):
       self.ft_left_lift_x   = True
-    else
+    else:
       self.ft_left_lift_x   = False
 
     if( msg.angular.y > 0.1 ):
       self.ft_left_lift_y   = True
-    else
+    else:
       self.ft_left_lift_y   = False
-
     
     return
 
@@ -304,17 +308,17 @@ class DarwinAchRos:
     self.ft_right_y      = msg.linear.y
     if( msg.linear.z > 0.1 ):
       self.ft_right_lift   = True
-    else
+    else:
       self.ft_right_lift   = False
 
     if( msg.angular.x > 0.1 ):
       self.ft_right_lift_x   = True
-    else
+    else:
       self.ft_right_lift_x   = False
 
     if( msg.angular.y > 0.1 ):
       self.ft_right_lift_y   = True
-    else
+    else:
       self.ft_right_lift_y   = False
 
     return
@@ -324,18 +328,28 @@ class DarwinAchRos:
     return
 
   def cb_state_mot_pos(self, msg):
+    for i in range(self.da.DARWIN_MOTOR_NUM + 1):
+      self.motor_postion[i] = msg.data[i]
     return
 
   def cb_state_mot_vel(self, msg):
+    for i in range(self.da.DARWIN_MOTOR_NUM + 1):
+      self.motor_velocity[i] = msg.data[i]
     return
 
   def cb_state_mot_vol(self, msg):
+    for i in range(self.da.DARWIN_MOTOR_NUM + 1):
+      self.motor_voltage[i] = msg.data[i]
     return
 
   def cb_state_mot_tor(self, msg):
+    for i in range(self.da.DARWIN_MOTOR_NUM + 1):
+      self.motor_torque[i] = msg.data[i]
     return
 
   def cb_state_mot_tmp(self, msg):
+    for i in range(self.da.DARWIN_MOTOR_NUM + 1):
+      self.motor_temperature[i] = msg.data[i]
     return
 
 
