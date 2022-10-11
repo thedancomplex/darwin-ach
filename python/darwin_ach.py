@@ -247,6 +247,18 @@ class DarwinAchRos:
       self.imu_gyro_y = 0.0
       self.imu_gyro_z = 0.0
       self.time       = 0.0
+
+      self.ft_left_x      = 0.0
+      self.ft_left_y      = 0.0
+      self.ft_left_lift   = False
+      self.ft_left_lift_x = False
+      self.ft_left_lift_y = False
+
+      self.ft_right_x      = 0.0
+      self.ft_right_y      = 0.0
+      self.ft_right_lift   = False
+      self.ft_right_lift_x = False
+      self.ft_right_lift_y = False
       self.do_spin_thread()
 
     return
@@ -267,9 +279,44 @@ class DarwinAchRos:
     return
 
   def cb_state_ft_left(self, msg):
+    self.ft_left_x      = msg.linear.x
+    self.ft_left_y      = msg.linear.y
+    if( msg.linear.z > 0.1 ):
+      self.ft_left_lift   = True
+    else
+      self.ft_left_lift   = False
+
+    if( msg.angular.x > 0.1 ):
+      self.ft_left_lift_x   = True
+    else
+      self.ft_left_lift_x   = False
+
+    if( msg.angular.y > 0.1 ):
+      self.ft_left_lift_y   = True
+    else
+      self.ft_left_lift_y   = False
+
+    
     return
 
   def cb_state_ft_right(self, msg):
+    self.ft_right_x      = msg.linear.x
+    self.ft_right_y      = msg.linear.y
+    if( msg.linear.z > 0.1 ):
+      self.ft_right_lift   = True
+    else
+      self.ft_right_lift   = False
+
+    if( msg.angular.x > 0.1 ):
+      self.ft_right_lift_x   = True
+    else
+      self.ft_right_lift_x   = False
+
+    if( msg.angular.y > 0.1 ):
+      self.ft_right_lift_y   = True
+    else
+      self.ft_right_lift_y   = False
+
     return
 
   def cb_state_time(self, msg):
