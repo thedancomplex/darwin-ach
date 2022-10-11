@@ -259,7 +259,7 @@ class DarwinAchRos:
       self.ft_right_lift   = False
       self.ft_right_lift_x = False
       self.ft_right_lift_y = False
-      self.motor_postion     = [None] * (self.da.DARWIN_MOTOR_NUM + 1)
+      self.motor_position     = [None] * (self.da.DARWIN_MOTOR_NUM + 1)
       self.motor_velocity    = [None] * (self.da.DARWIN_MOTOR_NUM + 1)
       self.motor_torque      = [None] * (self.da.DARWIN_MOTOR_NUM + 1)
       self.motor_voltage     = [None] * (self.da.DARWIN_MOTOR_NUM + 1)
@@ -329,7 +329,7 @@ class DarwinAchRos:
 
   def cb_state_mot_pos(self, msg):
     for i in range(self.da.DARWIN_MOTOR_NUM + 1):
-      self.motor_postion[i] = msg.data[i]
+      self.motor_position[i] = msg.data[i]
     return
 
   def cb_state_mot_vel(self, msg):
