@@ -99,6 +99,54 @@ void Ros2AchBridge::topic_callback_cmd(const std_msgs::msg::String & msg)
            if( s1.compare("true") == 0  ){ this->do_debug = true; }
            if( s1.compare("false") == 0 ){ this->do_debug = false; }
       }
+      else if( s0.compare("loop") == 0 )
+      {
+           if(length < 3) return;
+           std::string s1 = dout[1];
+           std::string s2 = dout[2];
+           if( s1.compare("state") == 0 )
+           {
+             if     ( s2.compare("50hz_imu_motor_ft") == 0 )
+             {
+               this->dac.cmd(DARWIN_CMD_LOOP_MODE, HZ_STATE_50_IMU_MOTOR_FT, false);
+             }
+             else if( s2.compare("50hz_imu") == 0 )
+             {
+               this->dac.cmd(DARWIN_CMD_LOOP_MODE, HZ_STATE_50_IMU, false);
+             }
+             else if( s2.compare("125hz_imu") == 0 )
+             {
+               this->dac.cmd(DARWIN_CMD_LOOP_MODE, HZ_STATE_125_IMU, false);
+             }
+             else if( s2.compare("100hz_imu_ft_slow") == 0 )
+             {
+               this->dac.cmd(DARWIN_CMD_LOOP_MODE, HZ_STATE_100_IMU_FT_SLOW, false);
+             }
+             else if( s2.compare("100hz_imu_motors_slow") == 0 )
+             {
+               this->dac.cmd(DARWIN_CMD_LOOP_MODE, HZ_STATE_100_IMU_MOTORS_SLOW, false);
+             }
+             else if( s2.compare("default") == 0 )
+             {
+               this->dac.cmd(DARWIN_CMD_LOOP_MODE, HZ_STATE_DEFAULT, false);
+             }
+           }
+           if else ( s1.compare("ref") == 0 )
+           {
+             if     ( s2.compare("slow_top") == 0 )
+             {
+               this->dac.cmd(DARWIN_CMD_LOOP_MODE, HZ_REF_SLOW_TOP, false);
+             }
+             else if( s2.compare("normal") == 0 )
+             {
+               this->dac.cmd(DARWIN_CMD_LOOP_MODE, HZ_REF_NORMAL, false);
+             }
+             else if( s2.compare("default") == 0 )
+             {
+               this->dac.cmd(DARWIN_CMD_LOOP_MODE, HZ_REF_DEFAULT, false);
+             }
+           }
+      }
   
       if(this->do_debug){ RCLCPP_INFO(this->get_logger(),"Message: '%s'", msg.data.c_str()); }
       return;

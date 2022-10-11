@@ -61,6 +61,9 @@ class DarwinAch
     int button_walking();
     int button_reset();
 
+    int the_mode_state = 0;
+    int the_mode_ref   = 0;
+
     /* Led State */
     uint8_t led_mode = LED_MODE_0;
 
@@ -251,6 +254,65 @@ int DarwinAch::do_cmd(int mode)
         do_return = true;
         break;
       }
+      case DARWIN_CMD_LOOP_MODE:
+      {
+        int d0 = this->darwin_cmd.data[0];
+        if( d0 == HZ_STATE_50_IMU_MOTOR_FT )
+        { 
+          this->the_mode_state = d0;
+          printf("Set HZ_STATE_50_IMU_MOTOR_FT\n");
+          do_return = true; 
+        }
+        else if( d0 == HZ_STATE_50_IMU )
+        { 
+          this->the_mode_state = d0;
+          printf("Set HZ_STATE_50_IMU\n");
+          do_return = true; 
+        }
+        else if( d0 == HZ_STATE_125_IMU )
+        { 
+          this->the_mode_state = d0;
+          printf("Set HZ_STATE_125_IMU\n");
+          do_return = true; 
+        }
+        else if( d0 == HZ_STATE_100_FT_SLOW )
+        { 
+          this->the_mode_state = d0;
+          printf("Set HZ_STATE_100_FT_SLOW\n");
+          do_return = true; 
+        }
+        else if( d0 == HZ_STATE_100_IMU_MOTORS_SLOW )
+        { 
+          this->the_mode_state = d0;
+          printf("Set HZ_STATE_100_IMU_MOTORS_SLOW\n");
+          do_return = true; 
+        }
+        else if( d0 == HZ_STATE_DEFAULT )
+        { 
+          this->the_mode_state = d0;
+          printf("Set HZ_STATE_DEFAULT\n");
+          do_return = true; 
+        }
+        else if( d0 == HZ_REF_SLOW_TOP )
+        { 
+          this->the_mode_ref = d0;
+          printf("Set HZ_REF_SLOW_TOP\n");
+          do_return = true; 
+        }
+        else if( d0 == HZ_REF_NORMAL )
+        { 
+          this->the_mode_ref = d0;
+          printf("Set HZ_REF_NORMAL\n");
+          do_return = true; 
+        }
+        else if( d0 == HZ_REF_DEFAULT )
+        { 
+          this->the_mode_ref = d0;
+          printf("Set HZ_REF_DEFAULT\n");
+          do_return = true; 
+        }
+        break;
+      }
       case DARWIN_CMD_MODE:
       {
         int d0 = this->darwin_cmd.data[0];
@@ -279,6 +341,7 @@ int DarwinAch::do_cmd(int mode)
         break;
       }
       default:
+          do_return = true; 
         break;
     }
   }
@@ -347,6 +410,8 @@ int DarwinAch::loop(double hz, int mode_state, int mode_ref)
   this->dl->rate(hz);
   
   bool do_loop = true;
+  this->the_mode_state = mode_state;
+  this->the_mode_ref   = mode_ref;
   while(do_loop)
   { 
     this->do_time();
@@ -358,6 +423,10 @@ int DarwinAch::loop(double hz, int mode_state, int mode_ref)
     this->do_save_previous_state();
 
     this->do_button();
+
+    /* Update the Mode if needed */
+    mode_state = this->the_mode_state;
+    mode_ref   = this->the_mode_ref;
 
     this->dl->sleep();
   }

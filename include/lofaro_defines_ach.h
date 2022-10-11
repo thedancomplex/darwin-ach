@@ -9,6 +9,7 @@ typedef enum {
 	HZ_STATE_100_IMU_FT_SLOW,
 	HZ_STATE_100_IMU_MOTORS_SLOW,
 	HZ_REF_SLOW_TOP,
+	HZ_REF_NORMAL,
 	WALKING_START,
 	WALKING_STOP,
         DARWIN_HZ_MODE_COUNT
@@ -59,6 +60,7 @@ typedef enum {
 	DARWIN_CMD_OFF_MOTOR,
 	DARWIN_CMD_OPEN,
 	DARWIN_CMD_CLOSE,
+	DARWIN_CMD_LOOP_MODE,
 	DARWIN_CMD_COUNT
         
 }__attribute__((packed)) darwin_cmd_mode_index_t;
