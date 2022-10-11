@@ -77,6 +77,20 @@ Ach()
   esac
 }
 
+Ros()
+{
+  case "$1" in
+	'rm' )
+		darwin-lofaro ros-clear
+	;;
+
+	* )
+		ShowUsage
+	;;
+  esac
+}
+
+
 Power()
 {
   case "$1" in
@@ -407,6 +421,9 @@ ShowUsage()
 	echo '   rm         : remove ach channels              '
 	echo '   reset      : destroy the remake ach channels  '
 	echo ''
+	echo 'ros                                              '
+	echo '   rm         : Clears shared memory for ros2    '
+	echo ''
 	echo 'darwin                                           '
 	echo '   start      : Starts the darwin side of the    '
 	echo '                system in the background         '
@@ -457,6 +474,10 @@ case "$1" in
 
 	'darwin-ros' )
 		DarwinRosBridge $2
+	;;
+
+	'ros' )
+		Ros $2
 	;;
 
 	* )

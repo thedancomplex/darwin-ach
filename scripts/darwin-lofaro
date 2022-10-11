@@ -58,6 +58,7 @@ RosAchBridgeMonitor()
      ./$BIN_NAME_ACH_TIMEOUT
 
      RosAchBridgeStop
+     darwin-ach ros rm
 
      echo ''
      echo 'Darwin-Ach to Ros2 connection timeout'
@@ -442,6 +443,12 @@ DarwinAchWalkingOff()
   fi
 }
 
+RosClear()
+{
+  rm /dev/shm/fastrtps_*
+  rm /dev/shm/sem.fastrtps_*
+  echo '0'
+}
 
 DarwinAchWalking()
 {
@@ -514,6 +521,7 @@ ShowUsage()
 	echo ''
 	echo 'ach-kill      : stops remote connections and     '
 	echo '                removes all ach channels         '
+	echo 'ros-clear     : Clears /dev/shm of ros2          '
 	echo ''
         echo 'darwin-ach-server                                '
         echo '    on             : Starts Darwin-Ach Server    '
@@ -640,6 +648,10 @@ case "$1" in
 
 	'darwin-ach-status' )
 		DarwinAchStatus $2 $3
+	;;
+
+	'ros-clear' )
+		RosClear
 	;;
 	
 	* )
