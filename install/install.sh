@@ -497,6 +497,10 @@ DarwinAchInstall()
 	'headers' )
 		DarwinLegacyHeaders
 	;;
+
+	'clean' )
+		DarwinLegacyClean
+	;;
 	
 	* )
 		ShowUsage
@@ -626,11 +630,17 @@ RosBridgeInstall()
         sudo cp -r ../$SYSTEM_ACH_DIR $INSTALL_DIR/
 }
 
-DarwinLegacy()
+DarwinLegacyClean()
 {
   	cd $THE_INSTALL_DIR
 	THE_DIR=$(pwd)
 	sudo rm -rf $INSTALL_DIR
+}
+
+DarwinLegacy()
+{
+  	cd $THE_INSTALL_DIR
+	THE_DIR=$(pwd)
 	sudo mkdir -p $INSTALL_DIR
 	DarwinLegacyHeaders
 
@@ -692,6 +702,7 @@ ShowUsage()
         echo 'darwin-ros2   : install the darwin-ros2 system   '
 	echo ''
 	echo 'darwin-ach                                       '
+	echo '   clean      : removes darwin-ach               '
 	echo '   base       : install base system including the'
 	echo '                ach IPC and the Dynamixel drivers'
 	echo '   base-ach   : installs the ach IPC             '
