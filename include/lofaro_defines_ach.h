@@ -19,6 +19,7 @@ typedef enum {
         MODE_REF = 0,
         MODE_WALKING,
 	MODE_WALKING_LOWER_ONLY,
+	MODE_WALKING_LOWER_ONLY_STIFF_HIP_PITCH,
         MODE_COUNT
 }__attribute__((packed)) darwin_ach_mode_index_t;
 
