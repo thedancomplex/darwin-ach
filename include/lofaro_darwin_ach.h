@@ -260,36 +260,42 @@ int DarwinAch::do_cmd(int mode)
         if( d0 == HZ_STATE_50_IMU_MOTOR_FT )
         { 
           this->the_mode_state = d0;
+          this->dl->rate(50.0);
           printf("Set HZ_STATE_50_IMU_MOTOR_FT\n");
           do_return = true; 
         }
         else if( d0 == HZ_STATE_50_IMU )
         { 
           this->the_mode_state = d0;
+          this->dl->rate(50.0);
           printf("Set HZ_STATE_50_IMU\n");
           do_return = true; 
         }
         else if( d0 == HZ_STATE_125_IMU )
         { 
           this->the_mode_state = d0;
+          this->dl->rate(125.0);
           printf("Set HZ_STATE_125_IMU\n");
           do_return = true; 
         }
         else if( d0 == HZ_STATE_100_IMU_FT_SLOW )
         { 
           this->the_mode_state = d0;
+          this->dl->rate(100.0);
           printf("Set HZ_STATE_100_IMU_FT_SLOW\n");
           do_return = true; 
         }
         else if( d0 == HZ_STATE_100_IMU_MOTORS_SLOW )
         { 
           this->the_mode_state = d0;
+          this->dl->rate(100.0);
           printf("Set HZ_STATE_100_IMU_MOTORS_SLOW\n");
           do_return = true; 
         }
         else if( d0 == HZ_STATE_DEFAULT )
         { 
           this->the_mode_state = d0;
+          this->dl->rate(100.0);
           printf("Set HZ_STATE_DEFAULT\n");
           do_return = true; 
         }
