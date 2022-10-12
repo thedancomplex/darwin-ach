@@ -34,12 +34,14 @@ def main(args=None):
     msg = String()
 
     i = 0
-    while rclpy.ok():
+    if rclpy.ok():
         msg.data = 'loop state 50hz_imu_motor_ft'
         i += 1
         node.get_logger().info('Publishing: "%s"' % msg.data)
         publisher.publish(msg)
         sleep(10.0)  # seconds
+    else:
+        print("Ros2 RCLPY not enabled")
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
