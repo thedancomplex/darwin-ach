@@ -3,6 +3,29 @@ class DarwinAch:
     pass
   DARWIN_DEFINES = 1
 
+  JOINT_NONE=0
+  RSP=1
+  LSP=2
+  RSR=3
+  LSR=4
+  REP=5
+  LEP=6
+  RHY=7
+  LHY=8
+  RHP=9
+  LHP=10
+  RHR=11
+  LHR=12
+  RKP=13
+  LKP=14
+  RAR=15
+  LAR=16
+  RAP=17
+  LAP=18
+  NKY=19
+  NKP=20
+
+
   M_PI                              = 3.14159265358979323846
 
   # Buffer positions
@@ -228,6 +251,30 @@ class DarwinAchRos:
     self.pub_vel = self.node.create_publisher(self.String, self.da.DARWIN_TOPIC_REF_VEL, 10)
     self.pub_tor = self.node.create_publisher(self.String, self.da.DARWIN_TOPIC_REF_TOR, 10)
     self.pub_cmd = self.node.create_publisher(self.String, self.da.DARWIN_TOPIC_CMD,     10)
+
+
+    self.JOINT_NONE=da.JOINT_NAME
+    self.RSP=da.RSP
+    self.LSP=da.LSP
+    self.RSR=da.RSR
+    self.LSR=da.LSR
+    self.REP=da.REP
+    self.LEP=da.LEP
+    self.RHY=da.RHY
+    self.LHY=da.LHY
+    self.RHP=da.RHP
+    self.LHP=da.LHP
+    self.RHR=da.RHR
+    self.LHR=da.LHR
+    self.RKP=da.RKP
+    self.LKP=da.LKP
+    self.RAR=da.RAR
+    self.LAR=da.LAR
+    self.RAP=da.RAP
+    self.LAP=da.LAP
+    self.NKY=da.NKY
+    self.NKP=da.NKP
+
 
     if state:
       self.sub_imu      = self.node.create_subscription(self.Twist,             self.da.DARWIN_TOPIC_STATE_IMU,       self.cb_state_imu,      10)
