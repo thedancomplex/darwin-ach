@@ -12,16 +12,16 @@ class DarwinAch:
   LEP=6
   RHY=7
   LHY=8
-  RHP=9
-  LHP=10
-  RHR=11
-  LHR=12
+  RHR=9
+  LHR=10
+  RHP=11
+  LHP=12
   RKP=13
   LKP=14
-  RAR=15
-  LAR=16
-  RAP=17
-  LAP=18
+  RAP=15
+  LAP=16
+  RAR=17
+  LAR=18
   NKY=19
   NKP=20
 
@@ -253,27 +253,27 @@ class DarwinAchRos:
     self.pub_cmd = self.node.create_publisher(self.String, self.da.DARWIN_TOPIC_CMD,     10)
 
 
-    self.JOINT_NONE=da.JOINT_NAME
-    self.RSP=da.RSP
-    self.LSP=da.LSP
-    self.RSR=da.RSR
-    self.LSR=da.LSR
-    self.REP=da.REP
-    self.LEP=da.LEP
-    self.RHY=da.RHY
-    self.LHY=da.LHY
-    self.RHP=da.RHP
-    self.LHP=da.LHP
-    self.RHR=da.RHR
-    self.LHR=da.LHR
-    self.RKP=da.RKP
-    self.LKP=da.LKP
-    self.RAR=da.RAR
-    self.LAR=da.LAR
-    self.RAP=da.RAP
-    self.LAP=da.LAP
-    self.NKY=da.NKY
-    self.NKP=da.NKP
+    self.JOINT_NONE=self.da.JOINT_NONE
+    self.RSP=self.da.RSP
+    self.LSP=self.da.LSP
+    self.RSR=self.da.RSR
+    self.LSR=self.da.LSR
+    self.REP=self.da.REP
+    self.LEP=self.da.LEP
+    self.RHY=self.da.RHY
+    self.LHY=self.da.LHY
+    self.RHP=self.da.RHP
+    self.LHP=self.da.LHP
+    self.RHR=self.da.RHR
+    self.LHR=self.da.LHR
+    self.RKP=self.da.RKP
+    self.LKP=self.da.LKP
+    self.RAR=self.da.RAR
+    self.LAR=self.da.LAR
+    self.RAP=self.da.RAP
+    self.LAP=self.da.LAP
+    self.NKY=self.da.NKY
+    self.NKP=self.da.NKP
 
 
     if state:
@@ -329,6 +329,12 @@ class DarwinAchRos:
     self.imu_gyro_y = msg.angular.y
     self.imu_gyro_z = msg.angular.z
     return
+
+  def toTuple(self, val):
+      res = type(val) is tuple
+      if ( res == False ):
+        val = (val,)
+      return val
 
   def cb_state_ft_left(self, msg):
     self.ft_left_x      = msg.linear.x
@@ -408,12 +414,14 @@ class DarwinAchRos:
 
   def setMotDeg(self, mot=None, pos=None, vel=None, tor=None):
     if (pos != None):
+      pos = self.toTuple(pos)
       if (len(pos) > 0):
         posl = list(pos)
         for i in range(len(pos)):
           posl[i] = posl[i] / 180.0 * self.PI
         pos = tuple(posl)
     if (vel != None):
+      vel = self.toTuple(vel)
       if (len(vel) > 0):
         vell = list(vel)
         for i in range(len(vel)):
@@ -437,6 +445,8 @@ class DarwinAchRos:
     # r is for rad
     msg.data = 'r '
     if (pos != None):
+     mot = self.toTuple(mot)
+     pos = self.toTuple(pos)
      if (len(mot) == len(pos)):
        for i in range (len(mot)):
           msg.data += str(int(mot[i])) + ' ' + str(float(pos[i])) + ' '
@@ -448,6 +458,8 @@ class DarwinAchRos:
     # r is for rad/sec
     msg.data = 'r '
     if (vel != None):
+     mot = self.toTuple(mot)
+     vel = self.toTuple(vel)
      if (len(mot) == len(vel)):
        for i in range (len(mot)):
           msg.data += str(int(mot[i])) + ' ' + str(float(vel[i])) + ' '
@@ -460,6 +472,8 @@ class DarwinAchRos:
     # p is for percent from 0.0 to 1.0
     msg.data = 'p '
     if (tor != None):
+     mot = self.toTuple(mot)
+     tor = self.toTuple(tor)
      if (len(mot) == len(tor)):
        for i in range (len(mot)):
           msg.data += str(int(mot[i])) + ' ' + str(float(tor[i])) + ' '
