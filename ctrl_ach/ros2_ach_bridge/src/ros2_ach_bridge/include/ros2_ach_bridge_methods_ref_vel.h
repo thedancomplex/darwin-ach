@@ -44,8 +44,6 @@ void Ros2AchBridge::topic_callback_ref_vel(const std_msgs::msg::String & msg)
          int    mot_num = std::stoi(s0);
          double mot_val = std::stod(s1) * scale;
 
-         if(mot_val >  (M_PI / 2.0)) return;
-         if(mot_val < -(M_PI / 2.0)) return;
          this->dac.stageRefVel(mot_num,mot_val);
          throw 1;
         }
