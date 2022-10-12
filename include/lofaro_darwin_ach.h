@@ -275,10 +275,10 @@ int DarwinAch::do_cmd(int mode)
           printf("Set HZ_STATE_125_IMU\n");
           do_return = true; 
         }
-        else if( d0 == HZ_STATE_100_FT_SLOW )
+        else if( d0 == HZ_STATE_100_IMU_FT_SLOW )
         { 
           this->the_mode_state = d0;
-          printf("Set HZ_STATE_100_FT_SLOW\n");
+          printf("Set HZ_STATE_100_IMU_FT_SLOW\n");
           do_return = true; 
         }
         else if( d0 == HZ_STATE_100_IMU_MOTORS_SLOW )

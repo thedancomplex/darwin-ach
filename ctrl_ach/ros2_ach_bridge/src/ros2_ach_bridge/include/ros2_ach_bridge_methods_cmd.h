@@ -131,7 +131,7 @@ void Ros2AchBridge::topic_callback_cmd(const std_msgs::msg::String & msg)
                this->dac.cmd(DARWIN_CMD_LOOP_MODE, HZ_STATE_DEFAULT, false);
              }
            }
-           if else ( s1.compare("ref") == 0 )
+           else if ( s1.compare("ref") == 0 )
            {
              if     ( s2.compare("slow_top") == 0 )
              {
