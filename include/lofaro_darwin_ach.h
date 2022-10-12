@@ -670,10 +670,16 @@ int DarwinAch::do_ref(int mode)
       {
         if( (i >= DARWIN_MOTOR_MIN_LOWER) & (i <= DARWIN_MOTOR_MAX_LOWER) )
         {
-          if( (i == LHP) | (i == RHP) )
+          if( (i == RHP) )
           {
             this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref_walking.motor_ref[i].pos
                                                         +
+                                                        this->darwin_ref.motor_ref[RHP].pos;
+          }
+          else if( (i == LHP) )
+          {
+            this->dl->darwin_data.motor_ref[i].pos    = this->darwin_ref_walking.motor_ref[i].pos
+                                                        -
                                                         this->darwin_ref.motor_ref[RHP].pos;
           }
 	  else
