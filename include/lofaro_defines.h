@@ -1,5 +1,31 @@
 #ifndef DARWIN_DEFINES 
 
+typedef enum {
+        JOINT_NONE=0,
+	RSP=1,
+	LSP=2,
+	RSR=3,
+	LSR=4,
+	REP=5,
+	LEP=6,
+	RHY=7,
+	LHY=8,
+	RHP=9,
+	LHP=10,
+	RHR=11,
+	LHR=12,
+	RKP=13,
+	LKP=14,
+	RAR=15,
+	LAR=16,
+	RAP=17,
+	LAP=18,
+	NKY=19,
+	NKP=20,
+        DARWIN_JOINT_NAME_COUNT
+}__attribute__((packed)) darwin_joint_name_index_t;
+
+
 # define M_PI                              3.14159265358979323846
 
 // Buffer positions
