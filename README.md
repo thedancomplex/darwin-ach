@@ -59,7 +59,7 @@ This tutorial assumes that you have Debial 11 32bit (headless/server) installed 
 #### Install Base Software (Darwin Lofaro Legacy and Darwin-Ach)
 A script has been made for easy install of the Darwin Lofaro Legacy and Darwin-Ach system.
 
-1. Run in a screen
+##### 1. Run in a screen
 
 To ensure the software is installed correctly even if network connection is lost it is highly recomended to run the instillation inside of a "screen".  The following steps will install the "screen" software, if it is not already installed, then it will run a "screen" session.
 ```
@@ -68,7 +68,7 @@ $ sudo apt install screen
 $ screen
 ```
 
-2. Install the base software
+##### 2. Install the base software
 
 Inside the terminal that has the "screen" running run the following script.
 ```
@@ -77,7 +77,7 @@ $ ./install-darwin.sh
 ```
 This script will install everything needed and enable the Darwin Lofaro Legacy / Darwin-Ach system to start on boot.
 
-3. (Optional) Disable Darwin Lofaro Legacy / Darwin-Ach auto start on boot
+##### 3. (Optional) Disable Darwin Lofaro Legacy / Darwin-Ach auto start on boot
 
 If you would like to stop Darwin Lofaro Legacy / Darwin-Ach from starting on boot run the following:
 ```
@@ -133,7 +133,7 @@ This tutorial assumes that you have Ubuntu 22.04 32bit (headless/server) install
 #### Install Base Software (Darwin Lofaro Legacy, Darwin-Ach, Ros2, and Ros2AchBridge)
 A script has been made for easy install of the Darwin Lofaro Legacy, Darwin-Ach system, Ros2, and the Ros2AchBridge.
 
-1. Run in a screen
+##### 1. Run in a screen
 
 To ensure the software is installed correctly even if network connection is lost it is highly recomended to run the instillation inside of a "screen".  The following steps will install the "screen" software, if it is not already installed, then it will run a "screen" session.
 ```
@@ -142,7 +142,7 @@ $ sudo apt install screen
 $ screen
 ```
 
-2. Install the base software
+##### 2. Install the base software
 
 Inside the terminal that has the "screen" running run the following script.  Due to the fact that we have to install Ros2 from source this will take around 20 to 24 hours to complete.
 ```
@@ -151,7 +151,7 @@ $ ./install-backpack.sh
 ```
 This script will install everything needed and enable the Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge system to start on boot.
 
-3. (Optional) Disable Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge auto start on boot
+##### 3. (Optional) Disable Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge auto start on boot
 
 If you would like to stop Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge from starting on boot run the following:
 ```
