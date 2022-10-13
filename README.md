@@ -17,6 +17,8 @@ The primary reason why the current plaform can not utilize modern software is be
 # Joint Index for the Darwin-Op
 The following are the joint indexes for the Darwin OP:
 
+![Darwin OP Joint Index](img/op_id_map.jpg)
+
 * [Software Definition / Abveration] = [Numberical ID] : [Human Readable Name]
 * RSP = 1 : Right Shoulder Pitch
 * LSP = 2 : Left Shoulder Pitch
@@ -39,7 +41,104 @@ The following are the joint indexes for the Darwin OP:
 * NKY = 19 : Neck Yaw
 * NKP = 20 : Neck Pitch
 
-![Darwin OP Joint Index](img/op_id_map.jpg)
+# ROS 2 Topics
+The follow are the feedforward and feedback ROS 2 Topics
+
+## Feedback Topics
+The feedback topics are updated at the rate in which the Darwin-Ach and Darwin Lofaro Legacy system is running.
+
+### Inertial Measurement Unit (IMU)
+* Message Type: Twist
+* The accelerometer information for x, y, and z is in the "linear" portion of the message in units of m/s^2
+* The gyro (rotational velocity) information for x, y, and z is in the "angular" portion of the message in units of rad/s
+
+Topic:
+```
+/darwin/state/imu
+```
+
+### Force Torque Left
+* Message Type: Twist
+* Each of the values are a float. Units for linear.x and linear.y values are in N. Units for lift state (linear.z, angular.x, and angular.y) are booleans (0 or 1).
+
+Topic:
+```
+/darwin/state/ft/left
+```
+
+### Force Torque Right
+* Message Type: Twist
+* Each of the values are a float. Units for linear.x and linear.y values are in N. Units for lift state (linear.z, angular.x, and angular.y) are booleans (0 or 1).
+
+Topic:
+```
+/darwin/state/ft/right
+```
+
+### Motor Load
+* Message Type: Float64MultiArray
+* Each of the values are floats where the index of the given motor is given in the index section of this document.
+* Unit: N/m
+
+Topic:
+```
+/darwin/state/motor/load
+```
+
+
+### Motor Position
+* Message Type: Float64MultiArray
+* Each of the values are floats where the index of the given motor is given in the index section of this document.
+* Unit: rad
+
+Topic:
+```
+/darwin/state/motor/position
+```
+
+
+### Motor Speed
+* Message Type: Float64MultiArray
+* Each of the values are floats where the index of the given motor is given in the index section of this document.
+* Unit: m/s
+
+Topic:
+```
+/darwin/state/motor/speed
+```
+
+
+### Motor Temperature
+* Message Type: Float64MultiArray
+* Each of the values are floats where the index of the given motor is given in the index section of this document.
+* Unit: Celsius
+
+Topic:
+```
+/darwin/state/motor/temperature
+```
+
+
+### Motor Voltage
+* Message Type: Float64MultiArray
+* Each of the values are floats where the index of the given motor is given in the index section of this document.
+* Unit: Volts
+
+Topic:
+```
+/darwin/state/motor/voltage
+```
+
+
+### Time
+* Message Type: Float64
+* The value is in float and is the time on the main computer on the Darwin OP
+* Unit: sec
+
+Topic:
+```
+/darwin/time
+```
 
 
 # Install
