@@ -412,6 +412,12 @@ This section shows how to install the Darwin-Ach / Darwin Lofaro Legacy system o
 ## Darwin OP's Computer
 These tutorials assume that you have Debian 11 32bit (headless/server) installed on the Darwin's computer (FitPC2)
 
+### Debian 11 32bit
+* Imaget Used: [to be posted]
+* SD Card Used: [to be posted]
+* Mini SD to Micro SD Card Adapter used: [Click Here](https://www.amazon.com/gp/product/B000TLXCDW/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1)
+* Pre-Installed Image: [to be posted]
+
 ### Network Configuration 
 On the Darwin's comptuer (the fitpc) we will use the 'interfaces' method to apply the wifi settings and the static ip for connecting to the backpack.
 
