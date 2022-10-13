@@ -203,17 +203,26 @@ Topic:
 
 Avaliable Commands:
 
-#### Post / Apply the Position, Velocity, and Torque desired reference values
+#### Post
+Post / Apply the Position, Velocity, and Torque desired reference values
+
+Message:
 ```
 post
 ```
 
-#### Open the Serial port and start the control loop on the main comptuer
+#### Open
+Open the Serial port and start the control loop on the main comptuer
+
+Message:
 ```
 open
 ```
 
-#### Close the serial port and stop the control loop on the main comptuer 
+#### Close 
+Close the serial port and stop the control loop on the main comptuer 
+
+Message:
 ```
 close
 ```
@@ -221,12 +230,18 @@ close
 #### Turn on power
 This command turns on the power.  This also automatically apply the "open" command.
 
-##### Turn on all motors and the main controller
+##### All Motors
+Turn on all motors and the main controller
+
+Message:
 ```
 on all
 ```
 
-##### Turn on a specific motor
+##### Specific Motor
+Turn on a specific motor
+
+Message:
 ```
 on [Motor Number]
 ```
@@ -243,12 +258,18 @@ Note 2: The ID of the main controller board with the IMU on it is 200.
 #### Turn off power
 This command turns off the power.  This also automatically apply the "close" command.
 
-##### Turn off all motors and the main controller
+##### All Motors
+Turn off all motors and the main controller
+
+Message:
 ```
 off all
 ```
 
-##### Turn off a specific motor
+##### Specific Motor
+Turn off a specific motor
+
+Message:
 ```
 off [Motor Number]
 ```
@@ -264,12 +285,18 @@ Note 2: The ID of the main controller board with the IMU on it is 200.
 #### Debug mode
 Debug mode print values in the screens that the controllers are running in.  By default "debug" mode is disable. 
 
-##### Enable Debug Mode
+##### Enable 
+Enable Debug Mode
+
+Message:
 ```
 debug true
 ```
 
-##### Disable Debug Mode
+##### Disable
+Disable Debug Mode
+
+Message:
 ```
 debug false
 ```
