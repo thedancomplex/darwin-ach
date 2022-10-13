@@ -140,6 +140,57 @@ Topic:
 /darwin/time
 ```
 
+## Feedforward Topics
+The feedforward topics can be posted at any rate.  The actoators will updated at the rate that the Darwin-Ach and Darwin Lofaro Legacy system is running. If multiple values are posted between motor updates only the most recent value will be applied to the motor. 
+
+### Desired Motor Position
+* Message Type: String
+* Message Example: 'r 1 1.234 17 -0.123 6 0.23'
+* * This message sets the desired position of motor 1, 17, and 6 to 1.234, -0.123, and 0.23 rad respectively
+* * The "r" denotes rad 
+* Message Example: 'd 1 10.2 17 -20.3456 6 7.23'
+* * This message sets the desired position of motor 1, 17, and 6 to 10.2, -20.3456, and 7.23 deg respectively
+* * The "d" denotes deg
+* The length of the message can be any length as long as it keeps the order as stated above.
+* The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
+
+Topic:
+```
+/darwin/ref/position
+```
+
+### Desired Motor Speed
+* Message Type: String
+* Message Example: 'r 1 1.234 17 -0.123 6 0.23'
+* * This message sets the desired speed of motor 1, 17, and 6 to 1.234, -0.123, and 0.23 rad/s respectively
+* * The "r" denotes rad/s
+* Message Example: 'd 1 10.2 17 -20.3456 6 7.23'
+* * This message sets the desired speed of motor 1, 17, and 6 to 10.2, -20.3456, and 7.23 deg/s respectively
+* * The "d" denotes deg/s
+* The length of the message can be any length as long as it keeps the order as stated above.
+* The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
+
+Topic:
+```
+/darwin/ref/speed
+```
+
+### Desired Motor Maximum Torque
+* Message Type: String
+* Message Example: 'p 1 0.5 17 0.111 6 1.0'
+* * This message sets the maximum torque of motor 1, 17, and 6 to 0.5 (50%), 0.111 (11.1%), and 1.0 (100%) of the maximum torque respectively
+* * The "p" denotes percent from 0.0 to 1.0
+* The length of the message can be any length as long as it keeps the order as stated above.
+* The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
+
+Topic:
+```
+/darwin/ref/torque
+```
+/darwin/cmd
+
+
+
 
 # Install
 ## Darwin OP's Computer
