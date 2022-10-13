@@ -60,6 +60,7 @@ This tutorial assumes that you have Debial 11 32bit (headless/server) installed 
 A script has been made for easy install of the Darwin Lofaro Legacy and Darwin-Ach system.
 
 1. Run in a screen
+
 To ensure the software is installed correctly even if network connection is lost it is highly recomended to run the instillation inside of a "screen".  The following steps will install the "screen" software, if it is not already installed, then it will run a "screen" session.
 ```
 $ sudo apt update
@@ -68,6 +69,7 @@ $ screen
 ```
 
 2. Install the base software
+
 Inside the terminal that has the "screen" running run the following script.
 ```
 $ cd darwin-op-debian-11/install
@@ -76,6 +78,7 @@ $ ./install-darwin.sh
 This script will install everything needed and enable the Darwin Lofaro Legacy / Darwin-Ach system to start on boot.
 
 3. (Optional) Disable Darwin Lofaro Legacy / Darwin-Ach auto start on boot
+
 If you would like to stop Darwin Lofaro Legacy / Darwin-Ach from starting on boot run the following:
 ```
 $ ./install.sh darwin-auto-start-server-stop 
@@ -131,6 +134,7 @@ This tutorial assumes that you have Ubuntu 22.04 32bit (headless/server) install
 A script has been made for easy install of the Darwin Lofaro Legacy, Darwin-Ach system, Ros2, and the Ros2AchBridge.
 
 1. Run in a screen
+
 To ensure the software is installed correctly even if network connection is lost it is highly recomended to run the instillation inside of a "screen".  The following steps will install the "screen" software, if it is not already installed, then it will run a "screen" session.
 ```
 $ sudo apt update
@@ -139,6 +143,7 @@ $ screen
 ```
 
 2. Install the base software
+
 Inside the terminal that has the "screen" running run the following script.  Due to the fact that we have to install Ros2 from source this will take around 20 to 24 hours to complete.
 ```
 $ cd darwin-op-debian-11/install
@@ -147,6 +152,7 @@ $ ./install-backpack.sh
 This script will install everything needed and enable the Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge system to start on boot.
 
 3. (Optional) Disable Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge auto start on boot
+
 If you would like to stop Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge from starting on boot run the following:
 ```
 $ ./install.sh darwin-auto-start-ros-bridge-stop
