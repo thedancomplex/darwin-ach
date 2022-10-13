@@ -25,14 +25,16 @@ Designed to talk directly with the CM730.  Updates the state and reference
 
 
 # Install
-## Network Configuration 
-### Darwin OP's Computer
+## Darwin OP's Computer
+These tutorials assume that you have Debian 11 32bit (headless/server) installed on the Darwin's computer (FitPC2)
+
+### Network Configuration 
 On the Darwin's comptuer (the fitpc) we will use the 'interfaces' method to apply the wifi settings and the static ip for connecting to the backpack.
 
 ```
 $ vi install/interfaces
 ```
-
+- Change "YOUR_WIFI_INTERFACE" to the name of your wireless interface.
 - Change "YOUR_SSID" to the SSID of your network.
 - Change "YOUR_PASSWORD" to the password to your wifi network.
 
@@ -51,7 +53,37 @@ This will conect the Darwin's comptuer to your wifi network and set the ethernet
 10.111.111.11
 ```
 
-### Backpack Computer
+### Darwin Computer Software Instillation
+This tutorial assumes that you have Debial 11 32bit (headless/server) installed on the comptuer.  This tutorial will install the base system on the comptuer with the optional step of enabling auto-start of the software on boot. This tutorial also assumes that you have SSHed into the Darwin's main computer (FitPC2).
+
+#### Install Base Software (Darwin Lofaro Legacy and Darwin-Ach)
+A script has been made for easy install of the Darwin Lofaro Legacy and Darwin-Ach system.
+
+1. Run in a screen
+To ensure the software is installed correctly even if network connection is lost it is highly recomended to run the instillation inside of a "screen".  The following steps will install the "screen" software, if it is not already installed, then it will run a "screen" session.
+```
+$ sudo apt update
+$ sudo apt install screen
+$ screen
+```
+
+2. Install the base software
+Inside the terminal that has the "screen" running run the following script.
+```
+$ cd darwin-op-debian-11/install
+$ ./install-darwin.sh
+```
+This script will install everything needed and enable the Darwin Lofaro Legacy / Darwin-Ach system to start on boot.
+
+3. (Optional) Disable Darwin Lofaro Legacy / Darwin-Ach auto start on boot
+If you would like to stop Darwin Lofaro Legacy / Darwin-Ach from starting on boot run the following:
+```
+$ ./install.sh darwin-auto-start-server-stop 
+```
+
+
+## Backpack Computer
+### Network Configuration 
 The backpack and the main darwin computer are hooked up via a single cable.  In "olden days" this would require a "crossover cable" but a regualr eithernet cable will be sufficent as modern ethernet chipsets automatically detect when a system is in a crossover mode.
 
 #### Backpack Ethernet
@@ -80,6 +112,7 @@ $ vi install/51-wifi-init.yaml
 
 - Change "YOUR_SSID" to the SSID of your network.
 - Change "YOUR_PASSWORD" to the password to your wifi network.
+- Change "wlan0" to your wireless lan device name.  Note: If you are running Ubuntu 22.04 on a raspi this should be wlan0 already and will not need to be changed.  However this should be verified.
 
 Now install and apply the settings.
 
@@ -88,4 +121,34 @@ $ cd install
 $ ./install.sh backpack-network-wifi
 ```
 
-Now the backpack computer should be connected to your wifi network.  
+Now the backpack computer should be connected to your wifi network. 
+
+ 
+### Darwin's Backpack Computer Software Instillation
+This tutorial assumes that you have Ubuntu 22.04 32bit (headless/server) installed on the comptuer.  This tutorial will install the base system on the comptuer with the optional step of enabling auto-start of the software on boot. This tutorial also assumes that you have SSHed into the Darwin's backpack computer (Raspi).  This was tested on a Raspi 3b+ and will be tested on other SBCs in the future.
+
+#### Install Base Software (Darwin Lofaro Legacy, Darwin-Ach, Ros2, and Ros2AchBridge)
+A script has been made for easy install of the Darwin Lofaro Legacy, Darwin-Ach system, Ros2, and the Ros2AchBridge.
+
+1. Run in a screen
+To ensure the software is installed correctly even if network connection is lost it is highly recomended to run the instillation inside of a "screen".  The following steps will install the "screen" software, if it is not already installed, then it will run a "screen" session.
+```
+$ sudo apt update
+$ sudo apt install screen
+$ screen
+```
+
+2. Install the base software
+Inside the terminal that has the "screen" running run the following script.  Due to the fact that we have to install Ros2 from source this will take around 20 to 24 hours to complete.
+```
+$ cd darwin-op-debian-11/install
+$ ./install-backpack.sh
+```
+This script will install everything needed and enable the Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge system to start on boot.
+
+3. (Optional) Disable Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge auto start on boot
+If you would like to stop Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge from starting on boot run the following:
+```
+$ ./install.sh darwin-auto-start-ros-bridge-stop
+```
+
