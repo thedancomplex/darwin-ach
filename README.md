@@ -54,7 +54,7 @@ This will conect the Darwin's comptuer to your wifi network and set the ethernet
 ```
 
 ### Darwin Computer Software Instillation
-This tutorial assumes that you have Debial 11 32bit (headless/server) installed on the comptuer.  This tutorial will install the base system on the comptuer with the optional step of enabling auto-start of the software on boot. This tutorial also assumes that you have SSHed into the Darwin's main computer (FitPC2).
+This tutorial assumes that you have Debian 11 32bit (headless/server) installed on the comptuer.  This tutorial will install the base system on the comptuer with the optional step of enabling auto-start of the software on boot. This tutorial also assumes that you have SSHed into the Darwin's main computer (FitPC2).
 
 #### Install Base Software (Darwin Lofaro Legacy and Darwin-Ach)
 A script has been made for easy install of the Darwin Lofaro Legacy and Darwin-Ach system.
@@ -72,7 +72,7 @@ $ screen
 
 Inside the terminal that has the "screen" running run the following script.
 ```
-$ cd darwin-op-debian-11/install
+$ cd darwin-ach/install
 $ ./install-darwin.sh
 ```
 This script will install everything needed and enable the Darwin Lofaro Legacy / Darwin-Ach system to start on boot.
@@ -153,7 +153,7 @@ $ screen
 
 Inside the terminal that has the "screen" running run the following script.  Due to the fact that we have to install Ros2 from source this will take around 20 to 24 hours to complete.
 ```
-$ cd darwin-op-debian-11/install
+$ cd darwin-ach/install
 $ ./install-backpack.sh
 ```
 This script will install everything needed and enable the Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge system to start on boot.
