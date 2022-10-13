@@ -240,6 +240,143 @@ Note 1: The motor numerical IDs are defined in the motor ID section
 Note 2: The ID of the main controller board with the IMU on it is 200.
 
 
+#### Turn off power
+This command turns off the power.  This also automatically apply the "close" command.
+
+##### Turn off all motors and the main controller
+```
+off all
+```
+
+##### Turn off a specific motor
+```
+off [Motor Number]
+```
+
+Example (Turns off motor 7):
+```
+off 7
+```
+
+Note 1: The motor numerical IDs are defined in the motor ID section 
+Note 2: The ID of the main controller board with the IMU on it is 200.
+
+#### Debug mode
+Debug mode print values in the screens that the controllers are running in.  By default "debug" mode is disable. 
+
+##### Enable Debug Mode
+```
+debug true
+```
+
+##### Disable Debug Mode
+```
+debug false
+```
+
+#### Change Control Loop Mode
+This allows for changing control loop modes which includes changing refreshrates and enable/disable state feedback.  It also chages how the reference is controlled and applied.
+
+##### State Feedback and Control Loop Modes
+Changes to the state feedback and control rate
+
+1. 50hz, IMU, Motor, and FT
+* Loop Rate: 50hz
+* IMU Feedback: Yes - 50hz
+* FT Feedback: Yes - 50hz
+* Motor Feedback: Yes - 50hz
+
+Message:
+```
+loop state 50hz_imu_motor_ft
+```
+
+2. 50hz and IMU
+* Loop Rate: 50hz
+* IMU Feedback: Yes - 50hz
+* FT Feedback: No
+* Motor Feedback: No
+
+Message:
+```
+loop state 50hz_imu
+```
+
+3. 125hz and IMU
+* Loop Rate: 125hz
+* IMU Feedback: Yes - 125hz
+* FT Feedback: No
+* Motor Feedback: No
+
+Message:
+```
+loop state 125hz_imu
+```
+
+4. 100hz, IMU, and FT (slow)
+* Loop Rate: 100hz
+* IMU Feedback: Yes - 100hz
+* FT Feedback: Yes - 50hz / FT
+* Motor Feedback: No
+
+Message:
+```
+loop state 125hz_imu_ft_slow
+```
+
+5. 100hz, IMU, and Motors (slow)
+* Loop Rate: 100hz
+* IMU Feedback: Yes - 100hz
+* FT Feedback: No
+* Motor Feedback: Yes - 5hz / motor
+
+Message:
+```
+loop state 125hz_imu_motors_slow
+```
+
+6. Default
+* Loop Rate: Default - 125hz
+* IMU Feedback: Default - Yes - 125hz
+* FT Feedback: Default - No
+* Motor Feedback: Default - No
+
+Message:
+```
+loop state default
+```
+
+
+##### Reference Mode
+This sets how the reference values are applied.
+
+1. Normal
+* Control Application Rate (Upper Body): Same as control loop
+* Control Application Rate (Lower Body): Same as control loop
+
+Message:
+```
+loop ref normal
+```
+
+2. Slow Top
+* Control Application Rate (Upper Body): (Control Loop Rate) / 8
+* Control Application Rate (Lower Body): Same as control loop
+
+Message:
+```
+loop ref slow_top
+```
+
+3. Default
+* Control Application Rate (Upper Body): Same as control loop
+* Control Application Rate (Lower Body): Same as control loop
+
+Message:
+```
+loop ref default
+```
+
 
 
 # Install
