@@ -84,6 +84,13 @@ If you would like to stop Darwin Lofaro Legacy / Darwin-Ach from starting on boo
 $ ./install.sh darwin-auto-start-server-stop 
 ```
 
+#### Install Examples
+The following examples are applicaple to being used on the Darwin's main computer (FitPC2).  As with the instillation, this assumes that you are SSHed into the Darwin's main computer.
+```
+$ git clone https://github.com/darwin-op/darwin-ach-simple-demo-cpp
+```
+Note: The README in the example above explains the usage.  If you system is setup to be "auto start" you can skip the "Start Darwin-OP" steps.
+
 
 ## Backpack Computer
 ### Network Configuration 
@@ -157,4 +164,19 @@ If you would like to stop Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge from
 ```
 $ ./install.sh darwin-auto-start-ros-bridge-stop
 ```
+
+#### Install Examples
+The following examples are applicaple to being used on the Darwin's backpack computer (Raspi).  As with the instillation, this assumes that you are SSHed into the Darwin's backpack computer.
+
+##### C++ Example (no Ros2)
+```
+$ git clone https://github.com/darwin-op/darwin-ach-simple-demo-cpp
+```
+Note: The README in the example above explains the usage.  If you system is setup to be "auto start" you can skip the "Start Darwin-OP" step.  If "auto start" is not enabled then you also need to enable the "client" which setups the remote comunication via Achd.
+
+##### Python Example (using Ros2)
+```
+$ git clone https://github.com/darwin-op/darwin-ach-simple-demo-ros2-python
+```
+Note: This example assumes that you have both the Darwin's main comptuer and backpack computer setup as "auto start".  The README in the example has a detailed explination of each of the examples.  These examples can also be run on an external comptuer that is also running Ros2 on the same Ros2 network.
 
