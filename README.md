@@ -153,6 +153,7 @@ The feedforward topics can be posted at any rate.  The actoators will updated at
 * * The "d" denotes deg
 * The length of the message can be any length as long as it keeps the order as stated above.
 * The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
+* This message "stages" the given values but does not send them to the motors.  You need to "post" (or apply) the messages using the "post" command on the "cmd" topic.
 
 Topic:
 ```
@@ -169,6 +170,7 @@ Topic:
 * * The "d" denotes deg/s
 * The length of the message can be any length as long as it keeps the order as stated above.
 * The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
+* This message "stages" the given values but does not send them to the motors.  You need to "post" (or apply) the messages using the "post" command on the "cmd" topic.
 
 Topic:
 ```
@@ -182,12 +184,60 @@ Topic:
 * * The "p" denotes percent from 0.0 to 1.0
 * The length of the message can be any length as long as it keeps the order as stated above.
 * The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
+* This message "stages" the given values but does not send them to the motors.  You need to "post" (or apply) the messages using the "post" command on the "cmd" topic.
 
 Topic:
 ```
 /darwin/ref/torque
 ```
+
+### Command Message
+* Message Type: String
+* This topic performs various commands and functions.  Each of the commands/functions occure once per cycle of the Darwin-Ach and the Darwin Lofaro Legacy system.
+* The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
+
+Topic:
+```
 /darwin/cmd
+```
+
+Avaliable Commands:
+
+#### Post / Apply the Position, Velocity, and Torque desired reference values
+```
+post
+```
+
+#### Open the Serial port and start the control loop on the main comptuer
+```
+open
+```
+
+#### Close the serial port and stop the control loop on the main comptuer 
+```
+close
+```
+
+#### Turn on power
+This command turns on the power.  This also automatically apply the "open" command.
+
+##### Turn on all motors and the main controller
+```
+on all
+```
+
+##### Turn on a specific motor
+```
+on [Motor Number]
+```
+
+Example (Turns on motor 7):
+```
+on 7
+```
+
+Note 1: The motor numerical IDs are defined in the motor ID section 
+Note 2: The ID of the main controller board with the IMU on it is 200.
 
 
 
