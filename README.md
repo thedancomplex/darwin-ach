@@ -1,26 +1,44 @@
-# Darwin Lofaro Legacy
-The Darwin Lofaro Legacy system is made to run on an origonal ROBOTIS Darwin OP platform utilizing ros2 as a middle ware to allow for communication between the origonal computer and a second computer such as a raspi.
-
-# CM730 Driver
-
-Designed to talk directly with the CM730.  Updates the state and reference
+# Darwin-Ach and Darwin Lofaro Legacy System
+The Darwin-Ach and the Darwin Lofaro Legacy System is made to run on an origonal ROBOTIS Darwin OP platform utilizing Ach and Ros2 as a middle ware to allow for communication between the origonal computer and a second computer such as a raspi.
+The primary purpose of this project is to enable the old (or legacy) Darwin OP to utilize modern software.
+The primary reason why the current plaform can not utilize modern software is because the onboard computer is outdated and is a 32 bit system with minimal memory and compute power.
 
 # Changes
-* Call motors, FTs, and the CM730 to have a return status level of 1 (default is 2)
-* Change the LEFT FT sensor to have an ID of 111.
-* Change the RIGHT FT sensor to have an ID of 112.
-* Added a timer to watch the achd and restart the ros2achd bridge if needed
+* This system is tested with the motors, FTs sensors, and the CM730 to have a return status level of 1 instead of the default is 2
+* Ensure the LEFT FT sensor to have an ID of 111.
+* Ensure the RIGHT FT sensor to have an ID of 112.
 
 # Todo:
-* Impliment walking via ROS utilizing the ROBOTIS walking gate but comunicating via ROS
 * Impliment alternative serial library to cut down on the latency and overhead caused by the dyn lib
-* Make a version that just publishes the IMU data and takes upper body commands and a twist message for walking
-* Put the ros2ach bridge monitor in the darwin-ach script
 * Design a backpack for Raspi Zero W2
-* Procure a Zero W2
+* Procure a Raspi Zero W2
 * Impliment USB to Ethernet on Zero W2
 
 # Joint Index for the Darwin-Op
+The following are the joint indexes for the Darwin OP:
+
+* [Software Definition / Abveration] = [Numberical ID] : [Human Readable Name]
+* RSP = 1 : Right Shoulder Pitch
+* LSP = 2 : Left Shoulder Pitch
+* RSR = 3 : Right Shoulder Roll
+* LSR = 4 : Left Shoulder Roll
+* REP = 5 : Right Elbow Pitch
+* LEP = 6 : Left Elbow Pitch
+* RHY = 7 : Right Hip Yaw
+* LHY = 8 : Left Hip Yaw
+* RHR = 9 : Right Hip Roll
+* LHR = 10 : Left Hip Roll
+* RHP = 11 : Right Hip Pitch
+* LHP = 12 : Left Hip Pitch
+* RKP = 13 : Right Knee Pitch
+* LKP = 14 : Left Knee Pitch
+* RAP = 15 : Right Ankle Pitch
+* LAP = 16 : Left Ankle Pitch
+* RAR = 17 : Right Ankle Roll
+* LAR = 18 : Left Andle Roll
+* NKY = 19 : Neck Yaw
+* NKP = 20 : Neck Pitch
+
 ![Darwin OP Joint Index](img/op_id_map.jpg)
 
 
