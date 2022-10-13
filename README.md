@@ -407,6 +407,8 @@ loop ref default
 
 
 # Install
+This section shows how to install the Darwin-Ach / Darwin Lofaro Legacy system on the Darwin-OP and its backpack computer.
+
 ## Darwin OP's Computer
 These tutorials assume that you have Debian 11 32bit (headless/server) installed on the Darwin's computer (FitPC2)
 
