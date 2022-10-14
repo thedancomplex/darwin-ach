@@ -49,7 +49,7 @@ InstallRos2Dep()
   cd $THE_INSTALL_DIR
   locale  # check for UTF-8
 
-  sudo apt update && sudo apt install locales
+  sudo apt -y update && sudo apt -y install locales
   sudo locale-gen en_US en_US.UTF-8
   sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
   export LANG=en_US.UTF-8
@@ -58,16 +58,16 @@ InstallRos2Dep()
 
   apt-cache policy | grep universe
 
-  sudo apt install software-properties-common
+  sudo apt -y install software-properties-common
   sudo add-apt-repository universe
 
-  sudo apt update && sudo apt install curl gnupg lsb-release
+  sudo apt -y update && sudo apt -y install curl gnupg lsb-release
   sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
 
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $DEB_VERSION) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
-  sudo apt update && sudo apt install -y \
+  sudo apt -y update && sudo apt -y install -y \
     build-essential \
     cmake \
     git \
@@ -83,30 +83,30 @@ InstallRos2Dep()
     python3-vcstool \
     wget
 
-  sudo apt install libtinyxml2-dev
-  sudo apt install libasio-dev 
-  sudo apt install libacl1-dev
-  sudo apt install gcc g++ cmake libacl1-dev libncurses5-dev pkg-config
-  sudo apt install libeigen3-dev
-  sudo apt install python3-lark
-  sudo apt install python3-numpy
-  sudo apt install libldap2-dev
-  sudo apt install rtirq-init
-  sudo apt install libbullet-dev
-  sudo apt install python3-opencv
-  sudo apt install libopencv-dev
-  sudo apt-get install mesa-common-dev
-  sudo apt install libqt5core5a
-  sudo apt-get install qtbase5-dev
-  sudo apt-get install qtdeclarative5-dev
-  sudo apt install python-is-python3
+  sudo apt -y install libtinyxml2-dev
+  sudo apt -y install libasio-dev 
+  sudo apt -y install libacl1-dev
+  sudo apt -y install gcc g++ cmake libacl1-dev libncurses5-dev pkg-config
+  sudo apt -y install libeigen3-dev
+  sudo apt -y install python3-lark
+  sudo apt -y install python3-numpy
+  sudo apt -y install libldap2-dev
+  sudo apt -y install rtirq-init
+  sudo apt -y install libbullet-dev
+  sudo apt -y install python3-opencv
+  sudo apt -y install libopencv-dev
+  sudo apt -y install mesa-common-dev
+  sudo apt -y install libqt5core5a
+  sudo apt -y install qtbase5-dev
+  sudo apt -y install qtdeclarative5-dev
+  sudo apt -y install python-is-python3
   sudo pip3 install netifaces
-  sudo apt install setserial
-  sudo apt install python3-colcon-common-extensions
-  sudo apt install ufw
+  sudo apt -y install setserial
+  sudo apt -y install python3-colcon-common-extensions
+  sudo apt -y install ufw
 
   # Remove  root access for serial port
-  sudo apt remove modemmanager
+  sudo apt -y remove modemmanager
 #  sudo usermod -a -G dialout username
 
 #  THE_DIR=$(pwd)
@@ -137,7 +137,7 @@ InstallRos2SourceIni()
   #wget https://raw.githubusercontent.com/ros2/ros2/humble/ros2.repos
   vcs import src < ros2.repos.32bit
 
-#  sudo apt upgrade
+#  sudo apt -y upgrade
 
   sudo rosdep init
   rosdep update
@@ -290,17 +290,17 @@ AchInstall()
 	THE_DIR=$(pwd)
 	cd /tmp
 
-	sudo apt install iw
+	sudo apt -y install iw
 
-	sudo apt install autotools-dev
-	sudo apt-get install autoconf
-	sudo apt-get install autoconf automake libtool autoconf-archive
-	sudo apt-get install linux-headers-generic dkms openbsd-inetd help2man man2html docbook-utils avahi-utils
-	sudo apt-get install doxygen
-	sudo apt install dkms
-	sudo apt-get install openbsd-inetd
+	sudo apt -y install autotools-dev
+	sudo apt -y install autoconf
+	sudo apt -y install autoconf automake libtool autoconf-archive
+	sudo apt -y install linux-headers-generic dkms openbsd-inetd help2man man2html docbook-utils avahi-utils
+	sudo apt -y install doxygen
+	sudo apt -y install dkms
+	sudo apt -y install openbsd-inetd
 
-	sudo apt install ufw
+	sudo apt -y install ufw
 
 	git clone https://github.com/thedancomplex/ach
 	cd ach

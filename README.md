@@ -490,25 +490,49 @@ Note: The README in the example above explains the usage.  If you system is setu
 * Mini SD to Micro SD Card Adapter used: [Click Here](https://www.amazon.com/gp/product/B000TLXCDW/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1)
 * Pre-Installed Image: [to be posted]
 
+### Pre-Setup
+Be sure to update and upgrade the system first.  This step assums that you are SSHed into the backpack comptuer and it has an active network connection.
+
+1. Update and Upgrade your system
+```
+$ sudo apt update
+$ sudo apt upgrade
+```
+
+2. Reboot
+```
+$ sudo reboot
+```
+
+3. Install git
+```
+$ sudo apt install git
+```
+
+4. Install screen
+```
+sudo apt install screen
+```
+
+5. Run screen
+```
+$ screen
+```
+
+6. Clone the Darwin-Ach / Darwin Lofaro Legacy system
+```
+$ mkdir projects
+$ cd projects
+$ git clone https://github.com/thedancomplex/darwin-ach
+```
+
+7. Go into the Darwin-Ach / Darwin Lofaro Legacy system's folder
+```
+$ cd darwin-ach
+```
+
 ### Network Configuration 
 The backpack and the main darwin computer are hooked up via a single cable.  In "olden days" this would require a "crossover cable" but a regualr eithernet cable will be sufficent as modern ethernet chipsets automatically detect when a system is in a crossover mode.
-
-#### Backpack Ethernet
-
-The following will automatically configure the ethernet to connect with the Darwin OP's computer:
-
-```
-$ cd install
-$ ./install.sh backpack-network
-```
-
-This will connect the backpack to the Darwin's computer via a network with a static IP.  The static IP of the backpack computer is:
-
-```
-10.111.111.10
-```
-
-Note: The 10.111.111.xxx network is only avaliable between the backpack and the Darwin's computer.  You will need to use the wifi connection to connect to the robot from an external computer.
 
 #### Backpack Wifi
 To set the wifi for the backpack computer run the following:
@@ -529,6 +553,27 @@ $ ./install.sh backpack-network-wifi
 ```
 
 Now the backpack computer should be connected to your wifi network. 
+
+#### Backpack Ethernet
+
+The following will automatically configure the ethernet to connect with the Darwin OP's computer:
+
+```
+$ cd install
+$ ./install.sh backpack-network
+```
+
+This will connect the backpack to the Darwin's computer via a network with a static IP.  The static IP of the backpack computer is:
+
+```
+10.111.111.10
+```
+
+Note 1: If you were connected via SSH via the ethernet cable then the connection will be lost.  Be sure to reconnect via the wifi address.
+
+Note 2: Connect the ethernet cord from the Raspi to the Darwin-OP.
+
+Note 3: The 10.111.111.xxx network is only avaliable between the backpack and the Darwin's computer.  You will need to use the wifi connection to connect to the robot from an external computer and access the internet.
 
  
 ### Darwin's Backpack Computer Software Instillation
