@@ -413,7 +413,7 @@ This section shows how to install the Darwin-Ach / Darwin Lofaro Legacy system o
 These tutorials assume that you have Debian 11 32bit (headless/server) installed on the Darwin's computer (FitPC2)
 
 ### Debian 11 32bit
-* Imaget Used: [to be posted]
+* Image Used: [to be posted]
 * SD Card Used: [to be posted]
 * Mini SD to Micro SD Card Adapter used: [Click Here](https://www.amazon.com/gp/product/B000TLXCDW/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1)
 * Pre-Installed Image: [to be posted]
@@ -483,6 +483,13 @@ Note: The README in the example above explains the usage.  If you system is setu
 
 
 ## Backpack Computer
+### Ubuntu 22.04 32bit for Raspi
+* Image Used (32 Bit): [to be posted]
+* Alternative Image (64 Bit): [Click Here](https://cdimage.ubuntu.com/releases/22.04.1/release/ubuntu-22.04.1-preinstalled-server-arm64+raspi.img.xz?_ga=2.173845286.468747468.1665704955-657318545.1654912167)
+* SD Card Used: [to be posted]
+* Mini SD to Micro SD Card Adapter used: [Click Here](https://www.amazon.com/gp/product/B000TLXCDW/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1)
+* Pre-Installed Image: [to be posted]
+
 ### Network Configuration 
 The backpack and the main darwin computer are hooked up via a single cable.  In "olden days" this would require a "crossover cable" but a regualr eithernet cable will be sufficent as modern ethernet chipsets automatically detect when a system is in a crossover mode.
 
