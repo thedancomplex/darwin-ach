@@ -413,9 +413,9 @@ This section shows how to install the Darwin-Ach / Darwin Lofaro Legacy system o
 These tutorials assume that you have Debian 11 32bit (headless/server) installed on the Darwin's computer (FitPC2)
 
 ### Debian 11 32bit
-* Image Used: [to be posted]
+* Image Used: [Debian 11 32 bit (i386) Mirror: OSU](http://debian.osuosl.org/debian-cdimage/11.5.0/i386/iso-dvd/debian-11.5.0-i386-DVD-1.iso)
 * SD Card Used: [to be posted]
-* Mini SD to Micro SD Card Adapter used: [Click Here](https://www.amazon.com/gp/product/B000TLXCDW/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1)
+* Mini SD to Micro SD Card Adapter used: [Mini to Micro SD Card adapter: Click Here](https://www.amazon.com/gp/product/B000TLXCDW/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1)
 * Pre-Installed Image: [to be posted]
 
 ### Network Configuration 
