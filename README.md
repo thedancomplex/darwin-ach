@@ -544,6 +544,7 @@ $ vi install/51-wifi-init.yaml
 - Change "YOUR_SSID" to the SSID of your network.
 - Change "YOUR_PASSWORD" to the password to your wifi network.
 - Change "wlan0" to your wireless lan device name.  Note: If you are running Ubuntu 22.04 on a raspi this should be wlan0 already and will not need to be changed.  However this should be verified.
+- Note: Some Raspi's only have a 2.4ghz radio.  Be sure to pick a wireless network compatiable with your wireless hardware/radio.
 
 Now install and apply the settings.
 
