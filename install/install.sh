@@ -204,7 +204,6 @@ InstallRos2Source()
   colcon build --symlink-install --packages-skip-build-finished --parallel-workers 1
   echo ". $ROS_INSTALL_DIR_BASE/$ROS_INSTALL_DIR_NAME/install/local_setup.bash > /dev/null" >> ~/.bashrc
 #  echo ". ~/ros2_humble/install/local_setup.bash > /dev/null" >> ~/.bashrc
-  echo "setserial /dev/ttyUSB0 low_latency > /dev/null" >> ~/.bashrc
 }
 
 InstallRos2Etc()
@@ -233,6 +232,7 @@ LowLatency()
   	cd $THE_INSTALL_DIR
 	setserial /dev/ttyUSB0 low_latency
 #	sudo setserial /dev/ttyUSB0 low_latency
+  	echo "setserial /dev/ttyUSB0 low_latency > /dev/null" >> ~/.bashrc
 	sync
 #	sudo sync
 	sleep 1
