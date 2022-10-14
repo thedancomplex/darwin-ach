@@ -131,11 +131,11 @@ InstallRos2SourceIni()
 {
   cd $THE_INSTALL_DIR
   mkdir -p $HUMBLE_INSTALL_DIR/src
-  cp ros2.repos.32bit $HUMBLE_INSTALL_DIR/
+  cp ros2.repos.32bit* $HUMBLE_INSTALL_DIR/
 
   cd $HUMBLE_INSTALL_DIR
   #wget https://raw.githubusercontent.com/ros2/ros2/humble/ros2.repos
-  vcs import src < ros2.repos.32bit
+  vcs import src < ros2.repos.32bit.minimal
 
 #  sudo apt -y upgrade
 
