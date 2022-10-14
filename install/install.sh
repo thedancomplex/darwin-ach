@@ -199,6 +199,7 @@ InstallRos2Source()
 {
 
   cd $THE_INSTALL_DIR
+  mkdir $HUMBLE_INSTALL_DIR
   cd $HUMBLE_INSTALL_DIR
   colcon build --symlink-install --packages-skip-build-finished --parallel-workers 1
   echo ". $ROS_INSTALL_DIR_BASE/$ROS_INSTALL_DIR_NAME/install/local_setup.bash > /dev/null" >> ~/.bashrc
