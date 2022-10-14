@@ -79,10 +79,6 @@ repositories:
     type: git
     url: https://github.com/ros/class_loader.git
     version: humble
-  ros/kdl_parser:
-    type: git
-    url: https://github.com/ros/kdl_parser.git
-    version: humble
   ros/pluginlib:
     type: git
     url: https://github.com/ros/pluginlib.git
@@ -154,10 +150,6 @@ repositories:
   ros2/mimick_vendor:
     type: git
     url: https://github.com/ros2/mimick_vendor.git
-    version: humble
-  ros2/orocos_kdl_vendor:
-    type: git
-    url: https://github.com/ros2/orocos_kdl_vendor.git
     version: humble
   ros2/performance_test_fixture:
     type: git
