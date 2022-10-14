@@ -343,7 +343,7 @@ loop state 125hz_imu
 4. 100hz, IMU, and FT (slow)
 * Loop Rate: 100hz
 * IMU Feedback: Yes - 100hz
-* FT Feedback: Yes - 50hz / FT
+* FT Feedback: Yes - 50hz per FT
 * Motor Feedback: No
 
 Message:
@@ -355,7 +355,7 @@ loop state 125hz_imu_ft_slow
 * Loop Rate: 100hz
 * IMU Feedback: Yes - 100hz
 * FT Feedback: No
-* Motor Feedback: Yes - 5hz / motor
+* Motor Feedback: Yes - 5hz per motor
 
 Message:
 ```
