@@ -59,7 +59,7 @@ InstallRos2Dep()
   apt-cache policy | grep universe
 
   sudo apt -y install software-properties-common
-  sudo add-apt-repository universe
+  sudo add-apt-repository -y universe
 
   sudo apt -y update && sudo apt -y install curl gnupg lsb-release
   sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
