@@ -44,6 +44,40 @@ InstallRos2()
   InstallRos2Soruce
 }
 
+InstallRosAptGet()
+{
+  locale  # check for UTF-8
+
+  sudo apt update && sudo apt install locales
+  sudo locale-gen en_US en_US.UTF-8
+  sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+  export LANG=en_US.UTF-8
+
+  locale  # verify settings
+
+  apt-cache policy | grep universe
+
+  sudo apt install software-properties-common
+  sudo add-apt-repository universe
+
+  sudo apt update && sudo apt install curl gnupg lsb-release
+  sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+
+  sudo apt update
+
+  sudo apt upgrade
+
+  sudo apt install ros-humble-ros-base
+
+  # Replace ".bash" with your shell if you're not using bash
+  # Possible values are: setup.bash, setup.sh, setup.zsh
+  source /opt/ros/humble/setup.bash
+  echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+
+}
+
 InstallRos2Dep()
 {
   cd $THE_INSTALL_DIR
@@ -695,6 +729,8 @@ ShowUsage()
         echo '                 (~20hr on raspi 3b+ CPU)        '
 	echo 'ros2-etc      : make a simlink of the ros2 dir in'
         echo '                etc                              '
+	echo 'ros2-apt-get  : installs ros2 via apt-get (64bit only)'
+	echo '                Works on arm64 and amd64 only    '
 	echo 'swap          : Create 4gb swap                  '
 	echo 'swap-1g       : Create 1gb swap (faster)         '
 	echo 'cm730         : installs cm730 (ros2) drivers    '
@@ -768,6 +804,10 @@ case "$1" in
 
 	'ros2-dep' )
 		InstallRos2Dep $@
+	;;
+
+	'ros2-apt-get' )
+		InstallRosAptGet
 	;;
 	
 	'cm730' )
