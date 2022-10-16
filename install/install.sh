@@ -169,7 +169,8 @@ InstallRos2SourceIni()
 
   cd $HUMBLE_INSTALL_DIR
   #wget https://raw.githubusercontent.com/ros2/ros2/humble/ros2.repos
-  vcs import src < ros2.repos.32bit.minimal
+  vcs import src < ros2.repos.32bit
+  #vcs import src < ros2.repos.32bit.minimal
 
 #  sudo apt -y upgrade
 
@@ -722,13 +723,23 @@ ShowUsage()
 	echo 'ros2          : installs ros2 Dep and ros2 from  '
         echo '                soruce (~24hr on Darwin OPs CPU) '
         echo '                       (~20hr on raspi 3b+ CPU)  '
+	echo '                       (32 Bit Only)             '
+	echo ''
 	echo 'ros2-dep      : installs ros2 dep                '
+	echo '                       (32 Bit Only)             '
+	echo ''
 	echo 'ros2-src-ini  : initialize soruce                '
+	echo '                       (32 Bit Only)             '
+	echo ''
 	echo 'ros2-src      : installs ros2 from source        '
         echo '                 (~24hr on Darwin OPs CPU)       '
         echo '                 (~20hr on raspi 3b+ CPU)        '
+	echo '                       (32 Bit Only)             '
+	echo ''
 	echo 'ros2-etc      : make a simlink of the ros2 dir in'
         echo '                etc                              '
+	echo '                       (32 Bit Only)             '
+	echo ''
 	echo 'ros2-apt-get  : installs ros2 via apt-get (64bit only)'
 	echo '                Works on arm64 and amd64 only    '
 	echo 'swap          : Create 4gb swap                  '
