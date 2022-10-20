@@ -13,6 +13,8 @@ The primary reason why the current plaform can not utilize modern software is be
 * Design a backpack for Raspi Zero W2
 * Procure a Raspi Zero W2
 * Impliment USB to Ethernet on Zero W2
+* Test the auto install for the Darwin side
+* Test the auto install for the Backpack side
 
 # Joint Index for the Darwin-Op
 The following are the joint indexes for the Darwin OP:
