@@ -25,6 +25,7 @@ The following are the joint indexes for the Darwin OP:
 <tr> 
 <th>Software Definition / Abveration</th><th>Numberical ID</th><th>Human Readable Name</th>
 </tr>
+</table>
   [Software Definition]
   [    Abveration     ] = [Numberical ID] : [Human Readable Name]
 * RSP                   =       1         : Right Shoulder Pitch
