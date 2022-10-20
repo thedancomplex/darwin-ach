@@ -50,40 +50,40 @@ The following are the joint indexes for the Darwin OP:
 <th>LHY</th><th> 8 </th><th> Left Hip Yaw </th>
 </tr>
 <tr> 
-<th>RHR</th><th> = 9 :</th><th> Right Hip Roll </th>
+<th>RHR</th><th> 9 </th><th> Right Hip Roll </th>
 </tr>
 <tr> 
-<th>LHR</th><th> = 10 :</th><th> Left Hip Roll </th>
+<th>LHR</th><th> 10 </th><th> Left Hip Roll </th>
 </tr>
 <tr> 
-<th>RHP</th><th> = 11 :</th><th> Right Hip Pitch </th>
+<th>RHP</th><th> 11 </th><th> Right Hip Pitch </th>
 </tr>
 <tr> 
-<th>LHP</th><th> = 12 :</th><th> Left Hip Pitch </th>
+<th>LHP</th><th> 12 </th><th> Left Hip Pitch </th>
 </tr>
 <tr> 
-<th>RKP</th><th> = 13 :</th><th> Right Knee Pitch </th>
+<th>RKP</th><th> 13 </th><th> Right Knee Pitch </th>
 </tr>
 <tr> 
-<th>LKP</th><th> = 14 :</th><th> Left Knee Pitch </th>
+<th>LKP</th><th> 14 </th><th> Left Knee Pitch </th>
 </tr>
 <tr> 
-<th>RAP</th><th> = 15 :</th><th> Right Ankle Pitch </th>
+<th>RAP</th><th> 15 </th><th> Right Ankle Pitch </th>
 </tr>
 <tr> 
-<th>LAP</th><th> = 16 :</th><th> Left Ankle Pitch </th>
+<th>LAP</th><th> 16 </th><th> Left Ankle Pitch </th>
 </tr>
 <tr> 
-<th>RAR</th><th> = 17 :</th><th> Right Ankle Roll </th>
+<th>RAR</th><th> 17 </th><th> Right Ankle Roll </th>
 </tr>
 <tr> 
-<th>LAR</th><th> = 18 :</th><th> Left Andle Roll </th>
+<th>LAR</th><th> 18 </th><th> Left Andle Roll </th>
 </tr>
 <tr> 
-<th>NKY</th><th> = 19 :</th><th> Neck Yaw </th>
+<th>NKY</th><th> 19 </th><th> Neck Yaw </th>
 </tr>
 <tr> 
-<th>NKP</th><th> = 20 :</th><th> Neck Pitch </th>
+<th>NKP</th><th> 20 </th><th> Neck Pitch </th>
 </tr>
 </table>
   [Software Definition]
