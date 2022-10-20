@@ -25,6 +25,66 @@ The following are the joint indexes for the Darwin OP:
 <tr> 
 <th>Software Definition / Abveration</th><th>Numberical ID</th><th>Human Readable Name</th>
 </tr>
+<tr> 
+<th>RSP</th><th> 1 </th><th> Right Shoulder Pitch </th>
+</tr>
+<tr> 
+<th>LSP</th><th> 2 </th><th> Left Shoulder Pitch </th>
+</tr>
+<tr> 
+<th>RSR</th><th> 3 </th><th> Right Shoulder Roll </th>
+</tr>
+<tr> 
+<th>LSR</th><th> 4 </th><th> Left Shoulder Roll </th>
+</tr>
+<tr> 
+<th>REP</th><th> 5 </th><th> Right Elbow Pitch </th>
+</tr>
+<tr> 
+<th>LEP</th><th> 6 </th><th> Left Elbow Pitch </th>
+</tr>
+<tr> 
+<th>RHY</th><th> 7 </th><th> Right Hip Yaw </th>
+</tr>
+<tr> 
+<th>LHY</th><th> 8 </th><th> Left Hip Yaw </th>
+</tr>
+<tr> 
+<th>RHR</th><th> = 9 :</th><th> Right Hip Roll </th>
+</tr>
+<tr> 
+<th>LHR</th><th> = 10 :</th><th> Left Hip Roll </th>
+</tr>
+<tr> 
+<th>RHP</th><th> = 11 :</th><th> Right Hip Pitch </th>
+</tr>
+<tr> 
+<th>LHP</th><th> = 12 :</th><th> Left Hip Pitch </th>
+</tr>
+<tr> 
+<th>RKP</th><th> = 13 :</th><th> Right Knee Pitch </th>
+</tr>
+<tr> 
+<th>LKP</th><th> = 14 :</th><th> Left Knee Pitch </th>
+</tr>
+<tr> 
+<th>RAP</th><th> = 15 :</th><th> Right Ankle Pitch </th>
+</tr>
+<tr> 
+<th>LAP</th><th> = 16 :</th><th> Left Ankle Pitch </th>
+</tr>
+<tr> 
+<th>RAR</th><th> = 17 :</th><th> Right Ankle Roll </th>
+</tr>
+<tr> 
+<th>LAR</th><th> = 18 :</th><th> Left Andle Roll </th>
+</tr>
+<tr> 
+<th>NKY</th><th> = 19 :</th><th> Neck Yaw </th>
+</tr>
+<tr> 
+<th>NKP</th><th> = 20 :</th><th> Neck Pitch </th>
+</tr>
 </table>
   [Software Definition]
   [    Abveration     ] = [Numberical ID] : [Human Readable Name]
