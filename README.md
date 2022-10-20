@@ -21,16 +21,20 @@ The following are the joint indexes for the Darwin OP:
 
 ![Darwin OP Joint Index](img/op_id_map.jpg)
 
+<table>
+<tr> 
+<th>Software Definition / Abveration</th><th>Numberical ID</th><th>Human Readable Name</th>
+</tr>
   [Software Definition]
   [    Abveration     ] = [Numberical ID] : [Human Readable Name]
 * RSP                   =       1         : Right Shoulder Pitch
-* LSP                   = 2               : Left Shoulder Pitch
-* RSR = 3 : Right Shoulder Roll
-* LSR = 4 : Left Shoulder Roll
-* REP = 5 : Right Elbow Pitch
-* LEP = 6 : Left Elbow Pitch
-* RHY = 7 : Right Hip Yaw
-* LHY = 8 : Left Hip Yaw
+* LSP                   =       2         : Left Shoulder Pitch
+* RSR                   =       3         : Right Shoulder Roll
+* LSR                   =       4         : Left Shoulder Roll
+* REP                   =       5         : Right Elbow Pitch
+* LEP                   =       6         : Left Elbow Pitch
+* RHY                   =       7         : Right Hip Yaw
+* LHY                   = 8 : Left Hip Yaw
 * RHR = 9 : Right Hip Roll
 * LHR = 10 : Left Hip Roll
 * RHP = 11 : Right Hip Pitch
