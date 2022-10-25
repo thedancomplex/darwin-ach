@@ -106,92 +106,83 @@ Topic:
 ```
 
 ### Force Torque Left
-* Message Type: Twist
-* Each of the values are a float. Units for linear.x and linear.y values are in N. Units for lift state (linear.z, angular.x, and angular.y) are booleans (0 or 1).
-
 Topic:
 ```
 /darwin/state/ft/left
 ```
-
-### Force Torque Right
 * Message Type: Twist
 * Each of the values are a float. Units for linear.x and linear.y values are in N. Units for lift state (linear.z, angular.x, and angular.y) are booleans (0 or 1).
 
+### Force Torque Right
 Topic:
 ```
 /darwin/state/ft/right
 ```
+* Message Type: Twist
+* Each of the values are a float. Units for linear.x and linear.y values are in N. Units for lift state (linear.z, angular.x, and angular.y) are booleans (0 or 1).
 
 ### Motor Load
-* Message Type: Float64MultiArray
-* Each of the values are floats where the index of the given motor is given in the index section of this document.
-* Unit: N/m
-
 Topic:
 ```
 /darwin/state/motor/load
 ```
-
-
-### Motor Position
 * Message Type: Float64MultiArray
 * Each of the values are floats where the index of the given motor is given in the index section of this document.
-* Unit: rad
+* Unit: N/m
 
+### Motor Position
 Topic:
 ```
 /darwin/state/motor/position
 ```
-
-
-### Motor Speed
 * Message Type: Float64MultiArray
 * Each of the values are floats where the index of the given motor is given in the index section of this document.
-* Unit: m/s
+* Unit: rad
 
+### Motor Speed
 Topic:
 ```
 /darwin/state/motor/speed
 ```
-
-
-### Motor Temperature
 * Message Type: Float64MultiArray
 * Each of the values are floats where the index of the given motor is given in the index section of this document.
-* Unit: Celsius
+* Unit: m/s
 
+### Motor Temperature
 Topic:
 ```
 /darwin/state/motor/temperature
 ```
-
-
-### Motor Voltage
 * Message Type: Float64MultiArray
 * Each of the values are floats where the index of the given motor is given in the index section of this document.
-* Unit: Volts
+* Unit: Celsius
 
+### Motor Voltage
 Topic:
 ```
 /darwin/state/motor/voltage
 ```
-
+* Message Type: Float64MultiArray
+* Each of the values are floats where the index of the given motor is given in the index section of this document.
+* Unit: Volts
 
 ### Time
-* Message Type: Float64
-* The value is in float and is the time on the main computer on the Darwin OP
-* Unit: sec
-
 Topic:
 ```
 /darwin/time
 ```
+* Message Type: Float64
+* The value is in float and is the time on the main computer on the Darwin OP
+* Unit: sec
 
 ## Feedforward Topics
 The feedforward topics can be posted at any rate.  The actoators will updated at the rate that the Darwin-Ach and Darwin Lofaro Legacy system is running. If multiple values are posted between motor updates only the most recent value will be applied to the motor. 
 
 ### Desired Motor Position
+Topic:
+```
+/darwin/ref/position
+```
 * Message Type: String
 * Message Example: 'r 1 1.234 17 -0.123 6 0.23'
 * * This message sets the desired position of motor 1, 17, and 6 to 1.234, -0.123, and 0.23 rad respectively
@@ -203,12 +194,11 @@ The feedforward topics can be posted at any rate.  The actoators will updated at
 * The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
 * This message "stages" the given values but does not send them to the motors.  You need to "post" (or apply) the messages using the "post" command on the "cmd" topic.
 
+### Desired Motor Speed
 Topic:
 ```
-/darwin/ref/position
+/darwin/ref/speed
 ```
-
-### Desired Motor Speed
 * Message Type: String
 * Message Example: 'r 1 1.234 17 -0.123 6 0.23'
 * * This message sets the desired speed of motor 1, 17, and 6 to 1.234, -0.123, and 0.23 rad/s respectively
@@ -220,12 +210,11 @@ Topic:
 * The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
 * This message "stages" the given values but does not send them to the motors.  You need to "post" (or apply) the messages using the "post" command on the "cmd" topic.
 
+### Desired Motor Maximum Torque
 Topic:
 ```
-/darwin/ref/speed
+/darwin/ref/torque
 ```
-
-### Desired Motor Maximum Torque
 * Message Type: String
 * Message Example: 'p 1 0.5 17 0.111 6 1.0'
 * * This message sets the maximum torque of motor 1, 17, and 6 to 0.5 (50%), 0.111 (11.1%), and 1.0 (100%) of the maximum torque respectively
@@ -234,20 +223,14 @@ Topic:
 * The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
 * This message "stages" the given values but does not send them to the motors.  You need to "post" (or apply) the messages using the "post" command on the "cmd" topic.
 
-Topic:
-```
-/darwin/ref/torque
-```
-
 ### Command Message
-* Message Type: String
-* This topic performs various commands and functions.  Each of the commands/functions occure once per cycle of the Darwin-Ach and the Darwin Lofaro Legacy system.
-* The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
-
 Topic:
 ```
 /darwin/cmd
 ```
+* Message Type: String
+* This topic performs various commands and functions.  Each of the commands/functions occure once per cycle of the Darwin-Ach and the Darwin Lofaro Legacy system.
+* The "String" message is used instead of a custom message to allow for greater compatiability with future systems.
 
 Avaliable Commands:
 
