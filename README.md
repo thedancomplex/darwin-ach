@@ -235,47 +235,42 @@ Topic:
 Avaliable Commands:
 
 #### Post
-Post / Apply the Position, Velocity, and Torque desired reference values
-
 Message:
 ```
 post
 ```
+Post / Apply the Position, Velocity, and Torque desired reference values
 
 #### Open
-Open the Serial port and start the control loop on the main comptuer
-
 Message:
 ```
 open
 ```
+Open the Serial port and start the control loop on the main comptuer
 
 #### Close 
-Close the serial port and stop the control loop on the main comptuer 
-
 Message:
 ```
 close
 ```
+Close the serial port and stop the control loop on the main comptuer 
 
 #### Turn on power
 This command turns on the power.  This also automatically apply the "open" command.
 
 ##### All Motors
-Turn on all motors and the main controller
-
 Message:
 ```
 on all
 ```
+Turn on all motors and the main controller
 
 ##### Specific Motor
-Turn on a specific motor
-
 Message:
 ```
 on [Motor Number]
 ```
+Turn on a specific motor
 
 Example (Turns on motor 7):
 ```
@@ -290,20 +285,18 @@ Note 2: The ID of the main controller board with the IMU on it is 200.
 This command turns off the power.  This also automatically apply the "close" command.
 
 ##### All Motors
-Turn off all motors and the main controller
-
 Message:
 ```
 off all
 ```
+Turn off all motors and the main controller
 
 ##### Specific Motor
-Turn off a specific motor
-
 Message:
 ```
 off [Motor Number]
 ```
+Turn off a specific motor
 
 Example (Turns off motor 7):
 ```
@@ -317,20 +310,18 @@ Note 2: The ID of the main controller board with the IMU on it is 200.
 Debug mode print values in the screens that the controllers are running in.  By default "debug" mode is disable. 
 
 ##### Enable 
-Enable Debug Mode
-
 Message:
 ```
 debug true
 ```
+Enable Debug Mode
 
 ##### Disable
-Disable Debug Mode
-
 Message:
 ```
 debug false
 ```
+Disable Debug Mode
 
 #### Change Control Loop Mode
 This allows for changing control loop modes which includes changing refreshrates and enable/disable state feedback.  It also chages how the reference is controlled and applied.
@@ -339,103 +330,91 @@ This allows for changing control loop modes which includes changing refreshrates
 Changes to the state feedback and control rate
 
 1. 50hz, IMU, Motor, and FT
+Message:
+```
+loop state 50hz_imu_motor_ft
+```
 * Loop Rate: 50hz
 * IMU Feedback: Yes - 50hz
 * FT Feedback: Yes - 50hz
 * Motor Feedback: Yes - 50hz
 
+2. 50hz and IMU
 Message:
 ```
-loop state 50hz_imu_motor_ft
+loop state 50hz_imu
 ```
-
-2. 50hz and IMU
 * Loop Rate: 50hz
 * IMU Feedback: Yes - 50hz
 * FT Feedback: No
 * Motor Feedback: No
 
+3. 125hz and IMU
 Message:
 ```
-loop state 50hz_imu
+loop state 125hz_imu
 ```
-
-3. 125hz and IMU
 * Loop Rate: 125hz
 * IMU Feedback: Yes - 125hz
 * FT Feedback: No
 * Motor Feedback: No
 
+4. 100hz, IMU, and FT (slow)
 Message:
 ```
-loop state 125hz_imu
+loop state 125hz_imu_ft_slow
 ```
-
-4. 100hz, IMU, and FT (slow)
 * Loop Rate: 100hz
 * IMU Feedback: Yes - 100hz
 * FT Feedback: Yes - 50hz per FT
 * Motor Feedback: No
 
+5. 100hz, IMU, and Motors (slow)
 Message:
 ```
-loop state 125hz_imu_ft_slow
+loop state 125hz_imu_motors_slow
 ```
-
-5. 100hz, IMU, and Motors (slow)
 * Loop Rate: 100hz
 * IMU Feedback: Yes - 100hz
 * FT Feedback: No
 * Motor Feedback: Yes - 5hz per motor
 
+6. Default
 Message:
 ```
-loop state 125hz_imu_motors_slow
+loop state default
 ```
-
-6. Default
 * Loop Rate: Default - 125hz
 * IMU Feedback: Default - Yes - 125hz
 * FT Feedback: Default - No
 * Motor Feedback: Default - No
 
-Message:
-```
-loop state default
-```
-
-
 ##### Reference Mode
 This sets how the reference values are applied.
 
 1. Normal
-* Control Application Rate (Upper Body): Same as control loop
-* Control Application Rate (Lower Body): Same as control loop
-
 Message:
 ```
 loop ref normal
 ```
-
-2. Slow Top
-* Control Application Rate (Upper Body): (Control Loop Rate) / 8
+* Control Application Rate (Upper Body): Same as control loop
 * Control Application Rate (Lower Body): Same as control loop
 
+2. Slow Top
 Message:
 ```
 loop ref slow_top
 ```
-
-3. Default
-* Control Application Rate (Upper Body): Same as control loop
+* Control Application Rate (Upper Body): (Control Loop Rate) / 8
 * Control Application Rate (Lower Body): Same as control loop
 
+3. Default
 Message:
 ```
 loop ref default
 ```
-
-
+* Control Application Rate (Upper Body): Same as control loop
+* Control Application Rate (Lower Body): Same as control loop
 
 # Install
 This section shows how to install the Darwin-Ach / Darwin Lofaro Legacy system on the Darwin-OP and its backpack computer.
