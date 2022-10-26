@@ -491,7 +491,6 @@ $ git clone https://github.com/darwin-op/darwin-ach-simple-demo-cpp
 ```
 Note: The README in the example above explains the usage.  If you system is setup to be "auto start" you can skip the "Start Darwin-OP" steps.
 
-
 ## Backpack Computer
 ### Ubuntu 22.04 32bit for Raspi
 * Image Used (32 Bit): [to be posted]
@@ -586,7 +585,6 @@ Note 2: Connect the ethernet cord from the Raspi to the Darwin-OP.
 
 Note 3: The 10.111.111.xxx network is only avaliable between the backpack and the Darwin's computer.  You will need to use the wifi connection to connect to the robot from an external computer and access the internet.
 
- 
 ### Darwin's Backpack Computer Software Instillation
 This tutorial assumes that you have Ubuntu 22.04 32bit (headless/server) installed on the comptuer.  This tutorial will install the base system on the comptuer with the optional step of enabling auto-start of the software on boot. This tutorial also assumes that you have SSHed into the Darwin's backpack computer (Raspi).  This was tested on a Raspi 3b+ and will be tested on other SBCs in the future.
 
@@ -617,7 +615,6 @@ If you would like to stop Darwin Lofaro Legacy / Darwin-Ach / Ros2AchBridge from
 ```
 $ ./install.sh darwin-auto-start-ros-bridge-stop
 ```
-
 #### Install Examples
 The following examples are applicaple to being used on the Darwin's backpack computer (Raspi).  As with the instillation, this assumes that you are SSHed into the Darwin's backpack computer.
 
