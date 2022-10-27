@@ -3,6 +3,14 @@ The Darwin-Ach and the Darwin Lofaro Legacy System is made to run on an origonal
 The primary purpose of this project is to enable the old (or legacy) Darwin OP to utilize modern software.
 The primary reason why the current plaform can not utilize modern software is because the onboard computer is outdated and is a 32 bit system with minimal memory and compute power.
 
+# Assumptions:
+* Access to a 3D printer or an alternative way of making a mounting system for a Raspberry Pi (Raspi) 3 or better (or Zero W2)
+* Have a Raspi 3 or better (or Zero W2)
+* Have a short USB to micro USB cable
+* Have a short ethernet cable
+* Have the ability to operate in a linux enviroment
+* Have a ROBOTIS Darwin-OP (origonal version).
+
 # Changes
 * This system is tested with the motors, FTs sensors, and the CM730 to have a return status level of 1 instead of the default is 2
 * Ensure the LEFT FT sensor to have an ID of 111.
