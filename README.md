@@ -25,6 +25,8 @@ The primary reason why the current plaform can not utilize modern software is be
 * Test the auto install for the Backpack side
 * Design 3D printed backpack case for the Raspi 3b+ and 4
 * Design 3D printed backpack csse for the Raspi Zero W2
+* Verify auto install for main computer
+* Verify auto install for backpack comptuer
 
 # Joint Index for the Darwin-Op
 The following are the joint indexes for the Darwin OP:
