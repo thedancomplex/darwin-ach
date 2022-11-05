@@ -28,6 +28,7 @@ The primary reason why the current plaform can not utilize modern software is be
 * Verify auto install for main computer
 * Verify auto install for backpack comptuer
 * Add apt-get auto install for 64 bit version on ubuntu raspi
+* Add example videos of the functionality
 
 # Joint Index for the Darwin-Op
 The following are the joint indexes for the Darwin OP:
