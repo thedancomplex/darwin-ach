@@ -27,6 +27,7 @@ The primary reason why the current plaform can not utilize modern software is be
 * Design 3D printed backpack csse for the Raspi Zero W2
 * Verify auto install for main computer
 * Verify auto install for backpack comptuer
+* Add apt-get auto install for 64 bit version on ubuntu raspi
 
 # Joint Index for the Darwin-Op
 The following are the joint indexes for the Darwin OP:
