@@ -17,7 +17,7 @@ The primary reason why the current plaform can not utilize modern software is be
 * Ensure the RIGHT FT sensor to have an ID of 112.
 
 # Todo:
-* Impliment alternative serial library to cut down on the latency and overhead caused by the dyn lib
+* Impliment alternative serial library to cut down on the latency and overhead caused by the dyn lib (lower priority)
 * Design a backpack for Raspi Zero W2
 * Procure a Raspi Zero W2
 * Impliment USB to Ethernet on Zero W2
