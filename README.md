@@ -29,6 +29,10 @@ The primary reason why the current plaform can not utilize modern software is be
 * Verify auto install for backpack comptuer
 * Add apt-get auto install for 64 bit version on ubuntu raspi
 * Add example videos of the functionality
+* Make a windows compatiable backpack
+* Make the ros2 drivers for the camera
+* Make the ros2 drivers for the LEDs on the face
+* Make the ros2 drivers for the microphones
 
 # Joint Index for the Darwin-Op
 The following are the joint indexes for the Darwin OP:
