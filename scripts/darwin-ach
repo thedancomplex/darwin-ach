@@ -132,32 +132,12 @@ Start()
 	        echo '--- Starting Darwin-ach Server using Darwin Lofaro Legacy ---'
   		darwin-lofaro ach-reset
 		darwin-lofaro darwin-ach-server on
-
-#		/tmp/darwin-ach-server.sh
-#		if ! screen -list | grep -q "$SCREEN_SERVER"; then
-#                	echo '--- Starting Darwin-Ach Server using Darwin Lofaro Legacy ---'
-#                	screen -d -m -S $SCREEN_SERVER /bin/bash -c /tmp/darwin-ach-server.sh
-#			sleep 2
-#			On
-#        	else
-#                	echo '--- Darwin-Ach Server usign Darwin Lofaro Legacy already running ---'
-#        	fi
 	;;
 
   	'client' )
 	        echo '--- Starting Darwin-ach Client using Darwin Lofaro Legacy ---'
   		darwin-lofaro ach-reset
   		darwin-lofaro ach-remote
-
-#		/tmp/darwin-ach-client.sh
-#		if ! screen -list | grep -q "$SCREEN_CLIENT"; then
-#                	echo '--- Starting Darwin-Ach Client using Darwin Lofaro Legacy ---'
-#                	screen -d -m -S $SCREEN_CLIENT /bin/bash -c /tmp/darwin-ach-client.sh
-#        	else
-#                	echo '--- Darwin-Ach Client usign Darwin Lofaro Legacy already running ---'
-#        	fi
-#		darwin-lofaro ach-reset
-#		darwin-lofaro ach-remote
 	;;
 	'client-ros' )
 		darwin-ach reset client 
@@ -168,14 +148,6 @@ Start()
 	        echo '--- Starting Darwin-ach Server (local) using Darwin Lofaro Legacy ---'
   		darwin-lofaro ach-reset
 		darwin-lofaro darwin-ach-server on
-
-#		/tmp/darwin-ach-server.sh
-#		if ! screen -list | grep -q "$SCREEN_SERVER"; then
-#                	echo '--- Starting Darwin-Ach Server using Darwin Lofaro Legacy ---'
-#                	screen -d -m -S $SCREEN_SERVER /bin/bash -c $CMD_SERVER
-#        	else
-#                	echo '--- Darwin-Ach Server usign Darwin Lofaro Legacy already running ---'
-#        	fi
 	;;
 
 	* )
@@ -199,12 +171,6 @@ Stop()
 		Off $2
 		darwin-lofaro darwin-ach-server off
 		darwin-lofaro ach-clear
-#        	screen -S "$SCREEN_SERVER" -X quit > /dev/null
-#      		if ! screen -list | grep -q "$SCREEN_SERVER"; then
-#                	echo '--- Darwin-ach Server using Darwin Lofaro Legacy Stopped ---'
-#        	else
-#                	echo '--- Darwin-ach Server using Darwin Lofaro Legacy Failed to Stop ---'
-#        	fi
 	;;
 
   	'client' )
@@ -212,12 +178,6 @@ Stop()
 		darwin-lofaro darwin-ach-walking off
 		darwin-lofaro ach-kill
 		darwin-lofaro ach-clear
-#        	screen -S "$SCREEN_CLIENT" -X quit > /dev/null
-#      		if ! screen -list | grep -q "$SCREEN_CLIENT"; then
-#                	echo '--- Darwin-ach Client using Darwin Lofaro Legacy Stopped ---'
-#        	else
-#                	echo '--- Darwin-ach Client using Darwin Lofaro Legacy Failed to Stop ---'
-#        	fi
 	;;
 
 	'local' )
@@ -226,12 +186,6 @@ Stop()
 		Off $2
 		darwin-lofaro darwin-ach-server off
 		darwin-lofaro ach-clear
-#        	screen -S "$SCREEN_SERVER" -X quit > /dev/null
-#      		if ! screen -list | grep -q "$SCREEN_SERVER"; then
-#			echo '--- Darwin-ach Server/Client (local) using Darwin Lofaro Legacy Stopped ---'
-#        	else
-#			echo '--- Darwin-ach Server/Client (local) using Darwin Lofaro Legacy Failed to Stop ---'
-#        	fi
 	;;
 	* )
 		ShowUsage
@@ -310,7 +264,6 @@ DarwinRosBridge()
         'start' )
 		if ! screen -list | grep -q "$DARWIN_SCREEN"; then
 			screen -S $DARWIN_SCREEN -d -m bash -c "darwin-lofaro ros-ach-bridge-monitor"
-#			screen -S $DARWIN_SCREEN -d -m bash -c "/etc/darwin-legacy/darwin-lofaro ros-ach-bridge-monitor"
 		else
 			echo 'Darwin-Ach to Ros System Already Started'
 		fi
