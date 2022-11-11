@@ -28,5 +28,3 @@
 #ifndef DARWIN_LOFARO_DAN
 #include "lofaro_darwin_methods_dyn.h"
 #endif
-
-
