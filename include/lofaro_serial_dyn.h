@@ -38,7 +38,6 @@ namespace lofaro {
 #define TORQUE_ENABLE                   1                   // Value for enabling the torque
 #define TORQUE_DISABLE                  0                   // Value for disabling the torque
 
-
 // Buffer positions
 #define BUFFER_ID 2
 #define BUFFER_LENGTH 3 
@@ -79,13 +78,12 @@ int       do_read_buffer(uint8_t buff[1024], int *the_length);
 int       check_serial();
 void      do_flush();
 int       do_flush_final();
-int getch();
-int kbhit(void);
+int       getch();
+int       kbhit(void);
 
+uint8_t   rx_buff[1024];
 
-uint8_t rx_buff[1024];
-
-bool PORT_STATUS = false;
+bool      PORT_STATUS = false;
 
 int check_serial()
 {
