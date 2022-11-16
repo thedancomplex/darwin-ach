@@ -4,7 +4,6 @@
 #include <sstream>
 #include <string>
 
-
 namespace lofaro_utils_ros2 
 {
   void do_split(std::string const &str, const char delim,
@@ -19,5 +18,3 @@ namespace lofaro_utils_ros2
    }
   }
 }
-
-
