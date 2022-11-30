@@ -304,7 +304,7 @@ DynInstall()
   	cd $THE_INSTALL_DIR
 	THE_DIR=$(pwd)
 	cd /tmp
-	git clone https://thedancomplex/DynamixelSDK.git
+	git clone https://github.com/thedancomplex/DynamixelSDK.git
         cd DynamixelSDK/c++
 	if [ $THE_ARCH -eq "i686" ];
 	then
