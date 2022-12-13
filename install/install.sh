@@ -344,7 +344,10 @@ AchInstall()
 	git checkout no/benchmarks
 
 	autoreconf -i
-	./configure --with-python --enable-dkms=no
+	##./configure --with-python --enable-dkms=no
+	./configure --disable-tests --disable-documentation --disable-javadoc --disable-man --disable-manhtml --disable-docbook --disable-doxygen-doc --disable-doxygen-man --disable-doxygen-html 
+
+
 	make
 	sudo make install
 
