@@ -2,10 +2,10 @@ network:
   version: 2
   renderer: networkd
   wifis:
-    wlan0:
+    wlx984827b23530:
       dhcp4: yes
       dhcp4-overrides:
         route-metric: 100
       access-points:
-        "YOUR_SSID":
-          password: "YOUR_PASSWORD"
+        "robotNet-5g":
+          password: "robot6106496811"

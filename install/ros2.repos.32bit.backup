@@ -15,6 +15,66 @@ repositories:
     type: git
     url: https://github.com/ament/ament_package.git
     version: humble
+  ament/google_benchmark_vendor:
+    type: git
+    url: https://github.com/ament/google_benchmark_vendor.git
+    version: humble
+  ament/googletest:
+    type: git
+    url: https://github.com/ament/googletest.git
+    version: humble
+  ament/uncrustify_vendor:
+    type: git
+    url: https://github.com/ament/uncrustify_vendor.git
+    version: humble
+  eProsima/Fast-CDR:
+    type: git
+    url: https://github.com/eProsima/Fast-CDR.git
+    version: v1.0.24
+  eProsima/Fast-DDS:
+    type: git
+    url: https://github.com/eProsima/Fast-DDS.git
+    version: 2.6.x
+  eProsima/foonathan_memory_vendor:
+    type: git
+    url: https://github.com/eProsima/foonathan_memory_vendor.git
+    version: master
+  ignition/ignition_cmake2_vendor:
+    type: git
+    url: https://github.com/ignition-release/ignition_cmake2_vendor.git
+    version: humble
+  ignition/ignition_math6_vendor:
+    type: git
+    url: https://github.com/ignition-release/ignition_math6_vendor.git
+    version: humble
+  osrf/osrf_pycommon:
+    type: git
+    url: https://github.com/osrf/osrf_pycommon.git
+    version: master
+  osrf/osrf_testing_tools_cpp:
+    type: git
+    url: https://github.com/osrf/osrf_testing_tools_cpp.git
+    version: master
+  ros-perception/image_common:
+    type: git
+    url: https://github.com/ros-perception/image_common.git
+    version: humble
+  ros-perception/laser_geometry:
+    type: git
+    url: https://github.com/ros-perception/laser_geometry.git
+    version: humble
+  ros-planning/navigation_msgs:
+    type: git
+    url: https://github.com/ros-planning/navigation_msgs.git
+    version: humble
+  ros-tooling/keyboard_handler:
+    type: git
+    url: https://github.com/ros-tooling/keyboard_handler.git
+    version: humble
+  ros-tooling/libstatistics_collector:
+    type: git
+    url: https://github.com/ros-tooling/libstatistics_collector.git
+    version: humble
   ros/class_loader:
     type: git
     url: https://github.com/ros/class_loader.git
@@ -190,6 +250,10 @@ repositories:
   ros2/ros_testing:
     type: git
     url: https://github.com/ros2/ros_testing.git
+    version: humble
+  ros2/rosbag2:
+    type: git
+    url: https://github.com/ros2/rosbag2.git
     version: humble
   ros2/rosidl:
     type: git

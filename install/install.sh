@@ -788,8 +788,53 @@ ShowUsage()
 	echo ''
 }
 
+Basic()
+{
+ sudo apt -y install   build-essential 
+ sudo apt -y install   cmake 
+ sudo apt -y install   git 
+ sudo apt -y install   python3-flake8 
+ sudo apt -y install   python3-flake8-* 
+ sudo apt -y install   python3-pip 
+ sudo apt -y install   python3-pytest 
+ sudo apt -y install   python3-pytest-cov 
+ sudo apt -y install   python3-pytest-repeat 
+ sudo apt -y install   python3-pytest-rerunfailures 
+ sudo apt -y install   python3-rosdep 
+ sudo apt -y install   python3-setuptools 
+ sudo apt -y install   python3-vcstool 
+ sudo apt -y install   wget
+
+  sudo apt -y install libtinyxml2-dev
+  sudo apt -y install libasio-dev 
+  sudo apt -y install libacl1-dev
+  sudo apt -y install gcc g++ cmake libacl1-dev libncurses5-dev pkg-config
+  sudo apt -y install libeigen3-dev
+  sudo apt -y install python3-lark
+  sudo apt -y install python3-numpy
+  sudo apt -y install libldap2-dev
+  sudo apt -y install rtirq-init
+  sudo apt -y install libbullet-dev
+  sudo apt -y install python3-opencv
+  sudo apt -y install libopencv-dev
+  sudo apt -y install mesa-common-dev
+  sudo apt -y install libqt5core5a
+  sudo apt -y install qtbase5-dev
+  sudo apt -y install qtdeclarative5-dev
+  sudo apt -y install python-is-python3
+  sudo pip3 install netifaces
+  sudo apt -y install setserial
+  sudo apt -y install python3-colcon-common-extensions
+  sudo apt -y install ufw
+
+  # Remove  root access for serial port
+  sudo apt -y remove modemmanager
+}
 
 case "$1" in
+	'basic' )
+		Basic
+		;;
 	'ros2' )
 		InstallRos2 $@
 	;;
